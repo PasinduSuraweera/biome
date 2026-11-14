@@ -176,3 +176,8 @@ html:lang(ta) h1, html:lang(ta) h2, html:lang(ta) h3, html:lang(ta) .name { font
 table.cal { min-width: 640px; }
 table.cal td { text-align: center; font-weight: 600; background: color-mix(in srgb, var(--c) calc(var(--a) * 85%), #fff); color: var(--ink); }
 table.cal th:first-child { white-space: nowrap; }
+
+/* team logo */
+.logo { display: block; width: 144px; height: auto; }
+.brand .tag { margin-top: 2px; }
+@media (max-width: 640px) { .logo { width: 120px; } }
