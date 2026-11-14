@@ -42,14 +42,24 @@ def _box(da):
     return da.sel(lat=slice(LAT0, LAT1), lon=slice(LON0, LON1))
 
 
+def _month(v):
+    """First day of the month for a time value. IMERG stores time as a Julian
+    calendar (cftime) object that pandas cannot convert, so read year and month
+    directly whenever the object has them."""
+    if hasattr(v, "year") and hasattr(v, "month"):
+        return pd.Timestamp(int(v.year), int(v.month), 1)
+    t = pd.Timestamp(v)
+    return pd.Timestamp(t.year, t.month, 1)
+
+
 def read_imerg_monthly(f):
     """GPM IMERG Final monthly: mean rate mm/hr -> total mm in the month."""
     ds = xr.open_dataset(f, group="Grid", engine="h5netcdf", decode_times=True)
     da = _box(ds["precipitation"]).load()
-    t = pd.Timestamp(da["time"].values[0])
+    t = _month(da["time"].values[0])
     hours = calendar.monthrange(t.year, t.month)[1] * 24
     da = da * hours
-    da = da.assign_coords(time=[pd.Timestamp(t.year, t.month, 1)])
+    da = da.assign_coords(time=[t])
     return da.rename("rain_mm")
 
 
@@ -64,18 +74,16 @@ def read_gldas(f):
     """GLDAS Noah monthly: root-zone and top-layer soil moisture (kg/m2)."""
     ds = xr.open_dataset(f, engine="h5netcdf", decode_times=True)
     ds = _box(ds[["RootMoist_inst", "SoilMoi0_10cm_inst", "Rainf_f_tavg", "Evap_tavg"]]).load()
-    t = pd.Timestamp(ds["time"].values[0])
-    ds = ds.assign_coords(time=[pd.Timestamp(t.year, t.month, 1)])
-    return ds
+    return ds.assign_coords(time=[_month(ds["time"].values[0])])
 
 
 def read_merra2_flx(f):
     """MERRA-2 monthly corrected precipitation: kg m-2 s-1 -> mm per month."""
     ds = xr.open_dataset(f, engine="h5netcdf", decode_times=True)
     da = _box(ds["PRECTOTCORR"]).load()
-    t = pd.Timestamp(da["time"].values[0])
+    t = _month(da["time"].values[0])
     secs = calendar.monthrange(t.year, t.month)[1] * 86400
-    da = (da * secs).assign_coords(time=[pd.Timestamp(t.year, t.month, 1)])
+    da = (da * secs).assign_coords(time=[t])
     return da.rename("rain_mm")
 
 
@@ -83,8 +91,7 @@ def read_merra2_lnd(f):
     """MERRA-2 monthly soil wetness (0 = dry, 1 = saturated)."""
     ds = xr.open_dataset(f, engine="h5netcdf", decode_times=True)
     ds = _box(ds[["GWETROOT", "GWETTOP"]]).load()
-    t = pd.Timestamp(ds["time"].values[0])
-    return ds.assign_coords(time=[pd.Timestamp(t.year, t.month, 1)])
+    return ds.assign_coords(time=[_month(ds["time"].values[0])])
 
 
 READERS = {
@@ -112,7 +119,8 @@ def to_rows(obj):
     for var, da in items:
         df = district_means(da)
         for t, r in df.iterrows():
-            row = {"time": pd.Timestamp(t).strftime("%Y-%m-%d"), "var": var}
+            day = pd.Timestamp(int(t.year), int(t.month), int(t.day)) if hasattr(t, "day") and not isinstance(t, pd.Timestamp) else pd.Timestamp(t)
+            row = {"time": day.strftime("%Y-%m-%d"), "var": var}
             row.update({k: (None if pd.isna(v) else round(float(v), 4)) for k, v in r.items()})
             rows.append(row)
     return rows
