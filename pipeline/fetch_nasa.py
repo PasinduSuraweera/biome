@@ -206,7 +206,8 @@ if __name__ == "__main__":
     ap.add_argument("--download", action="store_true", help="download whole files instead of streaming")
     ap.add_argument("--workers", type=int, default=6)
     a = ap.parse_args()
-    earthaccess.login(strategy="netrc")
+    # environment variables (GitHub Actions secrets) first, then ~/.netrc
+    earthaccess.login(strategy="environment" if "EARTHDATA_USERNAME" in __import__("os").environ else "netrc")
     keys = list(READERS) if a.dataset == "all" else [a.dataset]
     for k in keys:
         run(k, a.start, a.end, a.download, a.workers)

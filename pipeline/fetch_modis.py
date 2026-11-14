@@ -26,7 +26,11 @@ PRODUCT, LAYER = "MOD13A3.061", "_1_km_monthly_NDVI"
 
 
 def token():
-    login, _, password = netrc.netrc().authenticators("urs.earthdata.nasa.gov")
+    import os
+    if "EARTHDATA_USERNAME" in os.environ:  # GitHub Actions secrets
+        login, password = os.environ["EARTHDATA_USERNAME"], os.environ["EARTHDATA_PASSWORD"]
+    else:
+        login, _, password = netrc.netrc().authenticators("urs.earthdata.nasa.gov")
     r = requests.post(f"{API}/login", auth=(login, password), timeout=60)
     r.raise_for_status()
     return {"Authorization": f"Bearer {r.json()['token']}"}
@@ -88,5 +92,17 @@ def get():
     print(f"wrote {PROCESSED / 'modis_ndvi.csv'} ({long['time'].min():%Y-%m} to {long['time'].max():%Y-%m})")
 
 
+def wait(max_minutes=170):
+    """Submit, poll every 2 minutes until AppEEARS is done, then download."""
+    import time
+    if not TASK_FILE.exists():
+        submit()
+    for _ in range(max_minutes // 2):
+        if status() == "done":
+            return get()
+        time.sleep(120)
+    sys.exit("AppEEARS still processing; run `python fetch_modis.py get` later.")
+
+
 if __name__ == "__main__":
-    {"submit": submit, "status": status, "get": get}[sys.argv[1] if len(sys.argv) > 1 else "status"]()
+    {"submit": submit, "status": status, "get": get, "wait": wait}[sys.argv[1] if len(sys.argv) > 1 else "status"]()
