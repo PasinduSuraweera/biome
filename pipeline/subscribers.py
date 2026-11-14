@@ -92,7 +92,10 @@ def api(method, **params):
         print(f"[no token] {method} {json.dumps(params, ensure_ascii=False)[:300]}")
         return {"ok": True, "result": []}
     r = requests.post(f"https://api.telegram.org/bot{TOKEN}/{method}", data=params, timeout=40)
-    return r.json()
+    res = r.json()
+    if not res.get("ok"):  # say why, without printing the token
+        print(f"Telegram {method} failed: {res.get('error_code')} {res.get('description')}")
+    return res
 
 
 def load():

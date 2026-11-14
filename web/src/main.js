@@ -36,7 +36,8 @@ function rewind(feature) {
   return feature;
 }
 
-let SAFE = null;
+let SAFE = null, TOWNS = null;
+const townOf = {};   // the division picked in each district
 let DATA, GEO, FLOOD, current, profileKind = "el_nino", showFlood = false;
 let cal = { mode: "fc", level: "district", place: null, type: "after_el_nino" };
 let view = "family"; // family, farmer, coast (plain language) or full (all the data)
@@ -64,6 +65,7 @@ async function load() {
   // NASA pictures and the evacuation places load after the first paint
   loadNasa().then(() => renderGallery($("#nasa")));
   fetch("data/safe_centres.json").then((r) => (r.ok ? r.json() : null)).then((j) => { SAFE = j; if (current) renderPanel(current); }).catch(() => {});
+  fetch("data/towns.geojson").then((r) => (r.ok ? r.json() : null)).then((j) => { if (j) { j.features.forEach(rewind); TOWNS = j; if (current) renderPanel(current); } }).catch(() => {});
   const names = Object.keys(DATA.districts);
   select(names.find((n) => slug(n) === fromHash) || pickDefault(names), false);
 }
@@ -203,9 +205,14 @@ function renderSimple(name) {
     $("#panel").innerHTML = `<div class="simple"><p class="aud">${esc(t("for_coast"))}</p><h2>${esc(dName(name))}</h2><p class="basis">${esc(t("coast_not", { d: dName(name) }))}</p></div>`;
     return;
   }
-  const model = buildReport(name, view, DATA, SAFE);
+  const model = buildReport(name, view, DATA, SAFE, townOf[name]);
   $("#panel").innerHTML = reportHTML(model);
-  if ($("#cmap-slot")) $("#cmap-slot").innerHTML = centreMap(name, GEO, SAFE);
+  const pick = (tn) => { townOf[name] = tn; renderSimple(name); };
+  if ($("#cmap-slot")) {
+    $("#cmap-slot").innerHTML = centreMap(name, GEO, SAFE, TOWNS, DATA.towns?.districts?.[name], townOf[name]);
+    $("#cmap-slot").querySelectorAll("path.town").forEach((p) => p.addEventListener("click", () => pick(p.dataset.town === townOf[name] ? "" : p.dataset.town)));
+  }
+  $("#town-select")?.addEventListener("change", (e) => pick(e.target.value));
   wireAlerts(model);
   $("#dl-png").addEventListener("click", () => downloadPNG(model));
   $("#dl-pdf").addEventListener("click", () => window.print());
@@ -250,7 +257,12 @@ function renderPanel(name) {
   drawSwing("#chart-soil", prof?.soil_pct, showNow ? d.this_event?.soil_pct : null, 50, t("y_soil"), [0, 100]);
   renderLive(name);
   const sp = SAFE?.districts?.[name];
-  if (sp) $("#safe-full").innerHTML = `<div class="live"><h3>${esc(t("s_safe"))} <span class="nasa-tag">NASA SRTM</span></h3>${centreMap(name, GEO, SAFE)}
+  const tws = DATA.towns?.districts?.[name] || [];
+  const townTable = tws.length ? `<div class="live"><h3>${esc(t("s_towns"))} <span class="nasa-tag">NASA GPM IMERG + SRTM</span></h3>
+    <div class="table-wrap"><table class="towns"><tr><th>${esc(t("th_town"))}</th><th>${esc(t("th_today"))}</th><th>${esc(t("th_rain"))}</th><th>${esc(t("th_steep"))}</th><th>${esc(t("th_ditwah"))}</th></tr>
+    ${tws.map((x) => `<tr><td>${esc(x.name)}</td><td class="l${x.level}"><i class="lv-dot"></i> ${esc(t("lvs_" + x.level))}</td><td>${r0(x.rain_1d)} mm</td><td>${x.steep_share == null ? "" : Math.round(x.steep_share * 100) + "%"}</td><td class="l${x.ditwah?.level || 0}">${x.ditwah ? `<i class="lv-dot"></i> ${esc(t("lvs_" + x.ditwah.level))}, ${r0(x.ditwah.rain_mm)} mm` : ""}</td></tr>`).join("")}</table></div>
+    <p class="cap">${esc(t("town_note"))}</p></div>` : "";
+  if (sp) $("#safe-full").innerHTML = `${townTable}<div class="live"><h3>${esc(t("s_safe"))} <span class="nasa-tag">NASA SRTM</span></h3>${centreMap(name, GEO, SAFE, TOWNS, tws)}
     <ol class="picks">${sp.top.slice(0, 5).map((c) => `<li>${esc(c[3])} <span class="muted">(${esc(t("kind_" + c[2]))}, ${c[4]} m)</span></li>`).join("")}</ol>
     <p class="cap">${esc(t("safe_count", { a: sp.safer, n: sp.count }))} ${esc(t("safe_note"))}</p></div>`;
 }

@@ -52,19 +52,29 @@ export function renderMissions(el) {
     <div class="ms-grid">${MISSIONS.map(([n, k]) => `<div class="ms"><p class="ms-n">NASA ${esc(n)}</p><p>${esc(t(k))}</p></div>`).join("")}</div>`;
 }
 
-// every candidate place in one district, coloured by the ground it stands on
-export function centreMap(name, GEO, SAFE) {
+// every candidate place in one district, coloured by the ground it stands on;
+// with town data, the divisions are shaded by today's level and one can be picked
+const LV_FILL = ["#ffffff", "#f6e7a6", "#f0b98a", "#e39a94"];
+export function centreMap(name, GEO, SAFE, TOWNS, levels, town) {
   const f = GEO.features.find((x) => x.properties.name === name);
-  const sp = SAFE?.districts?.[name];
+  const tf = (TOWNS?.features || []).filter((x) => x.properties.district === name);
+  const focus = town ? tf.find((x) => x.properties.name === town) : null;
+  const sp = (focus && SAFE?.towns?.[`${name}|${town}`]) || SAFE?.districts?.[name];
   if (!f || !sp) return "";
   const W = 520, H = 380;
-  const proj = geoMercator().fitExtent([[10, 10], [W - 10, H - 10]], f);
+  const proj = geoMercator().fitExtent([[10, 10], [W - 10, H - 10]], focus || f);
   const path = geoPath(proj);
-  const [[x0, y0], [x1, y1]] = geoPath().bounds(f);
-  const pts = SAFE.items.filter((c) => c[0] >= x0 && c[0] <= x1 && c[1] >= y0 && c[1] <= y1 && geoContains(f, [c[0], c[1]]));
-  const dots = (grade, cls, r) => pts.filter((c) => (grade === 0 ? c[2] === 0 : c[2] !== 0)).map((c) => { const [x, y] = proj([c[0], c[1]]); return `<circle class="${cls}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r}"/>`; }).join("");
+  const area = focus || f;
+  const [[x0, y0], [x1, y1]] = geoPath().bounds(area);
+  const pts = SAFE.items.filter((c) => c[0] >= x0 && c[0] <= x1 && c[1] >= y0 && c[1] <= y1 && geoContains(area, [c[0], c[1]]));
+  const r = focus ? 3 : 1.8;
+  const dots = (ok, cls) => pts.filter((c) => (ok ? c[2] === 0 : c[2] !== 0)).map((c) => { const [x, y] = proj([c[0], c[1]]); return `<circle class="${cls}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r}"/>`; }).join("");
+  const lv = Object.fromEntries((levels || []).map((x) => [x.name, x.level]));
+  const shapes = tf.length ? tf.map((x) => `<path class="town${x === focus ? " on" : ""}" data-town="${esc(x.properties.name)}" d="${path(x)}" fill="${LV_FILL[lv[x.properties.name] || 0]}"><title>${esc(x.properties.name)}</title></path>`).join("") : `<path class="outline" d="${path(f)}"/>`;
   const top = sp.top.slice(0, 5).map((c, i) => { const [x, y] = proj([c[0], c[1]]); return `<g class="pick"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="9"/><text x="${x.toFixed(1)}" y="${(y + 4).toFixed(1)}" text-anchor="middle">${i + 1}</text></g>`; }).join("");
-  return `<figure class="cmap"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(t("s_safe"))}: ${esc(dName(name))}">
-      <path class="outline" d="${path(f)}"/>${dots(1, "bad", 1.6)}${dots(0, "ok", 1.8)}${top}</svg>
-    <figcaption><span><i class="dot ok"></i>${esc(t("lg_safe"))} (${sp.safer})</span><span><i class="dot bad"></i>${esc(t("lg_unsafe"))} (${sp.steep + sp.flooded})</span></figcaption></figure>`;
+  const bad = focus ? sp.count - sp.safer : sp.steep + sp.flooded;
+  return `<figure class="cmap"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(t("s_safe"))}: ${esc(town || dName(name))}">
+      ${shapes}${dots(false, "bad")}${dots(true, "ok")}${top}</svg>
+    <figcaption><span><i class="dot ok"></i>${esc(t("lg_safe"))} (${sp.safer})</span><span><i class="dot bad"></i>${esc(t("lg_unsafe"))} (${bad})</span>
+      ${tf.length ? `<span><i class="sq l1"></i>${esc(t("lvs_1"))}</span><span><i class="sq l2"></i>${esc(t("lvs_2"))}</span><span><i class="sq l3"></i>${esc(t("lvs_3"))}</span>` : ""}</figcaption></figure>`;
 }

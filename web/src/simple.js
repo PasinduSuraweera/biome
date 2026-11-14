@@ -91,7 +91,7 @@ function fcRuns(fc, upto) {
 
 const strip = (o, n) => o.months.slice(0, n).map((m) => ({ lab: mShort(m.month), sign: SIGN[m.level] || "normal" }));
 
-export function buildReport(name, view, DATA, SAFE) {
+export function buildReport(name, view, DATA, SAFE, townName) {
   const d = DATA.districts[name];
   const o = d.outlook;
   const aud = view === "farmer" ? "farmer" : "family";
@@ -177,13 +177,22 @@ export function buildReport(name, view, DATA, SAFE) {
     extras.push({ title: t("s_rivers"), lines: riverLines });
   }
 
-  const lv = d.level || null;
+  const towns = DATA.towns?.districts?.[name] || [];
+  const tw = towns.find((x) => x.name === townName) || null;
+  const lv = tw || d.level || null;
   const dayTxt = lv ? `${Number(lv.day.slice(8, 10))} ${mLong(lv.day.slice(0, 7))}` : "";
   const level = lv ? {
     n: lv.level, title: t(`lvl_${lv.level}`) + (lv.hazard ? ` (${t(`hz_${lv.hazard}`)})` : ""),
     rain: t("lvl_rain", { a: Math.round(lv.rain_1d), b: Math.round(lv.rain_3d), d: dayTxt }), how: t("lvl_how"),
   } : null;
-  const sp = SAFE?.districts?.[name];
+  const sp = (tw && SAFE?.towns?.[`${name}|${tw.name}`]) || SAFE?.districts?.[name];
+  if (tw) {
+    const fmtDay = (ymd) => `${Number(ymd.slice(8, 10))} ${monthName(ymd.slice(0, 7))}`;
+    const lines = [tw.steep_share >= 0.05 ? t("town_steep", { p: Math.round(tw.steep_share * 100) }) : t("town_flat")];
+    if (tw.ditwah?.level >= 2) lines.push(t("town_ditwah", { l: t(`lvl_${tw.ditwah.level}`), d: fmtDay(tw.ditwah.day), r: Math.round(tw.ditwah.rain_mm) }));
+    lines.push(t("town_note"));
+    extras.unshift({ title: tw.name, tag: "NASA GPM IMERG + SRTM", lines });
+  }
   if (sp?.top?.length) {
     extras.unshift({ title: t("s_safe"), tag: "NASA SRTM", map: true, lines: [
       ...sp.top.slice(0, 5).map((c, i) => `${i + 1}. ${c[3]} (${t(`kind_${c[2]}`)})`),
@@ -192,7 +201,7 @@ export function buildReport(name, view, DATA, SAFE) {
   const today = new Date();
   const ym = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}`;
   return {
-    view, name, level, hazardNow: lv?.hazard || (d.hill ? "landslide" : "flood"), bot: DATA.levels?.bot || null, safeTop: sp?.top || [], aud: t(`for_${view}`), district: dName(name), when: monthName(d.flag_month), now, todo, basis, periods, year, extras,
+    view, name, level, towns: towns.map((x) => ({ name: x.name, level: x.level })), town: tw?.name || "", hazardNow: lv?.hazard || (d.hill ? "landslide" : "flood"), bot: DATA.levels?.bot || null, safeTop: sp?.top || [], aud: t(`for_${view}`), district: tw ? `${tw.name}, ${dName(name)}` : dName(name), when: monthName(d.flag_month), now, todo, basis, periods, year, extras,
     emer: t("emer"), disc: t("disc"), nasa: t("rep_nasa"), modelled: !!fc, made: t("rep_made", { d: `${today.getDate()} ${monthName(ym)}` }),
   };
 }
@@ -247,6 +256,8 @@ export function reportHTML(m) {
     <div class="rep-head"><img src="logo.png" alt="Biome" width="120" height="43"><span>${esc(t("rep_title"))} · ${esc(m.made)}</span></div>
     <p class="aud">${esc(m.aud)}</p>
     <h2>${esc(m.district)}</h2>
+    ${m.towns.length ? `<label class="town-pick">${esc(t("s_town"))} <span class="nasa-tag">NASA GPM IMERG + SRTM</span>
+      <select id="town-select"><option value="">${esc(t("town_all"))}</option>${m.towns.map((x) => `<option value="${esc(x.name)}" ${x.name === m.town ? "selected" : ""}>${esc(x.name)}${x.level ? ` · ${esc(t(`lvs_${x.level}`))}` : ""}</option>`).join("")}</select></label>` : ""}
     <div class="nowbox" style="background:${m.now.bg};color:${m.now.fg}">
       <p class="k">${esc(t("s_now"))} · ${esc(m.when)} · NASA GPM IMERG</p><p class="v">${esc(m.now.title)}</p><p class="d">${esc(m.now.desc)}</p>
     </div>

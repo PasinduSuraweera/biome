@@ -290,14 +290,14 @@ def trends(df, label, start=CLIM_START, end=CLIM_END, pct_base=None):
 
 # ------------------------------------------------------------------ watch flags
 
-def flag_for(district, rain1, rain3, smp, ndvi_anom=None, wet_src="soil"):
+def flag_for(district, rain1, rain3, smp, ndvi_anom=None, wet_src="soil", hill=None):
     """Return (watch, reason) for one district-month.
 
     smp is how wet the ground is, as a percentile against the same month in
     past years: GLDAS soil moisture when it is current, otherwise (GLDAS runs
     about 3 months behind) the rank of the last 3 months of rain, which is how
     much water the ground has been given (wet_src="rain3")."""
-    hill = district in HILL_DISTRICTS
+    hill = district in HILL_DISTRICTS if hill is None else hill   # a town brings its own terrain
     if wet_src == "rain3":
         wet = lambda p: f"ground wetter than {p:.0f}% of past years (from 3 months of rain)"
         dry = lambda p: f"ground drier than {100 - p:.0f}% of past years (from 3 months of rain)"
@@ -431,6 +431,60 @@ def daily_levels(districts, rain1, rain3, wet3):
     counts = pd.Series([v.get("level", {}).get("level", 0) for v in districts.values()]).value_counts().to_dict()
     return {"rule": LEVEL_RULE, "day": last.strftime("%Y-%m-%d"), "counts": {str(k): int(n) for k, n in counts.items()},
             "ditwah_replay": replay, "bot": os.environ.get("BIOME_BOT") or "biomealertsbot"}
+
+
+def town_levels(districts, rain1, rain3, wet3):
+    """Today's level for each Divisional Secretariat division (the level NBRO warns at).
+
+    Town level uses what NASA resolves at that scale: daily rain on a 0.1 degree
+    (about 10 km) grid and 30 m terrain. The season's ground wetness comes from
+    the division's district, because the long records are coarser than a town.
+    """
+    path = PROCESSED / "imerg_late_towns.csv"
+    if not path.exists():
+        return None
+    days = pd.read_csv(path, parse_dates=["time"]).pivot_table(index="time", columns="district", values="value")
+    recent = days[days.index >= days.index.max() - pd.Timedelta(days=21)]
+    ditwah = days[(days.index >= "2025-11-24") & (days.index <= "2025-11-29")]
+    terrain = TERRAIN.get("towns", {})
+    prev = pd.Timestamp("2025-10-01")
+    out, counts = {}, {0: 0, 1: 0, 2: 0, 3: 0}
+    for key in days.columns:
+        d, name = key.split("|", 1)
+        if d not in districts:
+            continue
+        v = districts[d]
+        share = (terrain.get(key) or {}).get("steep_share")
+        hill = (share or 0) >= HILL_STEEP_SHARE
+        fv = v["flag_values"]
+        watch, _ = flag_for(d, fv["rain_pct"], fv["rain3_pct"], fv["soil_pct"], None, "rain3", hill=hill)
+        col = recent[key].dropna()
+        if col.empty:
+            continue
+        r1, r3 = float(col.iloc[-1]), float(col.iloc[-3:].sum())
+        lvl, hazard = risk_level(r1, watch, hill)
+        row = {"name": name, "level": lvl, "hazard": hazard, "rain_1d": _r(r1), "rain_3d": _r(r3),
+               "day": col.index[-1].strftime("%Y-%m-%d"), "steep_share": share, "hill": bool(hill), "watch": watch}
+        # the worst day of the Cyclone Ditwah week here, by the same rule and the Watch known at the time
+        if not ditwah.empty and prev in rain1.index and d in rain1:
+            w0, _ = flag_for(d, rain1.at[prev, d], rain3.at[prev, d], wet3.at[prev, d], None, "rain3", hill=hill)
+            best = None
+            for t, mm in ditwah[key].dropna().items():
+                l0, _h = risk_level(mm, w0, hill)
+                if best is None or (l0, mm) > (best[0], best[2]):
+                    best = (l0, t.strftime("%Y-%m-%d"), float(mm))
+            if best:
+                row["ditwah"] = {"level": best[0], "day": best[1], "rain_mm": _r(best[2])}
+        out.setdefault(d, []).append(row)
+        counts[lvl] += 1
+    for d in out:
+        out[d].sort(key=lambda x: x["name"])
+    dit = [t["ditwah"]["level"] for ts in out.values() for t in ts if "ditwah" in t]
+    return {"source": "NASA GPM IMERG Late daily (0.1 degree) and NASADEM 30 m terrain, per Divisional Secretariat division",
+            "day": recent.index.max().strftime("%Y-%m-%d"), "count": sum(len(v) for v in out.values()),
+            "counts": {str(k): n for k, n in counts.items()},
+            "ditwah_counts": {str(k): dit.count(k) for k in (1, 2, 3)},
+            "districts": out}
 
 
 def _ok(x):
@@ -828,6 +882,7 @@ def main():
                                           calendar["district"].get(d), kind_now)
 
     levels = _safe(daily_levels, districts, rain1, rain3, wet3)
+    towns = _safe(town_levels, districts, rain1, rain3, wet3)
 
     # ensemble outlook model: chance of each Watch for every month of the coming year
     import forecast as fc
@@ -860,6 +915,7 @@ def main():
                      "year_types": {str(y): t for y, t in types.items()},
                      "provinces": PROVINCES, **calendar},
         "levels": levels,
+        "towns": towns,
         "forecast": forecast,
         "reservoirs": _safe(reservoirs, rain1),
         "rivers": _safe(river_gauges),
