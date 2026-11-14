@@ -71,6 +71,13 @@ jobs:
           mkdir -p data/processed
           find artifacts -name '*.csv' -exec cp {} data/processed/ \;
           ls -la data/processed
+      - name: Save the NASA district tables first (kept even if the analysis fails)
+        run: |
+          git config user.name "PasinduSuraweera"
+          git config user.email "pasisuraweera2003@gmail.com"
+          git add data/processed
+          git diff --cached --quiet || git commit -m "NASA district tables $(date -u +%Y-%m-%d)"
+          for i in 1 2 3; do git pull --rebase origin main && git push && break; sleep 10; done
       - name: Candidate evacuation centres (OpenStreetMap)
         continue-on-error: true
         working-directory: pipeline

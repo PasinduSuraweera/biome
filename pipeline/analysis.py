@@ -178,8 +178,11 @@ def profile(anom_sources, events):
                 break
     if not paths:
         return None, []
+    # MERRA-2 masks the ocean, so a small coastal district can be missing from
+    # the older events: line every event up on the same districts (NaN if absent)
+    cols = sorted(set().union(*[p.columns for p in paths]))
+    paths = [p.reindex(columns=cols) for p in paths]
     stack = np.stack([p.values for p in paths])  # (event, lag, district)
-    cols = paths[0].columns
     with np.errstate(all="ignore"):
         mean = pd.DataFrame(np.nanmean(stack, axis=0), columns=cols)
         lo = pd.DataFrame(np.nanmin(stack, axis=0), columns=cols)
