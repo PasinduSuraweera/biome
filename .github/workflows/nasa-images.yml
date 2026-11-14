@@ -31,7 +31,7 @@ jobs:
         with:
           path: data/raw/nasadem
           key: nasadem-v1
-      - name: NASA elevation (SRTM): hill districts and safer evacuation centres
+      - name: NASA elevation (SRTM) for hill districts and safer evacuation centres
         continue-on-error: true
         working-directory: pipeline
         env:
