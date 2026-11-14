@@ -144,15 +144,15 @@
    "file": "nasa/now-1.jpg",
    "w": 1200,
    "h": 960,
-   "layer": "VIIRS_SNPP_CorrectedReflectance_TrueColor",
-   "title": "VIIRS_SNPP_CorrectedReflectance_TrueColor",
+   "layer": "VIIRS_NOAA20_CorrectedReflectance_TrueColor",
+   "title": "VIIRS_NOAA20_CorrectedReflectance_TrueColor",
    "bbox": [
     72.0,
     0.0,
     92.0,
     16.0
    ],
-   "worldview": "https://worldview.earthdata.nasa.gov/?v=72.0,0.0,92.0,16.0&l=Coastlines_15m,VIIRS_SNPP_CorrectedReflectance_TrueColor&t=2026-11-13"
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=72.0,0.0,92.0,16.0&l=Coastlines_15m,VIIRS_NOAA20_CorrectedReflectance_TrueColor&t=2026-11-13"
   },
   {
    "id": "now-rain-1",
@@ -178,15 +178,15 @@
    "file": "nasa/now-2.jpg",
    "w": 1200,
    "h": 960,
-   "layer": "VIIRS_SNPP_CorrectedReflectance_TrueColor",
-   "title": "VIIRS_SNPP_CorrectedReflectance_TrueColor",
+   "layer": "VIIRS_NOAA20_CorrectedReflectance_TrueColor",
+   "title": "VIIRS_NOAA20_CorrectedReflectance_TrueColor",
    "bbox": [
     72.0,
     0.0,
     92.0,
     16.0
    ],
-   "worldview": "https://worldview.earthdata.nasa.gov/?v=72.0,0.0,92.0,16.0&l=Coastlines_15m,VIIRS_SNPP_CorrectedReflectance_TrueColor&t=2026-11-12"
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=72.0,0.0,92.0,16.0&l=Coastlines_15m,VIIRS_NOAA20_CorrectedReflectance_TrueColor&t=2026-11-12"
   },
   {
    "id": "now-rain-2",
@@ -212,15 +212,15 @@
    "file": "nasa/now-3.jpg",
    "w": 1200,
    "h": 960,
-   "layer": "VIIRS_SNPP_CorrectedReflectance_TrueColor",
-   "title": "VIIRS_SNPP_CorrectedReflectance_TrueColor",
+   "layer": "VIIRS_NOAA20_CorrectedReflectance_TrueColor",
+   "title": "VIIRS_NOAA20_CorrectedReflectance_TrueColor",
    "bbox": [
     72.0,
     0.0,
     92.0,
     16.0
    ],
-   "worldview": "https://worldview.earthdata.nasa.gov/?v=72.0,0.0,92.0,16.0&l=Coastlines_15m,VIIRS_SNPP_CorrectedReflectance_TrueColor&t=2026-11-11"
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=72.0,0.0,92.0,16.0&l=Coastlines_15m,VIIRS_NOAA20_CorrectedReflectance_TrueColor&t=2026-11-11"
   },
   {
    "id": "now-rain-3",
@@ -240,106 +240,140 @@
    "worldview": "https://worldview.earthdata.nasa.gov/?v=72.0,0.0,92.0,16.0&l=Coastlines_15m,IMERG_Precipitation_Rate,BlueMarble_ShadedRelief_Bathymetry&t=2026-11-11"
   },
   {
-   "id": "flood-2025-12-02",
+   "id": "flood-2025-12-01",
    "group": "flood",
-   "date": "2025-12-02",
-   "file": "nasa/flood-2025-12-02.jpg",
+   "date": "2025-12-01",
+   "file": "nasa/flood-2025-12-01.jpg",
    "w": 900,
-   "h": 1192,
-   "layer": "MODIS_Combined_Flood_3-Day",
-   "title": "MODIS_Combined_Flood_3-Day",
+   "h": 1221,
+   "layer": "VIIRS_Combined_Flood_3-Day",
+   "title": "VIIRS_Combined_Flood_3-Day",
    "bbox": [
-    78.9,
-    5.4,
-    82.6,
-    10.3
+    80.6,
+    7.0,
+    82.0,
+    8.9
    ],
-   "worldview": "https://worldview.earthdata.nasa.gov/?v=78.9,5.4,82.6,10.3&l=Coastlines_15m,MODIS_Combined_Flood_3-Day,BlueMarble_ShadedRelief_Bathymetry&t=2025-12-02"
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=80.6,7.0,82.0,8.9&l=Coastlines_15m,VIIRS_Combined_Flood_3-Day,BlueMarble_ShadedRelief_Bathymetry&t=2025-12-01"
   },
   {
-   "id": "flood-2025-12-04",
+   "id": "flood-2025-12-03",
    "group": "flood",
-   "date": "2025-12-04",
-   "file": "nasa/flood-2025-12-04.jpg",
+   "date": "2025-12-03",
+   "file": "nasa/flood-2025-12-03.jpg",
    "w": 900,
-   "h": 1192,
-   "layer": "MODIS_Combined_Flood_3-Day",
-   "title": "MODIS_Combined_Flood_3-Day",
+   "h": 1221,
+   "layer": "VIIRS_Combined_Flood_3-Day",
+   "title": "VIIRS_Combined_Flood_3-Day",
    "bbox": [
-    78.9,
-    5.4,
-    82.6,
-    10.3
+    80.6,
+    7.0,
+    82.0,
+    8.9
    ],
-   "worldview": "https://worldview.earthdata.nasa.gov/?v=78.9,5.4,82.6,10.3&l=Coastlines_15m,MODIS_Combined_Flood_3-Day,BlueMarble_ShadedRelief_Bathymetry&t=2025-12-04"
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=80.6,7.0,82.0,8.9&l=Coastlines_15m,VIIRS_Combined_Flood_3-Day,BlueMarble_ShadedRelief_Bathymetry&t=2025-12-03"
   },
   {
-   "id": "ndvi-2025-08-15",
+   "id": "ndvi-2025-09-01",
    "group": "ndvi",
-   "date": "2025-08-15",
-   "file": "nasa/ndvi-2025-08-15.jpg",
+   "date": "2025-09-01",
+   "file": "nasa/ndvi-2025-09-01.jpg",
    "w": 900,
    "h": 1192,
-   "layer": "MODIS_Terra_NDVI_8Day",
-   "title": "MODIS_Terra_NDVI_8Day",
+   "layer": "MODIS_Terra_L3_NDVI_Monthly",
+   "title": "MODIS_Terra_L3_NDVI_Monthly",
    "bbox": [
     78.9,
     5.4,
     82.6,
     10.3
    ],
-   "worldview": "https://worldview.earthdata.nasa.gov/?v=78.9,5.4,82.6,10.3&l=Coastlines_15m,MODIS_Terra_NDVI_8Day&t=2025-08-15"
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=78.9,5.4,82.6,10.3&l=Coastlines_15m,MODIS_Terra_L3_NDVI_Monthly&t=2025-09-01"
   },
   {
-   "id": "ndvi-2026-08-15",
+   "id": "ndvi-2026-09-01",
    "group": "ndvi",
-   "date": "2026-08-15",
-   "file": "nasa/ndvi-2026-08-15.jpg",
+   "date": "2026-09-01",
+   "file": "nasa/ndvi-2026-09-01.jpg",
    "w": 900,
    "h": 1192,
-   "layer": "MODIS_Terra_NDVI_8Day",
-   "title": "MODIS_Terra_NDVI_8Day",
+   "layer": "MODIS_Terra_L3_NDVI_Monthly",
+   "title": "MODIS_Terra_L3_NDVI_Monthly",
    "bbox": [
     78.9,
     5.4,
     82.6,
     10.3
    ],
-   "worldview": "https://worldview.earthdata.nasa.gov/?v=78.9,5.4,82.6,10.3&l=Coastlines_15m,MODIS_Terra_NDVI_8Day&t=2026-08-15"
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=78.9,5.4,82.6,10.3&l=Coastlines_15m,MODIS_Terra_L3_NDVI_Monthly&t=2026-09-01"
   },
   {
-   "id": "soil-2025-11-29",
+   "id": "soil-2025-12-01",
    "group": "soil",
-   "date": "2025-11-29",
-   "file": "nasa/soil-2025-11-29.jpg",
+   "date": "2025-12-01",
+   "file": "nasa/soil-2025-12-01.jpg",
    "w": 900,
    "h": 1192,
-   "layer": "SMAP_L4_Analyzed_Root_Zone_Soil_Moisture",
-   "title": "SMAP_L4_Analyzed_Root_Zone_Soil_Moisture",
+   "layer": "GLDAS_Underground_Soil_Moisture_Monthly",
+   "title": "GLDAS_Underground_Soil_Moisture_Monthly",
    "bbox": [
     78.9,
     5.4,
     82.6,
     10.3
    ],
-   "worldview": "https://worldview.earthdata.nasa.gov/?v=78.9,5.4,82.6,10.3&l=Coastlines_15m,SMAP_L4_Analyzed_Root_Zone_Soil_Moisture&t=2025-11-29"
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=78.9,5.4,82.6,10.3&l=Coastlines_15m,GLDAS_Underground_Soil_Moisture_Monthly&t=2025-12-01"
   },
   {
-   "id": "soil-2026-08-15",
+   "id": "soil-2026-03-01",
    "group": "soil",
-   "date": "2026-08-15",
-   "file": "nasa/soil-2026-08-15.jpg",
+   "date": "2026-03-01",
+   "file": "nasa/soil-2026-03-01.jpg",
    "w": 900,
    "h": 1192,
-   "layer": "SMAP_L4_Analyzed_Root_Zone_Soil_Moisture",
-   "title": "SMAP_L4_Analyzed_Root_Zone_Soil_Moisture",
+   "layer": "GLDAS_Underground_Soil_Moisture_Monthly",
+   "title": "GLDAS_Underground_Soil_Moisture_Monthly",
    "bbox": [
     78.9,
     5.4,
     82.6,
     10.3
    ],
-   "worldview": "https://worldview.earthdata.nasa.gov/?v=78.9,5.4,82.6,10.3&l=Coastlines_15m,SMAP_L4_Analyzed_Root_Zone_Soil_Moisture&t=2026-08-15"
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=78.9,5.4,82.6,10.3&l=Coastlines_15m,GLDAS_Underground_Soil_Moisture_Monthly&t=2026-03-01"
+  },
+  {
+   "id": "soil-2026-06-01",
+   "group": "soil",
+   "date": "2026-06-01",
+   "file": "nasa/soil-2026-06-01.jpg",
+   "w": 900,
+   "h": 1192,
+   "layer": "GLDAS_Underground_Soil_Moisture_Monthly",
+   "title": "GLDAS_Underground_Soil_Moisture_Monthly",
+   "bbox": [
+    78.9,
+    5.4,
+    82.6,
+    10.3
+   ],
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=78.9,5.4,82.6,10.3&l=Coastlines_15m,GLDAS_Underground_Soil_Moisture_Monthly&t=2026-06-01"
+  },
+  {
+   "id": "landslide-hazard",
+   "group": "hazard",
+   "date": "2000-01-01",
+   "file": "nasa/landslide-hazard.jpg",
+   "w": 900,
+   "h": 1192,
+   "layer": "NDH_Landslide_Hazard_Distribution_2000",
+   "title": "NDH_Landslide_Hazard_Distribution_2000",
+   "bbox": [
+    78.9,
+    5.4,
+    82.6,
+    10.3
+   ],
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=78.9,5.4,82.6,10.3&l=Coastlines_15m,NDH_Landslide_Hazard_Distribution_2000,BlueMarble_ShadedRelief_Bathymetry&t=2000-01-01"
   }
  ]
 }

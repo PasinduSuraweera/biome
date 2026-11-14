@@ -1,0 +1,131 @@
+{
+ "source": "NASA NASADEM_HGT v001 (Shuttle Radar Topography Mission), 30 m",
+ "steep_degrees": 15.0,
+ "districts": {
+  "Ampara": {
+   "steep_share": 0.048,
+   "mean_elev_m": 65,
+   "max_elev_m": 825
+  },
+  "Anuradhapura": {
+   "steep_share": 0.008,
+   "mean_elev_m": 98,
+   "max_elev_m": 713
+  },
+  "Badulla": {
+   "steep_share": 0.378,
+   "mean_elev_m": 611,
+   "max_elev_m": 2295
+  },
+  "Batticaloa": {
+   "steep_share": 0.008,
+   "mean_elev_m": 24,
+   "max_elev_m": 380
+  },
+  "Colombo": {
+   "steep_share": 0.064,
+   "mean_elev_m": 35,
+   "max_elev_m": 410
+  },
+  "Galle": {
+   "steep_share": 0.195,
+   "mean_elev_m": 72,
+   "max_elev_m": 806
+  },
+  "Gampaha": {
+   "steep_share": 0.031,
+   "mean_elev_m": 34,
+   "max_elev_m": 301
+  },
+  "Hambantota": {
+   "steep_share": 0.022,
+   "mean_elev_m": 47,
+   "max_elev_m": 814
+  },
+  "Jaffna": {
+   "steep_share": 0.0,
+   "mean_elev_m": 5,
+   "max_elev_m": 23
+  },
+  "Kalutara": {
+   "steep_share": 0.206,
+   "mean_elev_m": 63,
+   "max_elev_m": 671
+  },
+  "Kandy": {
+   "steep_share": 0.46,
+   "mean_elev_m": 658,
+   "max_elev_m": 1822
+  },
+  "Kegalle": {
+   "steep_share": 0.445,
+   "mean_elev_m": 265,
+   "max_elev_m": 1927
+  },
+  "Kilinochchi": {
+   "steep_share": 0.0,
+   "mean_elev_m": 10,
+   "max_elev_m": 55
+  },
+  "Kurunegala": {
+   "steep_share": 0.051,
+   "mean_elev_m": 97,
+   "max_elev_m": 1058
+  },
+  "Mannar": {
+   "steep_share": 0.0,
+   "mean_elev_m": 28,
+   "max_elev_m": 99
+  },
+  "Matale": {
+   "steep_share": 0.283,
+   "mean_elev_m": 343,
+   "max_elev_m": 1860
+  },
+  "Matara": {
+   "steep_share": 0.251,
+   "mean_elev_m": 153,
+   "max_elev_m": 1216
+  },
+  "Monaragala": {
+   "steep_share": 0.113,
+   "mean_elev_m": 162,
+   "max_elev_m": 1497
+  },
+  "Mullaitivu": {
+   "steep_share": 0.0,
+   "mean_elev_m": 38,
+   "max_elev_m": 92
+  },
+  "Nuwara Eliya": {
+   "steep_share": 0.508,
+   "mean_elev_m": 1287,
+   "max_elev_m": 2502
+  },
+  "Polonnaruwa": {
+   "steep_share": 0.025,
+   "mean_elev_m": 73,
+   "max_elev_m": 526
+  },
+  "Puttalam": {
+   "steep_share": 0.0,
+   "mean_elev_m": 29,
+   "max_elev_m": 200
+  },
+  "Ratnapura": {
+   "steep_share": 0.384,
+   "mean_elev_m": 376,
+   "max_elev_m": 2174
+  },
+  "Trincomalee": {
+   "steep_share": 0.012,
+   "mean_elev_m": 29,
+   "max_elev_m": 244
+  },
+  "Vavuniya": {
+   "steep_share": 0.0,
+   "mean_elev_m": 74,
+   "max_elev_m": 178
+  }
+ }
+}
