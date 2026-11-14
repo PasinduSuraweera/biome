@@ -51,6 +51,10 @@ def get_map(layer_list, bbox, when, width, path, fmt="image/jpeg"):
     if r.status_code != 200 or not r.headers.get("content-type", "").startswith("image"):
         print(f"  FAILED {path.name}: {r.status_code} {r.text[:300]}")
         return None
+    if len(r.content) < 30_000:
+        print(f"  blank {path.name} ({len(r.content) // 1024} KB), skipped")
+        path.unlink(missing_ok=True)
+        return None
     path.write_bytes(r.content)
     print(f"  saved {path.name} {len(r.content) // 1024} KB ({width}x{h})")
     return {"w": width, "h": h}
@@ -67,28 +71,35 @@ BASE = ["BlueMarble_ShadedRelief_Bathymetry", "BlueMarble_NextGeneration"]
 COAST = ["Coastlines_15m", "Reference_Features_15m"]
 
 
+RECENT = ["VIIRS_NOAA20_CorrectedReflectance_TrueColor", "MODIS_Terra_CorrectedReflectance_TrueColor",
+          "VIIRS_SNPP_CorrectedReflectance_TrueColor"]
+RAIN = ["IMERG_Precipitation_Rate"]
+EAST = (80.6, 7.0, 82.0, 8.9)       # Mahaweli flood plain and the east coast
+
+
 def wanted():
     today = date.today()
     out = []
     for d in ["2025-11-26", "2025-11-27", "2025-11-28", "2025-11-29"]:
-        out.append({"id": f"ditwah-{d}", "group": "ditwah", "date": d, "bbox": WIDE, "width": 1200,
-                    "layers": [TRUE, COAST]})
+        out.append({"id": f"ditwah-{d}", "group": "ditwah", "date": d, "bbox": WIDE, "width": 1200, "layers": [TRUE, COAST]})
         out.append({"id": f"ditwah-rain-{d}", "group": "ditwah_rain", "date": d, "bbox": WIDE, "width": 1200,
-                    "layers": [BASE, ["IMERG_Precipitation_Rate", "IMERG_Precipitation_Rate_30min"], COAST]})
+                    "layers": [BASE, RAIN, COAST]})
     for k in (1, 2, 3):
         d = (today - timedelta(days=k)).isoformat()
-        out.append({"id": f"now-{k}", "group": "now", "date": d, "bbox": WIDE, "width": 1200, "layers": [TRUE, COAST]})
+        out.append({"id": f"now-{k}", "group": "now", "date": d, "bbox": WIDE, "width": 1200, "layers": [RECENT, COAST]})
         out.append({"id": f"now-rain-{k}", "group": "now_rain", "date": d, "bbox": WIDE, "width": 1200,
-                    "layers": [BASE, ["IMERG_Precipitation_Rate", "IMERG_Precipitation_Rate_30min"], COAST]})
-    for d in ["2025-12-02", "2025-12-04"]:
-        out.append({"id": f"flood-{d}", "group": "flood", "date": d, "bbox": ISLAND, "width": 900,
-                    "layers": [BASE, ["MODIS_Combined_Flood_3-Day", "MODIS_Combined_Flood_2-Day", "VIIRS_Combined_Flood_3-Day"], COAST]})
-    for d in ["2025-08-15", "2026-08-15"]:
+                    "layers": [BASE, RAIN, COAST]})
+    for d in ["2025-12-01", "2025-12-03"]:
+        out.append({"id": f"flood-{d}", "group": "flood", "date": d, "bbox": EAST, "width": 900,
+                    "layers": [BASE, ["VIIRS_Combined_Flood_3-Day", "MODIS_Combined_Flood_3-Day"], COAST]})
+    for d in ["2025-09-01", "2026-09-01"]:
         out.append({"id": f"ndvi-{d}", "group": "ndvi", "date": d, "bbox": ISLAND, "width": 900,
-                    "layers": [["MODIS_Terra_NDVI_8Day", "MODIS_Terra_L3_NDVI_16Day", "MODIS_Terra_L3_NDVI_Monthly"], COAST]})
-    for d in ["2025-11-29", "2026-08-15"]:
+                    "layers": [["MODIS_Terra_L3_NDVI_Monthly"], COAST]})
+    for d in ["2025-12-01", "2026-03-01", "2026-06-01"]:
         out.append({"id": f"soil-{d}", "group": "soil", "date": d, "bbox": ISLAND, "width": 900,
-                    "layers": [["SMAP_L4_Analyzed_Root_Zone_Soil_Moisture", "SMAP_L4_Analyzed_Surface_Soil_Moisture"], COAST]})
+                    "layers": [["GLDAS_Underground_Soil_Moisture_Monthly"], COAST]})
+    out.append({"id": "landslide-hazard", "group": "hazard", "date": "2000-01-01", "bbox": ISLAND, "width": 900,
+                "layers": [BASE, ["NDH_Landslide_Hazard_Distribution_2000"], COAST]})
     return out
 
 
@@ -101,6 +112,9 @@ def main():
     if "--layers" in sys.argv:
         return
     OUT.mkdir(parents=True, exist_ok=True)
+    for old in OUT.glob("*.jpg"):
+        if old.name != "terrain.jpg":
+            old.unlink()
     index = []
     for w in wanted():
         chosen = [pick(layers, c) for c in w["layers"]]

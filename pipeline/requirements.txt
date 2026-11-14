@@ -9,3 +9,4 @@ shapely>=2.0
 scipy>=1.11
 pymannkendall>=1.4.3
 requests>=2.31
+pillow

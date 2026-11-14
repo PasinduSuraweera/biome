@@ -772,6 +772,15 @@ def main():
         districts[d]["outlook"] = outlook(d, rain_all, rnorm, analog, y0_now, start,
                                           calendar["district"].get(d), kind_now)
 
+    # ensemble outlook model: chance of each Watch for every month of the coming year
+    import forecast as fc
+    prev = {}
+    for d in districts:
+        sf = districts[d]["so_far"]
+        last = [rain1[d].iloc[-2], rain1[d].iloc[-1]] if not sf else [rain1[d].iloc[-1], sf["rain_pct"]]
+        prev[d] = [float(v) if _ok(v) else 100.0 for v in last]
+    forecast = _safe(fc.build, rain_all, oni, start, rnorm, rain3, prev, flag_for, HILL_DISTRICTS, PROVINCES)
+
     counts = pd.Series([v["watch"] for v in districts.values()]).value_counts().to_dict()
     out = {
         "meta": {
@@ -791,6 +800,7 @@ def main():
         "calendar": {"years": [full_years[0], full_years[-1]] if full_years else None,
                      "year_types": {str(y): t for y, t in types.items()},
                      "provinces": PROVINCES, **calendar},
+        "forecast": forecast,
         "reservoirs": _safe(reservoirs, rain1),
         "rivers": _safe(river_gauges),
         "validation": {"stations": station_check(rain, rain1)},
