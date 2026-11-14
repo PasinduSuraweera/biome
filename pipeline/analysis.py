@@ -120,10 +120,15 @@ def percentile_of(df, start=CLIM_START, end=CLIM_END):
 
 # ------------------------------------------------------------------ El Nino
 
-def el_nino_events(oni_path=PROCESSED / "oni.csv"):
-    """NOAA rule: 5+ overlapping seasons with ONI >= 0.5. Year 0 = year of the peak's onset."""
+def el_nino_events(oni_path=PROCESSED / "oni.csv", kind="el_nino"):
+    """NOAA rule: 5+ overlapping seasons with ONI >= 0.5 (El Nino) or <= -0.5 (La Nina).
+
+    Year 0 = the calendar year in which the event builds towards its peak.
+    """
     oni = pd.read_csv(oni_path, parse_dates=["time"]).set_index("time")["oni"]
-    warm = oni >= 0.5
+    sign = 1 if kind == "el_nino" else -1
+    s = oni * sign  # La Nina becomes positive so one code path handles both
+    warm = s >= 0.5
     events, run = [], []
     for t, w in warm.items():
         if w:
@@ -132,19 +137,20 @@ def el_nino_events(oni_path=PROCESSED / "oni.csv"):
             if len(run) >= 5:
                 events.append(run)
             run = []
-    ongoing = len(run) > 0
-    if len(run) >= 5 or (ongoing and len(run) >= 3):  # an event still building counts as current
+    current_run = None
+    if len(run) >= 3:  # an event still building at the end of the record counts as current
         events.append(run)
+        current_run = run
     out = []
     for r in events:
-        peak_t = oni.loc[r].idxmax()
-        peak = float(oni.loc[r].max())
+        peak_t = s.loc[r].idxmax()
+        peak = float(s.loc[r].max())
         y0 = peak_t.year if peak_t.month >= 6 else peak_t.year - 1
-        out.append({"year0": int(y0), "start": r[0].strftime("%Y-%m"), "end": r[-1].strftime("%Y-%m"),
-                    "peak": round(peak, 2), "peak_season": peak_t.strftime("%Y-%m"),
+        out.append({"kind": kind, "year0": int(y0), "start": r[0].strftime("%Y-%m"), "end": r[-1].strftime("%Y-%m"),
+                    "peak": round(sign * peak, 2), "peak_season": peak_t.strftime("%Y-%m"),
                     "strength": "very strong" if peak >= 2.0 else "strong" if peak >= 1.5
                     else "moderate" if peak >= 1.0 else "weak",
-                    "ongoing": bool(ongoing and r is events[-1])})
+                    "ongoing": r is current_run})
     return out, oni
 
 

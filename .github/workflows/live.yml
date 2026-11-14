@@ -1,0 +1,44 @@
+name: Refresh live reservoirs and rivers
+
+# NOAA El Nino index and rain gauges, Irrigation Department reservoirs,
+# river gauges and the Nov 2025 flood map. No login needed. Runs every
+# 3 hours so the river gauge archive keeps growing past the 7-day feed.
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/live.yml
+      - pipeline/fetch_irrigation.py
+      - pipeline/fetch_ground.py
+  schedule:
+    - cron: "15 */3 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: commit-data
+  cancel-in-progress: false
+
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11", cache: pip, cache-dependency-path: pipeline/requirements.txt }
+      - run: pip install -r pipeline/requirements.txt
+      - name: Download
+        working-directory: pipeline
+        run: |
+          python fetch_ground.py
+          python fetch_irrigation.py
+      - name: Commit
+        run: |
+          git config user.name "PasinduSuraweera"
+          git config user.email "pasisuraweera2003@gmail.com"
+          git add data/processed web/public/data
+          git diff --cached --quiet || git commit -m "Live data $(date -u +%Y-%m-%dT%H:%M)"
+          for i in 1 2 3; do git pull --rebase origin main && git push && break; sleep 10; done

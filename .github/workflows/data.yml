@@ -1,15 +1,15 @@
 name: Refresh data
 
-# Downloads NASA, NOAA and Irrigation Department data on GitHub's servers,
-# runs the Biome analysis and commits the results back to the repo.
+# Downloads NASA data on GitHub's servers, runs the Biome analysis and
+# commits the results. Live reservoir/river data and MODIS greenness have
+# their own workflows (live.yml, modis.yml) and are picked up from the repo.
 # Needs two repository secrets: EARTHDATA_USERNAME and EARTHDATA_PASSWORD.
 
 on:
   workflow_dispatch:
-    inputs:
-      datasets:
-        description: "NASA datasets (comma separated)"
-        default: "imerg_final,imerg_late_daily,gldas,merra2_flx,merra2_lnd"
+  push:
+    paths:
+      - .github/data-refresh.txt
   schedule:
     - cron: "30 1 * * *"   # daily, 07:00 in Sri Lanka
 
@@ -21,26 +21,6 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  ground:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: { python-version: "3.11", cache: pip, cache-dependency-path: pipeline/requirements.txt }
-      - run: pip install -r pipeline/requirements.txt
-      - name: NOAA El Nino index and rain gauges, Irrigation Department reservoirs and rivers
-        working-directory: pipeline
-        run: |
-          python fetch_ground.py
-          python fetch_irrigation.py
-      - uses: actions/upload-artifact@v4
-        with:
-          name: ground
-          path: |
-            data/processed/*.csv
-            web/public/data/flood_nov2025.geojson
-
   nasa:
     runs-on: ubuntu-latest
     timeout-minutes: 300
@@ -53,14 +33,13 @@ jobs:
       - uses: actions/setup-python@v5
         with: { python-version: "3.11", cache: pip, cache-dependency-path: pipeline/requirements.txt }
       - run: pip install -r pipeline/requirements.txt
-      - name: Cache granule results (resume after a failure)
+      - name: Cache granule results (resume, and skip months already done)
         uses: actions/cache@v4
         with:
           path: data/raw/${{ matrix.dataset }}
           key: raw-${{ matrix.dataset }}-${{ github.run_id }}
           restore-keys: raw-${{ matrix.dataset }}-
       - name: Download ${{ matrix.dataset }}
-        if: contains(github.event.inputs.datasets || 'imerg_final,imerg_late_daily,gldas,merra2_flx,merra2_lnd', matrix.dataset)
         working-directory: pipeline
         env:
           EARTHDATA_USERNAME: ${{ secrets.EARTHDATA_USERNAME }}
@@ -73,44 +52,24 @@ jobs:
           path: data/processed/${{ matrix.dataset }}.csv
           if-no-files-found: warn
 
-  modis:
-    runs-on: ubuntu-latest
-    timeout-minutes: 200
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: { python-version: "3.11", cache: pip, cache-dependency-path: pipeline/requirements.txt }
-      - run: pip install -r pipeline/requirements.txt
-      - name: MODIS greenness through AppEEARS (submit, wait, download)
-        working-directory: pipeline
-        env:
-          EARTHDATA_USERNAME: ${{ secrets.EARTHDATA_USERNAME }}
-          EARTHDATA_PASSWORD: ${{ secrets.EARTHDATA_PASSWORD }}
-        run: python fetch_modis.py wait
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: modis
-          path: data/processed/modis_ndvi.csv
-          if-no-files-found: warn
-
   analyze:
-    needs: [ground, nasa, modis]
+    needs: [nasa]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+        with: { ref: main }
       - uses: actions/setup-python@v5
         with: { python-version: "3.11", cache: pip, cache-dependency-path: pipeline/requirements.txt }
       - run: pip install -r pipeline/requirements.txt
       - uses: actions/download-artifact@v4
-        with: { path: artifacts }
-      - name: Gather downloaded files
+        with: { path: artifacts, pattern: nasa-* }
+      - name: Gather NASA files (live data and MODIS already in the repo)
         run: |
-          mkdir -p data/processed web/public/data
+          git pull --rebase origin main
+          mkdir -p data/processed
           find artifacts -name '*.csv' -exec cp {} data/processed/ \;
-          find artifacts -name '*.geojson' -exec cp {} web/public/data/ \;
           ls -la data/processed
       - name: Run analysis
         working-directory: pipeline
@@ -121,4 +80,4 @@ jobs:
           git config user.email "pasisuraweera2003@gmail.com"
           git add data/processed web/public/data
           git diff --cached --quiet || git commit -m "Data refresh $(date -u +%Y-%m-%d)"
-          git pull --rebase origin main && git push
+          for i in 1 2 3; do git pull --rebase origin main && git push && break; sleep 10; done

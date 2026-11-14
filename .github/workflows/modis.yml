@@ -1,0 +1,48 @@
+name: Refresh MODIS greenness
+
+# AppEEARS cuts the Sri Lanka box out on NASA's side; processing can take
+# 30 minutes to 3 hours, so this runs on its own and commits when done.
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/modis-refresh.txt
+  schedule:
+    - cron: "0 20 * * 0"   # weekly, Monday 01:30 in Sri Lanka
+
+permissions:
+  contents: write
+
+concurrency:
+  group: modis
+  cancel-in-progress: false
+
+jobs:
+  modis:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11", cache: pip, cache-dependency-path: pipeline/requirements.txt }
+      - run: pip install -r pipeline/requirements.txt
+      - name: Submit, wait, download
+        working-directory: pipeline
+        env:
+          EARTHDATA_USERNAME: ${{ secrets.EARTHDATA_USERNAME }}
+          EARTHDATA_PASSWORD: ${{ secrets.EARTHDATA_PASSWORD }}
+        run: python fetch_modis.py wait
+      - name: Re-run analysis with greenness and commit
+        run: |
+          git config user.name "PasinduSuraweera"
+          git config user.email "pasisuraweera2003@gmail.com"
+          git add data/processed/modis_ndvi.csv
+          git diff --cached --quiet || git commit -m "MODIS greenness $(date -u +%Y-%m-%d)"
+          for i in 1 2 3; do git pull --rebase origin main && git push && break; sleep 10; done
+          if [ -f data/processed/imerg_final.csv ]; then
+            (cd pipeline && python analysis.py)
+            git add web/public/data
+            git diff --cached --quiet || git commit -m "Analysis with MODIS greenness"
+            for i in 1 2 3; do git pull --rebase origin main && git push && break; sleep 10; done
+          fi
