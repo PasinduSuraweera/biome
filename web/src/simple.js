@@ -10,7 +10,7 @@ const NOW_STYLE = {
   SlopeWatch: { bg: "#7d2e1c", fg: "#ffffff" }, FloodWatch: { bg: "#2b7c8a", fg: "#ffffff" },
   DryWatch: { bg: "#d9a441", fg: "#2a1e05" }, Clear: { bg: "#d8ddd6", fg: "#16201f" },
 };
-const SIGN_STYLE = { dry: { bg: "#e3b85c", fg: "#2a1e05" }, normal: { bg: "#e4e6e0", fg: "#4a5552" }, wet: { bg: "#23687a", fg: "#ffffff" } };
+const SIGN_STYLE = { dry: { bg: "#e3b85c", fg: "#2a1e05" }, normal: { bg: "#e4e6e0", fg: "#4a5552" }, wet: { bg: "#23687a", fg: "#ffffff" }, mixed: { bg: "#f1dba6", fg: "#16201f", bg2: "#b9d6dc" } };
 const SIGN = { much_drier: "dry", drier: "dry", normal: "normal", wetter: "wet", much_wetter: "wet" };
 const GAUGE_HOT = ["alert", "minor flood", "major flood"];
 
@@ -62,7 +62,8 @@ function fcMonths(DATA, name) {
   const sig = F.skill.signal;
   const months = F.months.map((ym, i) => ({
     month: ym, signal: sig[i], median: x.median[i],
-    sign: !sig[i] ? "normal" : x.p_dry[i] >= 0.5 ? "dry" : x.p_wet[i] >= 0.5 ? "wet" : "normal",
+    // dry or wet when that is more likely than not; "mixed" when past years split both ways
+    sign: !sig[i] ? "normal" : x.p_dry[i] >= 0.5 ? "dry" : x.p_wet[i] >= 0.5 ? "wet" : (1 - x.p_dry[i] - x.p_wet[i]) >= 0.4 ? "normal" : "mixed",
   }));
   return { F, x, months };
 }
@@ -78,9 +79,12 @@ function fcRuns(fc, upto) {
     const nm = x.normal_mm.slice(r.i, r.j + 1), tot = nm.reduce((a, b) => a + b, 0) || 1;
     const totals = x.members.map((row) => row.slice(r.i, r.j + 1).reduce((a, v, k) => a + v * nm[k], 0) / tot);
     r.pct = wMedian(totals, F.weights);
-    r.level = r.sign === "normal" ? "normal" : levelOf(r.pct);
-    if (SIGN[r.level] !== r.sign) r.level = r.sign === "dry" ? "drier" : "wetter";
-    r.p = totals.reduce((a, v, k) => a + ((r.sign === "dry" ? v < 85 : v > 115) ? F.weights[k] : 0), 0);
+    r.level = r.sign === "normal" || r.sign === "mixed" ? "normal" : levelOf(r.pct);
+    if (r.sign === "dry" && SIGN[r.level] !== "dry") r.level = "drier";
+    if (r.sign === "wet" && SIGN[r.level] !== "wet") r.level = "wetter";
+    r.pDry = totals.reduce((a, v, k) => a + (v < 85 ? F.weights[k] : 0), 0);
+    r.pWet = totals.reduce((a, v, k) => a + (v > 115 ? F.weights[k] : 0), 0);
+    r.p = r.sign === "dry" ? r.pDry : r.pWet;
   }
   return out;
 }
@@ -117,11 +121,19 @@ export function buildReport(name, view, DATA, SAFE) {
     for (const h of [1, 3, 6]) {
       const rs = fcRuns(fc, h);
       const lines = rs.map((r) => {
-        const what = r.sign === "normal" ? t(r.signal ? "lv_normal" : "lv_unclear") : t(`lv_${r.level}`);
+        const what = r.sign === "mixed" ? t("lv_mixed") : r.sign === "normal" ? t(r.signal ? "lv_normal" : "lv_unclear") : t(`lv_${r.level}`);
         const head = h === 1 ? `${what}.` : `${what}: ${span(months, r.i, r.j)}.`;
+        if (r.sign === "mixed") return `${head} ${t("mixed_odds", { a: in10(r.pDry), b: in10(r.pWet) })}`;
         return r.sign !== "normal" ? `${head} ${t("chance", { x: in10(r.p) })}` : head;
       });
-      const signs = [...new Set(rs.map((r) => r.sign))].filter((sg) => sg !== "normal");
+      // a Watch that is more likely than not in these months, such as a drought that carries on
+      for (const w of ["SlopeWatch", "FloodWatch", "DryWatch"]) {
+        const ms = months.slice(0, h).map((mo, i) => ({ mo, p: x.watch[w][i] })).filter((q) => q.mo.signal && q.p >= 0.5)
+          .map((q) => `${mLong(q.mo.month)} (${t("in10", { x: in10(q.p) })})`).join(", ");
+        if (ms) lines.push(t(`fc_${w}`, { m: ms }));
+      }
+      const signs = [...new Set(rs.map((r) => r.sign))].filter((sg) => sg === "dry" || sg === "wet");
+      if (!signs.includes("dry") && months.slice(0, h).some((mo, i) => mo.signal && x.watch.DryWatch[i] >= 0.5)) signs.push("dry");
       periods.push({ label: t(`h_${h}`), range: span(months, 0, h - 1), strip: stripF(h), lines, adv: signs.map((sg) => t(`adv_${aud}_${sg}`)) });
     }
     const by = (sign, dir) => months.map((m, i) => ({ m, i })).filter((q) => q.m.sign === sign)
@@ -228,7 +240,7 @@ export function wireAlerts(m) {
 }
 
 export function reportHTML(m) {
-  const key = ["dry", "normal", "wet"].map((s) => `<span><i class="mo ${s}"></i>${esc(t(`${m.modelled ? "kf" : "k"}_${s}`))}</span>`).join("");
+  const key = (m.modelled ? ["dry", "wet", "mixed", "normal"] : ["dry", "normal", "wet"]).map((s) => `<span><i class="mo ${s}"></i>${esc(t(`${m.modelled ? "kf" : "k"}_${s}`))}</span>`).join("");
   const tag = (x) => (x ? ` <span class="nasa-tag">${esc(x)}</span>` : "");
   return `
   <div class="simple" id="report">
@@ -343,13 +355,20 @@ function draw(m, logo, dry) {
   text(m.basis, `400 26px ${BODY}`, "#4a5552");
   y += 12;
   // colour key
+  const box = (st, x, yy, w, h, r) => {
+    rounded(ctx, x, yy, w, h, r, st.bg);
+    if (st.bg2) { ctx.save(); ctx.beginPath(); ctx.moveTo(x + w, yy); ctx.lineTo(x + w, yy + h); ctx.lineTo(x, yy + h); ctx.closePath(); ctx.clip(); rounded(ctx, x, yy, w, h, r, st.bg2); ctx.restore(); }
+  };
   let kx = P;
-  for (const s of ["dry", "normal", "wet"]) {
-    rounded(ctx, kx, y + 4, 30, 30, 6, SIGN_STYLE[s].bg);
-    ctx.font = `500 26px ${BODY}`; ctx.fillStyle = "#16201f";
+  for (const s of (m.modelled ? ["dry", "wet", "mixed", "normal"] : ["dry", "normal", "wet"])) {
     const kl = t(`${m.modelled ? "kf" : "k"}_${s}`);
+    ctx.font = `500 26px ${BODY}`;
+    const kw = 40 + ctx.measureText(kl).width + 30;
+    if (kx + kw > W - P && kx > P) { kx = P; y += 44; }
+    box(SIGN_STYLE[s], kx, y + 4, 30, 30, 6);
+    ctx.fillStyle = "#16201f";
     ctx.fillText(kl, kx + 40, y + 2);
-    kx += 40 + ctx.measureText(kl).width + 30;
+    kx += kw;
   }
   y += 56;
 
@@ -366,7 +385,7 @@ function draw(m, logo, dry) {
     const n = p.strip.length, gap = 6, bw = Math.min(150, (IW - gap * (n - 1)) / n);
     p.strip.forEach((s, i) => {
       const st = SIGN_STYLE[s.sign], bx = P + 32 + i * (bw + gap);
-      rounded(ctx, bx, y, bw, 56, 8, st.bg);
+      box(st, bx, y, bw, 56, 8);
       ctx.font = `600 24px ${BODY}`; ctx.fillStyle = st.fg; ctx.textAlign = "center";
       ctx.fillText(s.lab, bx + bw / 2, y + 14); ctx.textAlign = "left";
     });

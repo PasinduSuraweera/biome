@@ -305,3 +305,4 @@ table.cal th .muted { font-weight: 400; }
 a.btn { display: inline-flex; align-items: center; text-decoration: none; }
 .alerts .disc { margin-top: 10px; }
 @media print { .alerts { display: none !important; } }
+.mo.mixed { background: linear-gradient(135deg, #f1dba6 50%, #b9d6dc 50%); color: var(--ink); }

@@ -289,4 +289,7 @@ export const S = {
   al_official: ["This is a heads-up from NASA satellite data, not an official order. Follow DMC (call 117) and NBRO.",
     "මෙය NASA චන්ද්‍රිකා දත්ත මත පදනම් වූ පූර්ව දැනුම්දීමකි, නිල නියෝගයක් නොවේ. DMC (117 අමතන්න) සහ NBRO අනුගමනය කරන්න.",
     "இது NASA செயற்கைக்கோள் தரவிலிருந்து ஒரு முன்னறிவிப்பு, அதிகாரப்பூர்வ உத்தரவு அல்ல. DMC (117 ஐ அழையுங்கள்), NBRO ஆகியவற்றைப் பின்பற்றுங்கள்."],
+  lv_mixed: ["It could go either way", "දෙපැත්තටම විය හැක", "இரு வகையிலும் அமையலாம்"],
+  mixed_odds: ["Drier: {a} in 10. Wetter: {b} in 10.", "වියළි: 10න් {a}. වැඩි වැසි: 10න් {b}.", "வறட்சி: 10 இல் {a}. அதிக மழை: 10 இல் {b}."],
+  kf_mixed: ["Could go either way", "දෙපැත්තටම විය හැක", "இரு வகையிலும் அமையலாம்"],
 };

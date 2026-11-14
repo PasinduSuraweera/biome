@@ -430,7 +430,7 @@ def daily_levels(districts, rain1, rain3, wet3):
         replay.append(row)
     counts = pd.Series([v.get("level", {}).get("level", 0) for v in districts.values()]).value_counts().to_dict()
     return {"rule": LEVEL_RULE, "day": last.strftime("%Y-%m-%d"), "counts": {str(k): int(n) for k, n in counts.items()},
-            "ditwah_replay": replay, "bot": os.environ.get("BIOME_BOT", "") or None}
+            "ditwah_replay": replay, "bot": os.environ.get("BIOME_BOT") or "biomealertsbot"}
 
 
 def _ok(x):
