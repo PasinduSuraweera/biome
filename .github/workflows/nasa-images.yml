@@ -42,6 +42,6 @@ jobs:
         run: |
           git config user.name "PasinduSuraweera"
           git config user.email "pasisuraweera2003@gmail.com"
-          git add web/public/nasa web/public/data/safe_centres.json data/processed/terrain.json || true
+          for f in web/public/nasa web/public/data/safe_centres.json data/processed/terrain.json; do git add "$f" 2>/dev/null || true; done
           git diff --cached --quiet || git commit -m "NASA images $(date -u +%Y-%m-%d)"
           for i in 1 2 3; do git pull --rebase origin main && git push && break; sleep 10; done
