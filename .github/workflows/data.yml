@@ -71,9 +71,23 @@ jobs:
           mkdir -p data/processed
           find artifacts -name '*.csv' -exec cp {} data/processed/ \;
           ls -la data/processed
+      - name: Candidate evacuation centres (OpenStreetMap)
+        continue-on-error: true
+        working-directory: pipeline
+        run: python fetch_places.py
       - name: Run analysis
         working-directory: pipeline
-        run: python analysis.py
+        run: |
+          git show HEAD:web/public/data/biome.json > /tmp/previous_biome.json 2>/dev/null || echo '{}' > /tmp/previous_biome.json
+          python analysis.py
+      - name: Alerts for districts that moved up a Watch level
+        continue-on-error: true
+        working-directory: pipeline
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          BIOME_SITE_URL: ${{ vars.BIOME_SITE_URL }}
+        run: python alerts.py /tmp/previous_biome.json ../web/public/data/biome.json
       - name: Commit results
         run: |
           git config user.name "PasinduSuraweera"
