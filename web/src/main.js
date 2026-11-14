@@ -2,7 +2,7 @@ import "./style.css";
 import { geoArea, geoMercator, geoPath } from "d3-geo";
 import * as Plot from "@observablehq/plot";
 import { LANGS, t, dName, pName, monthName, getLang, setLang } from "./i18n.js";
-import { VIEWS, COASTAL, buildReport, reportHTML, downloadPNG } from "./simple.js";
+import { VIEWS, COASTAL, buildReport, reportHTML, downloadPNG, wireAlerts } from "./simple.js";
 import { loadNasa, renderGallery, renderMissions, centreMap } from "./nasa.js";
 
 const WATCH = {
@@ -206,6 +206,7 @@ function renderSimple(name) {
   const model = buildReport(name, view, DATA, SAFE);
   $("#panel").innerHTML = reportHTML(model);
   if ($("#cmap-slot")) $("#cmap-slot").innerHTML = centreMap(name, GEO, SAFE);
+  wireAlerts(model);
   $("#dl-png").addEventListener("click", () => downloadPNG(model));
   $("#dl-pdf").addEventListener("click", () => window.print());
 }
@@ -222,6 +223,7 @@ function renderPanel(name) {
     <h2>${esc(dName(name))}</h2>
     <p class="sub">${esc(d.hill ? t("hill") : t("district"))} · ${esc(monthName(d.flag_month))}${esc(early)}</p>
     <span class="badge ${d.watch}">${esc(watchLabel(d.watch))}</span>
+    ${d.level ? `<p class="lv-line l${d.level.level}"><i class="lv-dot"></i><b>${esc(t("lvl_" + d.level.level))}</b>${d.level.hazard ? ` (${esc(t("hz_" + d.level.hazard))})` : ""} · ${esc(t("lvl_rain", { a: r0(d.level.rain_1d), b: r0(d.level.rain_3d), d: d.level.day }))}</p>` : ""}
     <p class="reason">${esc(reasonText(d))}</p>
     ${d.next ? `<p class="next">${esc(t("next", { n: d.next.months.length, p: r0(d.next.rain_pct) }))}</p>` : ""}
     <p class="meta-line">${esc(soilNote)}${esc(t("not_forecast"))}</p>
@@ -407,6 +409,23 @@ function renderHow() {
       <li>Risk calendar: the Watch rules applied to every month from ${esc(DATA.calendar?.years?.[0] ?? "")} (MERRA-2 before 2001, NASA satellites after).</li>
       <li>Reservoirs: each reservoir's monthly change in storage compared with NASA rain over its district${R?.median_r_rain_vs_storage != null ? ` (median correlation ${R.median_r_rain_vs_storage})` : ""}.</li>
     </ol>
+    ${DATA.forecast ? `<h3>The outlook model and risk calendar</h3>
+    <p>The outlook is a weighted analog ensemble. Every year from ${DATA.forecast.train_years[0]} to ${DATA.forecast.train_years[1]} is one possible future: the rain that really fell over the following 12 months (NASA MERRA-2 before 2001, NASA GPM IMERG after). Each year is weighted by how close its ocean state (NOAA ONI in ${esc(monthName(DATA.forecast.issue_month))}) was to today's ${DATA.forecast.oni}, with a Gaussian kernel whose width (${DATA.forecast.kernel_width}) is chosen by cross-validation. The Watch rules run on every member; the weighted share on a Watch is the chance in the calendar. The years that count most now: ${DATA.forecast.closest_years.slice(0, 5).map((y) => `${y.year} (${Math.round(y.weight * 100)}%)`).join(", ")}; the weights are worth about ${DATA.forecast.effective_members} equally weighted years.</p>
+    <p>Skill is measured by leaving each year out, forecasting it from the others and scoring the three-category forecast (drier, usual, wetter) with the ranked probability skill score against equal odds. Over all years the ocean says little about Sri Lanka's monthly rain, and the model says so. In ${esc(DATA.forecast.skill.like_this_year.kind)} (${DATA.forecast.skill.like_this_year.years.join(", ")}) it has real skill for some months. Only months with a score of 0.05 or more are shown as a signal.</p>
+    <div class="table-wrap"><table><tr><th>Month ahead</th>${DATA.forecast.months.map((ym) => `<th>${esc(monthName(ym, true))}</th>`).join("")}</tr>
+      <tr><td>Skill score, years like this one</td>${DATA.forecast.skill.like_this_year.rpss.map((v) => `<td>${v ?? ""}</td>`).join("")}</tr>
+      <tr><td>Right category, years like this one</td>${DATA.forecast.skill.like_this_year.hit_rate.map((v) => `<td>${v == null ? "" : Math.round(v * 100) + "%"}</td>`).join("")}</tr>
+      <tr><td>Skill score, all years</td>${DATA.forecast.skill.all_years.rpss.map((v) => `<td>${v ?? ""}</td>`).join("")}</tr>
+      <tr><td>Shown as a signal</td>${DATA.forecast.skill.signal.map((v) => `<td>${v ? "yes" : "no"}</td>`).join("")}</tr></table></div>
+    <p class="muted">Guessing gets the right category 33% of the time. The years like this one are few (${DATA.forecast.skill.like_this_year.years.length}) and neighbouring districts are not independent, so treat the scores as a guide.</p>` : ""}
+    ${DATA.levels ? `<h3>Daily risk levels</h3>
+    <ul>${["1", "2", "3", "drought"].map((k) => `<li>${esc(DATA.levels.rule[k])}.</li>`).join("")}</ul>
+    <p>${esc(DATA.levels.rule.source)}. Replayed on the week of Cyclone Ditwah, using only what was known at the time:</p>
+    <div class="table-wrap"><table><tr><th>Day of rain</th><th>Yellow</th><th>Amber</th><th>Red</th><th>Amber and Red districts (district rain, mm)</th></tr>
+      ${DATA.levels.ditwah_replay.map((r) => `<tr><td>${esc(r.day)}</td><td>${r.counts["1"]}</td><td>${r.counts["2"]}</td><td>${r.counts["3"]}</td><td>${esc(Object.entries(r.districts).filter(([, x]) => x.level >= 2).sort((a, c) => c[1].level - a[1].level).map(([n, x]) => `${n} ${x.level === 3 ? "Red" : "Amber"} (${Math.round(x.rain_mm)})`).join(", "))}</td></tr>`).join("")}</table></div>
+    <p class="muted">NASA's Late rain product arrives about 14 hours after the day ends, so a level reflects yesterday's rain. It is a nowcast, not a forecast.</p>` : ""}
+    ${m.hill_rule?.source ? `<h3>Hill districts and safer places</h3>
+    <p>A district is hill country, and can get SlopeWatch, when ${Math.round(m.hill_rule.min_share * 100)}% or more of its land is steeper than ${m.hill_rule.steep_degrees} degrees in ${esc(m.hill_rule.source)}: ${esc(m.hill_rule.districts.join(", "))}. The same elevation data checks ${SAFE ? Object.values(SAFE.districts).reduce((a, x) => a + x.count, 0).toLocaleString() : "about 15,000"} schools, places of worship and halls from OpenStreetMap: a place is marked safer when it did not flood in Cyclone Ditwah and has no slope of 20 degrees or more within 90 m. Places are ranked by building type and by height above the lowest ground within 500 m. They are candidates for officers to confirm, not an official list.</p>` : ""}
     <h3>El Niño and La Niña in the record</h3>
     <div class="table-wrap"><table><tr><th>Event</th><th>Strength</th><th>Peak index</th><th>Use</th></tr>${evRows}</table></div>
     <h3>Check against rain gauges</h3>

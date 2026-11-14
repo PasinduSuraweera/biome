@@ -286,3 +286,22 @@ table.cal td.conf { font-weight: 500; font-size: 12px; background: #fff; color: 
 table.cal td.conf.yes { color: #1f6b3f; font-weight: 700; }
 table.cal th .muted { font-weight: 400; }
 @media print { .nasa, .missions, .cmap { display: none !important; } }
+
+/* daily risk level and alerts */
+.levelbox { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; margin: 12px 0 0; }
+.levelbox p { margin: 0; }
+.levelbox .k { font-size: 14px; color: var(--ink-3); }
+.levelbox .v { font: 700 20px var(--display); margin: 4px 0; display: flex; align-items: center; gap: 10px; }
+.levelbox .d { font-size: 16px; }
+.levelbox .h { font-size: 13px; color: var(--ink-3); margin-top: 6px; }
+.lv-dot { width: 16px; height: 16px; border-radius: 50%; display: inline-block; flex: none; background: #9aa39e; }
+.l1 .lv-dot { background: #e0b422; } .l2 .lv-dot { background: #d2691e; } .l3 .lv-dot { background: #b3261e; }
+.lv-line { font-size: 15px; margin: 12px 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.alerts { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; margin: 20px 0 0; max-width: 720px; }
+.alerts h3 { margin: 0 0 10px; font-size: 20px; }
+.al-pick { display: flex; flex-direction: column; gap: 4px; font-size: 14px; color: var(--ink-2); max-width: 420px; margin-bottom: 12px; }
+.al-pick select { font: 16px var(--sans); padding: 10px 12px; min-height: 44px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink); }
+.al-msg { font: 15px/1.5 var(--sans); white-space: pre-wrap; background: var(--paper-2); border-radius: 10px; padding: 12px 14px; margin: 4px 0 12px; }
+a.btn { display: inline-flex; align-items: center; text-decoration: none; }
+.alerts .disc { margin-top: 10px; }
+@media print { .alerts { display: none !important; } }

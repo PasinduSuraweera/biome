@@ -11,6 +11,7 @@ on:
       - .github/workflows/live.yml
       - pipeline/fetch_irrigation.py
       - pipeline/fetch_ground.py
+      - pipeline/subscribers.py
   schedule:
     - cron: "15 */3 * * *"
 
@@ -35,6 +36,21 @@ jobs:
         run: |
           python fetch_ground.py
           python fetch_irrigation.py
+      - name: Registered people (kept in the private cache, never committed)
+        uses: actions/cache@v4
+        with:
+          path: data/private
+          key: subscribers-${{ github.run_id }}
+          restore-keys: subscribers-
+      - name: Read new alert sign-ups
+        continue-on-error: true
+        working-directory: pipeline
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          BIOME_SITE_URL: ${{ vars.BIOME_SITE_URL }}
+        run: |
+          python subscribers.py sync
+          python subscribers.py send ../web/public/data/biome.json
       - name: Commit
         run: |
           git config user.name "PasinduSuraweera"

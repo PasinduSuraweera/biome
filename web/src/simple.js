@@ -165,6 +165,12 @@ export function buildReport(name, view, DATA, SAFE) {
     extras.push({ title: t("s_rivers"), lines: riverLines });
   }
 
+  const lv = d.level || null;
+  const dayTxt = lv ? `${Number(lv.day.slice(8, 10))} ${mLong(lv.day.slice(0, 7))}` : "";
+  const level = lv ? {
+    n: lv.level, title: t(`lvl_${lv.level}`) + (lv.hazard ? ` (${t(`hz_${lv.hazard}`)})` : ""),
+    rain: t("lvl_rain", { a: Math.round(lv.rain_1d), b: Math.round(lv.rain_3d), d: dayTxt }), how: t("lvl_how"),
+  } : null;
   const sp = SAFE?.districts?.[name];
   if (sp?.top?.length) {
     extras.unshift({ title: t("s_safe"), tag: "NASA SRTM", map: true, lines: [
@@ -174,7 +180,7 @@ export function buildReport(name, view, DATA, SAFE) {
   const today = new Date();
   const ym = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}`;
   return {
-    view, name, aud: t(`for_${view}`), district: dName(name), when: monthName(d.flag_month), now, todo, basis, periods, year, extras,
+    view, name, level, hazardNow: lv?.hazard || (d.hill ? "landslide" : "flood"), bot: DATA.levels?.bot || null, safeTop: sp?.top || [], aud: t(`for_${view}`), district: dName(name), when: monthName(d.flag_month), now, todo, basis, periods, year, extras,
     emer: t("emer"), disc: t("disc"), nasa: t("rep_nasa"), modelled: !!fc, made: t("rep_made", { d: `${today.getDate()} ${monthName(ym)}` }),
   };
 }
@@ -188,6 +194,39 @@ const cardHTML = (p, cls = "") => `
     ${p.adv.map((a) => `<p class="p-a">${esc(a)}</p>`).join("")}
   </div>`;
 
+// the exact text a registered person receives, in their language
+export function alertMessage(m, n) {
+  const lines = [`Biome · ${m.district}`, t(`lvl_${n}`) + (m.hazardNow ? ` (${t(`hz_${m.hazardNow}`)})` : ""), m.level.rain, t(`al_do_${n}`)];
+  if (n >= 2 && m.safeTop.length) lines.push(`${t("s_safe")}: ${m.safeTop.slice(0, 3).map((c) => c[3]).join("; ")}`);
+  lines.push(t("al_official"));
+  return lines.join("\n");
+}
+
+function alertsHTML(m) {
+  return `<div class="alerts" id="alerts">
+    <h3>${esc(t("s_alerts", { d: m.district }))}</h3>
+    <label class="al-pick">${esc(t("al_from"))}
+      <select id="al-level">${[1, 2, 3].map((n) => `<option value="${n}" ${n === 2 ? "selected" : ""}>${esc(t(`lvl_${n}`))}</option>`).join("")}</select></label>
+    <p class="p-r">${esc(t("al_preview"))}</p>
+    <pre class="al-msg" id="al-msg"></pre>
+    ${m.bot ? `<a class="btn primary" id="al-go" target="_blank" rel="noopener" href="#">${esc(t("al_btn"))}</a>` : `<p class="basis">${esc(t("al_soon"))}</p>`}
+    <p class="disc">${esc(t("al_note"))}</p>
+  </div>`;
+}
+
+export function wireAlerts(m) {
+  const sel = document.querySelector("#al-level");
+  if (!sel) return;
+  const upd = () => {
+    const n = Number(sel.value);
+    document.querySelector("#al-msg").textContent = alertMessage(m, n);
+    const go = document.querySelector("#al-go");
+    if (go) go.href = `https://t.me/${m.bot}?start=${m.name.toLowerCase().replace(/\s+/g, "-")}-${getLang()}-${n}`;
+  };
+  sel.addEventListener("change", upd);
+  upd();
+}
+
 export function reportHTML(m) {
   const key = ["dry", "normal", "wet"].map((s) => `<span><i class="mo ${s}"></i>${esc(t(`${m.modelled ? "kf" : "k"}_${s}`))}</span>`).join("");
   const tag = (x) => (x ? ` <span class="nasa-tag">${esc(x)}</span>` : "");
@@ -199,6 +238,8 @@ export function reportHTML(m) {
     <div class="nowbox" style="background:${m.now.bg};color:${m.now.fg}">
       <p class="k">${esc(t("s_now"))} · ${esc(m.when)} · NASA GPM IMERG</p><p class="v">${esc(m.now.title)}</p><p class="d">${esc(m.now.desc)}</p>
     </div>
+    ${m.level ? `<div class="levelbox l${m.level.n}"><p class="k">${esc(t("s_level"))} <span class="nasa-tag">NASA GPM IMERG</span></p>
+      <p class="v"><i class="lv-dot"></i>${esc(m.level.title)}</p><p class="d">${esc(m.level.rain)}</p><p class="h">${esc(m.level.how)}</p></div>` : ""}
     <h3>${esc(t("s_todo"))}</h3>
     <ul class="todo">${m.todo.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>
     <h3>${esc(t("s_expect"))}${tag("NASA GPM IMERG + MERRA-2")}</h3>
@@ -211,6 +252,7 @@ export function reportHTML(m) {
     <p class="disc">${esc(m.disc)}</p>
     <p class="disc nasa-line">${esc(m.nasa)}</p>
   </div>
+  ${m.level ? alertsHTML(m) : ""}
   <div class="actions">
     <button type="button" class="btn primary" id="dl-png">${esc(t("dl_png"))}</button>
     <button type="button" class="btn" id="dl-pdf">${esc(t("dl_pdf"))}</button>
@@ -277,6 +319,14 @@ function draw(m, logo, dry) {
   text(m.now.desc, nf[2], m.now.fg, P + 36, CW - 72);
   y += 30 + 40;
 
+  if (m.level) {
+    const LC = ["#6b7470", "#c79a1b", "#d2691e", "#b3261e"][m.level.n];
+    y -= 16;
+    ctx.fillStyle = LC; ctx.beginPath(); ctx.arc(P + 16, y + 22, 14, 0, 2 * Math.PI); ctx.fill();
+    text(m.level.title, `700 32px ${HEAD}`, "#16201f", P + 44, CW - 44, 1.3);
+    text(m.level.rain, `400 26px ${BODY}`, "#4a5552");
+    y += 28;
+  }
   const heading = (s) => { text(s, `700 40px ${HEAD}`, "#16201f", P, CW, 1.25); y += 10; };
   const bullets = (items) => {
     for (const it of items) {

@@ -20,6 +20,7 @@ Steps
   8. Trust checks: satellite rain against rain gauges; backtest on known events.
 """
 import json
+import os
 import math
 from datetime import datetime, timezone
 
@@ -376,6 +377,60 @@ def outlook(d, rain_all, rnorm, analog_years, y0_now, start, cal_d, kind):
             "years": sorted(per_event), "months": rows, "horizons": horizons,
             "normal_mm": [_r(v) for v in w],
             "events": {str(y): [_r(v) for v in p] for y, p in sorted(per_event.items())}}
+
+
+LEVEL_RULE = {
+    "source": "NASA GPM IMERG Late daily rain, averaged over each district, with NBRO's 24-hour rainfall steps (75, 100, 150 mm)",
+    "1": "Yellow, be aware: 75 mm or more in the last day, or the district is on SlopeWatch or FloodWatch",
+    "2": "Amber, be ready: 100 mm or more in the last day, or 75 mm on ground that is already soaked (a Watch is on)",
+    "3": "Red, act now: 150 mm or more in the last day, or 100 mm on ground that is already soaked",
+    "drought": "DryWatch is shown as Level 1 (save water)",
+}
+
+
+def risk_level(r1, watch, hill):
+    """Daily risk level 0-3 from the last day's rain and whether the ground is already soaked."""
+    wet = watch in ("SlopeWatch", "FloodWatch")
+    r1 = r1 if _ok(r1) else 0.0
+    lvl = 3 if (r1 >= 150 or (r1 >= 100 and wet)) else 2 if (r1 >= 100 or (r1 >= 75 and wet)) else 1 if (r1 >= 75 or wet) else 0
+    if lvl == 0 and watch == "DryWatch":
+        return 1, "drought"
+    return lvl, (("landslide" if hill else "flood") if lvl else None)
+
+
+def daily_levels(districts, rain1, rain3, wet3):
+    """Today's level for every district, and a day-by-day replay of the Cyclone Ditwah week."""
+    path = PROCESSED / "imerg_late_daily_days.csv"
+    if not path.exists():
+        return None
+    days = pd.read_csv(path, parse_dates=["time"]).pivot_table(index="time", columns="district", values="value")
+    days = days.dropna(how="all")
+    last = days.index.max()
+    for d, v in districts.items():
+        if d not in days:
+            continue
+        r1, r3 = float(days[d].iloc[-1]), float(days[d].iloc[-3:].sum())
+        lvl, hazard = risk_level(r1, v["watch"], v["hill"])
+        v["level"] = {"level": lvl, "hazard": hazard, "rain_1d": _r(r1), "rain_3d": _r(r3), "day": last.strftime("%Y-%m-%d")}
+    # replay: what the same rule showed each day of Ditwah, using the Watch of the month before (known at the time)
+    replay = []
+    prev = pd.Timestamp("2025-10-01")
+    for t in pd.date_range("2025-11-24", "2025-11-29"):
+        if t not in days.index or prev not in rain1.index:
+            continue
+        row = {"day": t.strftime("%Y-%m-%d"), "districts": {}}
+        for d in districts:
+            if d not in days or d not in rain1:
+                continue
+            w, _ = flag_for(d, rain1.at[prev, d], rain3.at[prev, d], wet3.at[prev, d], None, "rain3")
+            lvl, _h = risk_level(days.at[t, d], w, districts[d]["hill"])
+            if lvl:
+                row["districts"][d] = {"level": lvl, "rain_mm": _r(days.at[t, d])}
+        row["counts"] = {str(k): sum(1 for x in row["districts"].values() if x["level"] == k) for k in (1, 2, 3)}
+        replay.append(row)
+    counts = pd.Series([v.get("level", {}).get("level", 0) for v in districts.values()]).value_counts().to_dict()
+    return {"rule": LEVEL_RULE, "day": last.strftime("%Y-%m-%d"), "counts": {str(k): int(n) for k, n in counts.items()},
+            "ditwah_replay": replay, "bot": os.environ.get("BIOME_BOT", "") or None}
 
 
 def _ok(x):
@@ -772,6 +827,8 @@ def main():
         districts[d]["outlook"] = outlook(d, rain_all, rnorm, analog, y0_now, start,
                                           calendar["district"].get(d), kind_now)
 
+    levels = _safe(daily_levels, districts, rain1, rain3, wet3)
+
     # ensemble outlook model: chance of each Watch for every month of the coming year
     import forecast as fc
     prev = {}
@@ -802,6 +859,7 @@ def main():
         "calendar": {"years": [full_years[0], full_years[-1]] if full_years else None,
                      "year_types": {str(y): t for y, t in types.items()},
                      "provinces": PROVINCES, **calendar},
+        "levels": levels,
         "forecast": forecast,
         "reservoirs": _safe(reservoirs, rain1),
         "rivers": _safe(river_gauges),
