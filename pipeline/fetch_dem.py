@@ -36,11 +36,17 @@ def download():
     out = RAW / "nasadem"
     out.mkdir(parents=True, exist_ok=True)
     res = earthaccess.search_data(short_name="NASADEM_HGT", bounding_box=BBOX, count=60)
-    have = {p.name for p in out.glob("*.zip")}
-    todo = [g for g in res if Path(g.data_links()[0]).name not in have]
-    if todo:
-        earthaccess.download(todo, str(out))
-    return sorted(out.glob("*.zip"))
+    session = earthaccess.get_requests_https_session()
+    for g in res:
+        url = g.data_links()[0]
+        dest = out / Path(url).name
+        if dest.exists() and zipfile.is_zipfile(dest):
+            continue
+        r = session.get(url, timeout=300)
+        r.raise_for_status()
+        dest.write_bytes(r.content)
+        print("  downloaded", dest.name, len(r.content) // 1024, "KB")
+    return sorted(p for p in out.glob("*.zip") if zipfile.is_zipfile(p))
 
 
 def read_tile(zpath):

@@ -30,7 +30,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: data/raw/nasadem
-          key: nasadem-v1
+          key: nasadem-v2
       - name: NASA elevation (SRTM) for hill districts and safer evacuation centres
         continue-on-error: true
         working-directory: pipeline
