@@ -84,9 +84,12 @@ def get():
     da = ds[LAYER]
     da = da.where((da >= -0.2) & (da <= 1.0))  # drop fill values and bad pixels
     df = district_means(da)
-    df.index = pd.to_datetime(df.index).to_period("M").to_timestamp()
-    long = df.reset_index().melt(id_vars=df.index.name or "index", var_name="district", value_name="value")
-    long = long.rename(columns={df.index.name or "index": "time"})
+    # AppEEARS writes a Julian calendar, which pandas cannot convert directly
+    df.index = pd.DatetimeIndex([
+        pd.Timestamp(int(t.year), int(t.month), 1) if hasattr(t, "year")
+        else pd.Timestamp(t).to_period("M").to_timestamp()
+        for t in df.index], name="time")
+    long = df.reset_index().melt(id_vars="time", var_name="district", value_name="value")
     long["var"] = "ndvi"
     long.to_csv(PROCESSED / "modis_ndvi.csv", index=False)
     print(f"wrote {PROCESSED / 'modis_ndvi.csv'} ({long['time'].min():%Y-%m} to {long['time'].max():%Y-%m})")
@@ -95,6 +98,13 @@ def get():
 def wait(max_minutes=170):
     """Submit, poll every 2 minutes until AppEEARS is done, then download."""
     import time
+    from pathlib import Path
+    # Reuse a finished AppEEARS request if its id is pinned in the repo, so a
+    # rerun downloads in minutes instead of waiting for NASA to process again.
+    seed = Path(__file__).resolve().parent.parent / ".github" / "appeears-task.txt"
+    if not TASK_FILE.exists() and seed.exists() and seed.read_text().strip():
+        TASK_FILE.parent.mkdir(parents=True, exist_ok=True)
+        TASK_FILE.write_text(json.dumps({"task_id": seed.read_text().strip()}))
     if not TASK_FILE.exists():
         submit()
     for _ in range(max_minutes // 2):
