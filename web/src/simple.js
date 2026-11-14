@@ -46,9 +46,48 @@ function runs(o, upto) {
   return out;
 }
 
+// ---- outlook model (weighted ensemble) ----
+const wMedian = (vals, w) => {
+  const o = vals.map((v, i) => [v, w[i]]).sort((a, b) => a[0] - b[0]);
+  const tot = o.reduce((a, x) => a + x[1], 0);
+  let c = 0;
+  for (const [v, wi] of o) { c += wi; if (c >= tot / 2) return v; }
+  return o[o.length - 1][0];
+};
+const in10 = (p) => Math.max(1, Math.min(9, Math.round(p * 10)));
+
+function fcMonths(DATA, name) {
+  const F = DATA.forecast, x = F?.district?.[name];
+  if (!x) return null;
+  const sig = F.skill.signal;
+  const months = F.months.map((ym, i) => ({
+    month: ym, signal: sig[i], median: x.median[i],
+    sign: !sig[i] ? "normal" : x.p_dry[i] >= 0.5 ? "dry" : x.p_wet[i] >= 0.5 ? "wet" : "normal",
+  }));
+  return { F, x, months };
+}
+
+function fcRuns(fc, upto) {
+  const { F, x, months } = fc, out = [];
+  for (let i = 0; i < upto; i++) {
+    const key = months[i].sign + (months[i].signal ? "" : "?");
+    if (out.length && out[out.length - 1].key === key) out[out.length - 1].j = i;
+    else out.push({ key, sign: months[i].sign, signal: months[i].signal, i, j: i });
+  }
+  for (const r of out) {
+    const nm = x.normal_mm.slice(r.i, r.j + 1), tot = nm.reduce((a, b) => a + b, 0) || 1;
+    const totals = x.members.map((row) => row.slice(r.i, r.j + 1).reduce((a, v, k) => a + v * nm[k], 0) / tot);
+    r.pct = wMedian(totals, F.weights);
+    r.level = r.sign === "normal" ? "normal" : levelOf(r.pct);
+    if (SIGN[r.level] !== r.sign) r.level = r.sign === "dry" ? "drier" : "wetter";
+    r.p = totals.reduce((a, v, k) => a + ((r.sign === "dry" ? v < 85 : v > 115) ? F.weights[k] : 0), 0);
+  }
+  return out;
+}
+
 const strip = (o, n) => o.months.slice(0, n).map((m) => ({ lab: mShort(m.month), sign: SIGN[m.level] || "normal" }));
 
-export function buildReport(name, view, DATA) {
+export function buildReport(name, view, DATA, SAFE) {
   const d = DATA.districts[name];
   const o = d.outlook;
   const aud = view === "farmer" ? "farmer" : "family";
@@ -68,7 +107,35 @@ export function buildReport(name, view, DATA) {
 
   const periods = [];
   let year = null, basis = t("basis_none");
-  if (o) {
+  const fc = fcMonths(DATA, name);
+  if (fc) {
+    const { F, x, months } = fc;
+    const n = F.train_years[1] - F.train_years[0] + 1;
+    const hits = F.skill.like_this_year.hit_rate.filter((_, i) => F.skill.signal[i]);
+    basis = hits.length ? t("basis_model", { n, a: in10(hits.reduce((a, b) => a + b, 0) / hits.length) }) : t("basis_weak", { n });
+    const stripF = (k) => months.slice(0, k).map((m) => ({ lab: mShort(m.month), sign: m.sign }));
+    for (const h of [1, 3, 6]) {
+      const rs = fcRuns(fc, h);
+      const lines = rs.map((r) => {
+        const what = r.sign === "normal" ? t(r.signal ? "lv_normal" : "lv_unclear") : t(`lv_${r.level}`);
+        const head = h === 1 ? `${what}.` : `${what}: ${span(months, r.i, r.j)}.`;
+        return r.sign !== "normal" ? `${head} ${t("chance", { x: in10(r.p) })}` : head;
+      });
+      const signs = [...new Set(rs.map((r) => r.sign))].filter((sg) => sg !== "normal");
+      periods.push({ label: t(`h_${h}`), range: span(months, 0, h - 1), strip: stripF(h), lines, adv: signs.map((sg) => t(`adv_${aud}_${sg}`)) });
+    }
+    const by = (sign, dir) => months.map((m, i) => ({ m, i })).filter((q) => q.m.sign === sign)
+      .sort((a, b) => dir * (a.m.median - b.m.median)).slice(0, 3).sort((a, b) => a.i - b.i).map((q) => mLong(q.m.month)).join(", ");
+    const lines = [];
+    if (by("dry", 1)) lines.push(t("driest", { m: by("dry", 1) }));
+    if (by("wet", -1)) lines.push(t("wettest", { m: by("wet", -1) }));
+    for (const w of ["SlopeWatch", "FloodWatch", "DryWatch"]) {
+      const ms = months.map((m, i) => ({ m, p: x.watch[w][i] })).filter((q) => q.m.signal && q.p >= 0.4)
+        .map((q) => `${mLong(q.m.month)} (${t("in10", { x: in10(q.p) })})`).join(", ");
+      if (ms) lines.push(t(`fc_${w}`, { m: ms }));
+    }
+    year = { label: t("h_12"), range: span(months, 0, 11), strip: stripF(12), lines, adv: [] };
+  } else if (o) {
     if (o.basis) basis = t(`basis_${o.basis}`, { n: o.years.length });
     for (const h of [1, 3, 6]) {
       const rs = runs(o, h);
@@ -76,19 +143,10 @@ export function buildReport(name, view, DATA) {
         const head = h === 1 ? `${t(`lv_${r.level}`)}.` : `${t(`lv_${r.level}`)}: ${span(o.months, r.i, r.j)}.`;
         return r.sign !== "normal" && r.n ? `${head} ${t("seen", { a: r.agree, n: r.n })}` : head;
       });
-      const signs = [...new Set(rs.map((r) => r.sign))].filter((s) => s !== "normal");
-      periods.push({ label: t(`h_${h}`), range: span(o.months, 0, h - 1), strip: strip(o, h), lines, adv: signs.map((s) => t(`adv_${aud}_${s}`)) });
+      const signs = [...new Set(rs.map((r) => r.sign))].filter((sg) => sg !== "normal");
+      periods.push({ label: t(`h_${h}`), range: span(o.months, 0, h - 1), strip: strip(o, h), lines, adv: signs.map((sg) => t(`adv_${aud}_${sg}`)) });
     }
-    const by = (sign, dir) => o.months.map((m, i) => ({ m, i })).filter((x) => SIGN[x.m.level] === sign && x.m.rain_pct != null)
-      .sort((a, b) => dir * (a.m.rain_pct - b.m.rain_pct)).slice(0, 3).sort((a, b) => a.i - b.i).map((x) => mLong(x.m.month)).join(", ");
-    const lines = [];
-    if (by("dry", 1)) lines.push(t("driest", { m: by("dry", 1) }));
-    if (by("wet", -1)) lines.push(t("wettest", { m: by("wet", -1) }));
-    for (const w of ["SlopeWatch", "FloodWatch", "DryWatch"]) {
-      const ms = o.months.filter((m) => m.risk_years && m.risk[w] >= 2 && m.risk[w] / m.risk_years >= 1 / 3).map((m) => mLong(m.month)).join(", ");
-      if (ms) lines.push(t(`risk_${w}`, { m: ms }));
-    }
-    year = { label: t("h_12"), range: span(o.months, 0, 11), strip: strip(o, 12), lines, adv: [] };
+    year = { label: t("h_12"), range: span(o.months, 0, 11), strip: strip(o, 12), lines: [], adv: [] };
   }
 
   const extras = [];
@@ -99,7 +157,7 @@ export function buildReport(name, view, DATA) {
   if (view === "farmer") {
     extras.push({ title: t("s_tanks"), lines: res.length ? res.slice(0, 6).map((r) => `${r.name}: ${t(r.spilling ? "tank_spill" : "full", { p: Math.round(r.pct_full) })}`) : [t("res_none")] });
     const g = d.now?.ndvi_anom;
-    if (g != null) extras.push({ title: t("s_green"), lines: [t(g > 0.03 ? "green_more" : g < -0.03 ? "green_less" : "green_same")] });
+    if (g != null) extras.push({ title: t("s_green"), tag: "NASA Terra MODIS", lines: [t(g > 0.03 ? "green_more" : g < -0.03 ? "green_less" : "green_same")] });
   } else if (view === "coast") {
     extras.push({ title: t("s_sea"), lines: [t("coast_sea"), t("coast_rain"), t("coast_next")] });
     extras.push({ title: t("s_rivers"), lines: riverLines });
@@ -107,11 +165,17 @@ export function buildReport(name, view, DATA) {
     extras.push({ title: t("s_rivers"), lines: riverLines });
   }
 
+  const sp = SAFE?.districts?.[name];
+  if (sp?.top?.length) {
+    extras.unshift({ title: t("s_safe"), tag: "NASA SRTM", map: true, lines: [
+      ...sp.top.slice(0, 5).map((c, i) => `${i + 1}. ${c[3]} (${t(`kind_${c[2]}`)})`),
+      t("safe_count", { a: sp.safer, n: sp.count }), t("safe_note")] });
+  }
   const today = new Date();
   const ym = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}`;
   return {
     view, name, aud: t(`for_${view}`), district: dName(name), when: monthName(d.flag_month), now, todo, basis, periods, year, extras,
-    emer: t("emer"), disc: t("disc"), made: t("rep_made", { d: `${today.getDate()} ${monthName(ym)}` }),
+    emer: t("emer"), disc: t("disc"), nasa: t("rep_nasa"), modelled: !!fc, made: t("rep_made", { d: `${today.getDate()} ${monthName(ym)}` }),
   };
 }
 
@@ -125,25 +189,27 @@ const cardHTML = (p, cls = "") => `
   </div>`;
 
 export function reportHTML(m) {
-  const key = ["dry", "normal", "wet"].map((s) => `<span><i class="mo ${s}"></i>${esc(t(`k_${s}`))}</span>`).join("");
+  const key = ["dry", "normal", "wet"].map((s) => `<span><i class="mo ${s}"></i>${esc(t(`${m.modelled ? "kf" : "k"}_${s}`))}</span>`).join("");
+  const tag = (x) => (x ? ` <span class="nasa-tag">${esc(x)}</span>` : "");
   return `
   <div class="simple" id="report">
     <div class="rep-head"><img src="logo.png" alt="Biome" width="120" height="43"><span>${esc(t("rep_title"))} · ${esc(m.made)}</span></div>
     <p class="aud">${esc(m.aud)}</p>
     <h2>${esc(m.district)}</h2>
     <div class="nowbox" style="background:${m.now.bg};color:${m.now.fg}">
-      <p class="k">${esc(t("s_now"))} · ${esc(m.when)}</p><p class="v">${esc(m.now.title)}</p><p class="d">${esc(m.now.desc)}</p>
+      <p class="k">${esc(t("s_now"))} · ${esc(m.when)} · NASA GPM IMERG</p><p class="v">${esc(m.now.title)}</p><p class="d">${esc(m.now.desc)}</p>
     </div>
     <h3>${esc(t("s_todo"))}</h3>
     <ul class="todo">${m.todo.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>
-    <h3>${esc(t("s_expect"))}</h3>
+    <h3>${esc(t("s_expect"))}${tag("NASA GPM IMERG + MERRA-2")}</h3>
     <p class="basis">${esc(m.basis)}</p>
     <div class="key">${key}</div>
     <div class="periods">${m.periods.map((p) => cardHTML(p)).join("")}</div>
     ${m.year ? cardHTML(m.year, "year") : ""}
-    ${m.extras.map((e) => `<h3>${esc(e.title)}</h3><ul class="plain">${e.lines.map((l) => `<li>${esc(l)}</li>`).join("")}</ul>`).join("")}
+    ${m.extras.map((e) => `<h3>${esc(e.title)}${tag(e.tag)}</h3>${e.map ? '<div id="cmap-slot"></div>' : ""}<ul class="plain${e.map ? " nomark" : ""}">${e.lines.map((l) => `<li>${esc(l)}</li>`).join("")}</ul>`).join("")}
     <p class="emer">${esc(m.emer)}</p>
     <p class="disc">${esc(m.disc)}</p>
+    <p class="disc nasa-line">${esc(m.nasa)}</p>
   </div>
   <div class="actions">
     <button type="button" class="btn primary" id="dl-png">${esc(t("dl_png"))}</button>
@@ -231,8 +297,9 @@ function draw(m, logo, dry) {
   for (const s of ["dry", "normal", "wet"]) {
     rounded(ctx, kx, y + 4, 30, 30, 6, SIGN_STYLE[s].bg);
     ctx.font = `500 26px ${BODY}`; ctx.fillStyle = "#16201f";
-    ctx.fillText(t(`k_${s}`), kx + 40, y + 2);
-    kx += 40 + ctx.measureText(t(`k_${s}`)).width + 36;
+    const kl = t(`${m.modelled ? "kf" : "k"}_${s}`);
+    ctx.fillText(kl, kx + 40, y + 2);
+    kx += 40 + ctx.measureText(kl).width + 30;
   }
   y += 56;
 
@@ -270,6 +337,8 @@ function draw(m, logo, dry) {
   text(m.emer, `600 30px ${BODY}`, "#f5f3ee", P + 32, CW - 64);
   y += 24 + 28;
   text(m.disc, `400 24px ${BODY}`, "#6b7470");
+  y += 12;
+  text(m.nasa, `600 24px ${BODY}`, "#4a5552");
   y += P;
   return { canvas: c, height: Math.ceil(y) };
 }

@@ -27,7 +27,7 @@ import numpy as np
 import pandas as pd
 import pymannkendall as mk
 
-from config import CLIM_END, CLIM_START, HILL_DISTRICTS, PROCESSED, WEB_DATA
+from config import CLIM_END, CLIM_START, HILL_DISTRICTS, HILL_STEEP_SHARE, PROCESSED, TERRAIN, WEB_DATA
 
 RNG = np.random.default_rng(42)
 LAGS = 18  # Jan of El Nino year (lag 0) to Jun of the following year (lag 17)
@@ -38,7 +38,7 @@ LAG_LABELS = [pd.Timestamp(2000 + (i // 12), i % 12 + 1, 1).strftime("%b") + (""
 RULES = {
     "DryWatch": "3-month rain at or below 75% of normal and soil moisture in the driest 25% for this month",
     "FloodWatch": "rain at or above 150% of normal this month on soil already in the wettest 25%",
-    "SlopeWatch": "a hill district where soil is in the wettest 25% and rain is at or above 130% of normal",
+    "SlopeWatch": "a hill district (10% or more of its land steeper than 15 degrees in NASA SRTM elevation data) where soil is in the wettest 25% and rain is at or above 130% of normal",
     "ground_wetness": "GLDAS root-zone soil moisture when it is no more than a month old; GLDAS runs about 3 months "
                       "behind, so for recent months the rank of the last 3 months of rain against the same months in "
                       "2001-2025 stands in for it",
@@ -728,7 +728,7 @@ def main():
 
         last24 = rain1.index[-24:]
         districts[d] = {
-            "hill": d in HILL_DISTRICTS,
+            "hill": d in HILL_DISTRICTS, "terrain": TERRAIN.get("districts", {}).get(d),
             "watch": watch, "reason": why, "flag_month": flag_month, "next": nxt,
             "now": {"month": latest.strftime("%Y-%m"), "source": rain_source.get(latest, "IMERG Final"),
                     "rain_mm": _r(rain.at[latest, d]), "rain_pct": _r(rain1.at[latest, d]),
@@ -790,6 +790,8 @@ def main():
             "normal_period": f"{CLIM_START}-{CLIM_END}",
             "lag_labels": LAG_LABELS, "lag_now": int(lag_now),
             "rules": RULES, "watch_counts": counts, "gap_fills": GAP_FILLS,
+            "hill_rule": {"source": TERRAIN.get("source"), "steep_degrees": TERRAIN.get("steep_degrees"),
+                          "min_share": HILL_STEEP_SHARE, "districts": sorted(HILL_DISTRICTS)},
             "data_ranges": {k: _range(v) for k, v in
                             {"rain": rain, "soil": soil, "ndvi": ndvi, "merra2_rain": m_rain}.items()},
         },

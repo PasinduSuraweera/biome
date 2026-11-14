@@ -1,0 +1,70 @@
+// Real NASA pictures, the missions behind each feature, and the evacuation place map.
+import { geoMercator, geoPath, geoContains } from "d3-geo";
+import { t, dName, monthName } from "./i18n.js";
+
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const fmt = (d) => `${Number(d.slice(8, 10))} ${monthName(d.slice(0, 7))}`;
+let INDEX = null, day = "2025-11-27";
+
+export async function loadNasa() {
+  try { INDEX = await fetch("nasa/index.json").then((r) => (r.ok ? r.json() : null)); } catch { INDEX = null; }
+  return INDEX;
+}
+
+function figure(im, cap) {
+  if (!im) return "";
+  const layer = im.layer.replaceAll("_", " ");
+  return `<figure class="shot"><a href="${esc(im.worldview)}" target="_blank" rel="noopener"><img loading="lazy" src="${esc(im.file)}" width="${im.w}" height="${im.h}" alt="${esc(cap)}, ${esc(fmt(im.date))}. NASA ${esc(layer)}"></a>
+    <figcaption><b>${esc(cap)}</b> · ${esc(fmt(im.date))}<br><span class="muted">NASA Worldview / GIBS · ${esc(layer)}</span><br><a href="${esc(im.worldview)}" target="_blank" rel="noopener">${esc(t("g_open"))}</a></figcaption></figure>`;
+}
+
+export function renderGallery(el) {
+  if (!INDEX?.images?.length) { el.hidden = true; return; }
+  el.hidden = false;
+  const by = (g) => INDEX.images.filter((i) => i.group === g);
+  const days = by("ditwah").map((i) => i.date);
+  if (!days.includes(day)) day = days[0];
+  const pick = (g, d) => by(g).find((i) => i.date === d);
+  const now = by("now")[0], nowRain = by("now_rain")[0];
+  const flood = by("flood")[0];
+  el.innerHTML = `
+    <h2>${esc(t("g_title"))}</h2>
+    <p class="lede">${esc(t("g_lede"))}</p>
+    ${days.length ? `<div class="g-block">
+      <h3>${esc(t("g_ditwah"))}</h3><p class="cap">${esc(t("g_ditwah_d"))}</p>
+      <div class="seg days" role="group">${days.map((d) => `<button type="button" data-d="${d}" class="${d === day ? "on" : ""}" aria-pressed="${d === day}">${esc(fmt(d))}</button>`).join("")}</div>
+      <div class="shots">${figure(pick("ditwah", day), t("g_clouds"))}${figure(pick("ditwah_rain", day), t("g_rain"))}</div>
+    </div>` : ""}
+    ${now || nowRain ? `<div class="g-block"><h3>${esc(t("g_now"))}</h3><p class="cap">${esc(t("g_now_d"))}</p>
+      <div class="shots">${figure(now, t("g_clouds"))}${figure(nowRain, t("g_rain"))}</div></div>` : ""}
+    <div class="g-block"><div class="shots tall">
+      ${flood ? `<div><h3>${esc(t("g_flood"))}</h3><p class="cap">${esc(t("g_flood_d"))}</p>${figure(flood, t("g_flood"))}</div>` : ""}
+      <div><h3>${esc(t("g_terrain"))}</h3><p class="cap">${esc(t("g_terrain_d"))}</p>
+        <figure class="shot"><img loading="lazy" src="nasa/terrain.jpg" width="990" height="1600" alt="${esc(t("g_terrain"))}">
+        <figcaption><span class="muted">NASA NASADEM (Shuttle Radar Topography Mission), 30 m</span></figcaption></figure></div>
+    </div></div>`;
+  el.querySelectorAll(".days button").forEach((b) => b.addEventListener("click", () => { day = b.dataset.d; renderGallery(el); }));
+}
+
+const MISSIONS = [["GPM · IMERG", "ms_gpm"], ["GLDAS · MERRA-2", "ms_gldas"], ["Terra · MODIS", "ms_modis"], ["SRTM · NASADEM", "ms_srtm"], ["Suomi NPP · VIIRS · Worldview", "ms_viirs"]];
+export function renderMissions(el) {
+  el.innerHTML = `<h2>${esc(t("ms_title"))}</h2><p class="lede">${esc(t("ms_lede"))}</p>
+    <div class="ms-grid">${MISSIONS.map(([n, k]) => `<div class="ms"><p class="ms-n">NASA ${esc(n)}</p><p>${esc(t(k))}</p></div>`).join("")}</div>`;
+}
+
+// every candidate place in one district, coloured by the ground it stands on
+export function centreMap(name, GEO, SAFE) {
+  const f = GEO.features.find((x) => x.properties.name === name);
+  const sp = SAFE?.districts?.[name];
+  if (!f || !sp) return "";
+  const W = 520, H = 380;
+  const proj = geoMercator().fitExtent([[10, 10], [W - 10, H - 10]], f);
+  const path = geoPath(proj);
+  const [[x0, y0], [x1, y1]] = geoPath().bounds(f);
+  const pts = SAFE.items.filter((c) => c[0] >= x0 && c[0] <= x1 && c[1] >= y0 && c[1] <= y1 && geoContains(f, [c[0], c[1]]));
+  const dots = (grade, cls, r) => pts.filter((c) => (grade === 0 ? c[2] === 0 : c[2] !== 0)).map((c) => { const [x, y] = proj([c[0], c[1]]); return `<circle class="${cls}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r}"/>`; }).join("");
+  const top = sp.top.slice(0, 5).map((c, i) => { const [x, y] = proj([c[0], c[1]]); return `<g class="pick"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="9"/><text x="${x.toFixed(1)}" y="${(y + 4).toFixed(1)}" text-anchor="middle">${i + 1}</text></g>`; }).join("");
+  return `<figure class="cmap"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(t("s_safe"))}: ${esc(dName(name))}">
+      <path class="outline" d="${path(f)}"/>${dots(1, "bad", 1.6)}${dots(0, "ok", 1.8)}${top}</svg>
+    <figcaption><span><i class="dot ok"></i>${esc(t("lg_safe"))} (${sp.safer})</span><span><i class="dot bad"></i>${esc(t("lg_unsafe"))} (${sp.steep + sp.flooded})</span></figcaption></figure>`;
+}

@@ -15,12 +15,20 @@ BBOX = (79.4, 5.8, 82.0, 10.0)
 # Normal ("climatology") period: full years inside the satellite record
 CLIM_START, CLIM_END = 2001, 2025
 
-# Districts NBRO treats as landslide-prone hill country.
-# TODO before submission: confirm this list against an NBRO source and cite it.
+# Hill country, measured: a district counts as hill country when at least 10% of its
+# land is steeper than 15 degrees in NASA's Shuttle Radar elevation data (NASADEM, 30 m;
+# see fetch_dem.py). The fixed list below is only the fallback until that file exists.
+HILL_STEEP_SHARE = 0.10
 HILL_DISTRICTS = {
     "Badulla", "Nuwara Eliya", "Kandy", "Matale", "Kegalle",
-    "Ratnapura", "Kalutara", "Galle", "Matara", "Hambantota",
+    "Ratnapura", "Kalutara", "Galle", "Matara", "Monaragala",
 }
+TERRAIN = {}
+_terrain_file = PROCESSED / "terrain.json"
+if _terrain_file.exists():
+    import json as _json
+    TERRAIN = _json.loads(_terrain_file.read_text())
+    HILL_DISTRICTS = {d for d, v in TERRAIN["districts"].items() if (v.get("steep_share") or 0) >= HILL_STEEP_SHARE}
 
 # NASA collections (short name, version) used by the fetch scripts
 COLLECTIONS = {

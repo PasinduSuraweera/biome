@@ -244,3 +244,45 @@ html:lang(ta) .nowbox .v { font-family: "Space Grotesk", "Noto Sans Tamil", sans
   .periods { grid-template-columns: repeat(3, 1fr); }
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
+
+/* NASA pictures and missions */
+.nasa, .missions { margin: 48px 0 0; padding-top: 24px; border-top: 1px solid var(--line); }
+.nasa h2, .missions h2 { font-size: 28px; margin: 0 0 8px; }
+.nasa h3 { font-size: 20px; margin: 0 0 4px; }
+.nasa .cap { font-size: 15px; color: var(--ink-2); margin: 0 0 12px; max-width: 760px; }
+.g-block { margin: 24px 0 0; }
+.g-block .seg { margin: 0 0 12px; flex-wrap: wrap; }
+.shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.shots.tall { grid-template-columns: repeat(auto-fit, minmax(260px, 420px)); gap: 24px 32px; }
+.shot { margin: 0; }
+.shot img { width: 100%; height: auto; display: block; border-radius: var(--radius); background: #10232a; }
+.shot figcaption { font-size: 14px; margin-top: 6px; line-height: 1.45; }
+.ms-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+.ms { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; }
+.ms p { margin: 0; font-size: 15px; }
+.ms .ms-n { font: 700 16px var(--display); margin-bottom: 6px; }
+.nasa-tag { display: inline-block; font: 600 11px var(--sans); letter-spacing: .04em; text-transform: uppercase; color: var(--ink-2); border: 1px solid var(--line); border-radius: 999px; padding: 2px 8px; vertical-align: middle; background: #fff; white-space: nowrap; }
+.nasa-line { margin-top: 6px !important; font-weight: 600; color: var(--ink-2) !important; }
+
+/* evacuation place map */
+.cmap { margin: 0 0 12px; background: var(--paper-2); border-radius: var(--radius); padding: 8px; }
+.cmap svg { width: 100%; height: auto; display: block; }
+.cmap .outline { fill: #fff; stroke: var(--ink-3); stroke-width: 1; }
+.cmap .ok { fill: #2e7d4f; fill-opacity: .75; }
+.cmap .bad { fill: #b3261e; fill-opacity: .55; }
+.cmap .pick circle { fill: var(--ink); stroke: #fff; stroke-width: 1.5; }
+.cmap .pick text { fill: #fff; font: 700 11px var(--sans); }
+.cmap figcaption { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; padding: 6px 4px 2px; }
+.cmap .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+.cmap .dot.ok { background: #2e7d4f; } .cmap .dot.bad { background: #b3261e; }
+.plain.nomark { list-style: none; padding-left: 0; }
+.picks { margin: 0 0 8px; padding-left: 22px; font-size: 15px; }
+
+/* forecast calendar */
+table.cal td.rain { background: #fff; }
+table.cal td.rain.dry { background: #f1dba6; }
+table.cal td.rain.wet { background: #b9d6dc; }
+table.cal td.conf { font-weight: 500; font-size: 12px; background: #fff; color: var(--ink-3); }
+table.cal td.conf.yes { color: #1f6b3f; font-weight: 700; }
+table.cal th .muted { font-weight: 400; }
+@media print { .nasa, .missions, .cmap { display: none !important; } }

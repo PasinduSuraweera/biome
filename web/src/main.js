@@ -3,6 +3,7 @@ import { geoArea, geoMercator, geoPath } from "d3-geo";
 import * as Plot from "@observablehq/plot";
 import { LANGS, t, dName, pName, monthName, getLang, setLang } from "./i18n.js";
 import { VIEWS, COASTAL, buildReport, reportHTML, downloadPNG } from "./simple.js";
+import { loadNasa, renderGallery, renderMissions, centreMap } from "./nasa.js";
 
 const WATCH = {
   SlopeWatch: { hex: "#7d2e1c", brand: "SlopeWatch" },
@@ -35,8 +36,9 @@ function rewind(feature) {
   return feature;
 }
 
+let SAFE = null;
 let DATA, GEO, FLOOD, current, profileKind = "el_nino", showFlood = false;
-let cal = { level: "district", place: null, type: "after_el_nino" };
+let cal = { mode: "fc", level: "district", place: null, type: "after_el_nino" };
 let view = "family"; // family, farmer, coast (plain language) or full (all the data)
 try { view = localStorage.getItem("biome-view") || "family"; } catch { /* storage blocked */ }
 if (!VIEWS.includes(view)) view = "family";
@@ -59,6 +61,9 @@ async function load() {
   if (VIEWS.includes(parts[0])) view = parts.shift();
   const fromHash = parts[0] || "";
   renderAll();
+  // NASA pictures and the evacuation places load after the first paint
+  loadNasa().then(() => renderGallery($("#nasa")));
+  fetch("data/safe_centres.json").then((r) => (r.ok ? r.json() : null)).then((j) => { SAFE = j; if (current) renderPanel(current); }).catch(() => {});
   const names = Object.keys(DATA.districts);
   select(names.find((n) => slug(n) === fromHash) || pickDefault(names), false);
 }
@@ -88,6 +93,8 @@ function renderAll() {
   renderPicker();
   renderCalendar();
   renderHow();
+  renderGallery($("#nasa"));
+  renderMissions($("#missions"));
   if (current) select(current, false);
 }
 
@@ -196,8 +203,9 @@ function renderSimple(name) {
     $("#panel").innerHTML = `<div class="simple"><p class="aud">${esc(t("for_coast"))}</p><h2>${esc(dName(name))}</h2><p class="basis">${esc(t("coast_not", { d: dName(name) }))}</p></div>`;
     return;
   }
-  const model = buildReport(name, view, DATA);
+  const model = buildReport(name, view, DATA, SAFE);
   $("#panel").innerHTML = reportHTML(model);
+  if ($("#cmap-slot")) $("#cmap-slot").innerHTML = centreMap(name, GEO, SAFE);
   $("#dl-png").addEventListener("click", () => downloadPNG(model));
   $("#dl-pdf").addEventListener("click", () => window.print());
 }
@@ -218,6 +226,7 @@ function renderPanel(name) {
     ${d.next ? `<p class="next">${esc(t("next", { n: d.next.months.length, p: r0(d.next.rain_pct) }))}</p>` : ""}
     <p class="meta-line">${esc(soilNote)}${esc(t("not_forecast"))}</p>
     <div id="live"></div>
+    <div id="safe-full"></div>
     <div class="figure">
       <div class="fig-head"><h3>${esc(t("swing_title"))}</h3>
         ${hasLN ? `<div class="seg" role="group">${["el_nino", "la_nina"].map((k) => `<button type="button" data-k="${k}" class="${k === profileKind ? "on" : ""}" aria-pressed="${k === profileKind}">${esc(t("t_" + k))}</button>`).join("")}</div>` : ""}
@@ -238,6 +247,10 @@ function renderPanel(name) {
   drawSwing("#chart-rain", prof?.rain_pct, showNow ? d.this_event?.rain_pct : null, 100, t("y_rain"));
   drawSwing("#chart-soil", prof?.soil_pct, showNow ? d.this_event?.soil_pct : null, 50, t("y_soil"), [0, 100]);
   renderLive(name);
+  const sp = SAFE?.districts?.[name];
+  if (sp) $("#safe-full").innerHTML = `<div class="live"><h3>${esc(t("s_safe"))} <span class="nasa-tag">NASA SRTM</span></h3>${centreMap(name, GEO, SAFE)}
+    <ol class="picks">${sp.top.slice(0, 5).map((c) => `<li>${esc(c[3])} <span class="muted">(${esc(t("kind_" + c[2]))}, ${c[4]} m)</span></li>`).join("")}</ol>
+    <p class="cap">${esc(t("safe_count", { a: sp.safer, n: sp.count }))} ${esc(t("safe_note"))}</p></div>`;
 }
 
 function renderLive(name) {
@@ -307,27 +320,55 @@ function story(name, d) {
 }
 
 function renderCalendar() {
-  const C = DATA.calendar;
+  const C = DATA.calendar, F = DATA.forecast;
   if (!C) { $("#calendar").hidden = true; return; }
+  if (!F) cal.mode = "hist";
   const places = { country: ["Sri Lanka"], province: Object.keys(C.provinces), district: Object.keys(C.district).sort() };
   if (!cal.place || !C[cal.level][cal.place]) cal.place = cal.level === "district" ? (current || places.district[0]) : places[cal.level][0];
   const nm = (p) => (cal.level === "district" ? dName(p) : pName(p));
   const types = ["after_el_nino", "all", "el_nino", "la_nina", "neutral"];
+  const fcMode = cal.mode === "fc";
+  $("#cal-title").textContent = t("cal_title");
+  const nYears = F ? F.train_years[1] - F.train_years[0] + 1 : 0;
+  $("#cal-lede").textContent = fcMode ? t("cal_fc_lede", { n: nYears }) : t("cal_lede", { a: C.years?.[0], b: C.years?.[1] });
+  $("#cal-controls").innerHTML = `
+    ${F ? `<label>${esc(t("cal_mode"))}<select id="cal-mode"><option value="fc" ${fcMode ? "selected" : ""}>${esc(t("cal_mode_fc"))}</option><option value="hist" ${fcMode ? "" : "selected"}>${esc(t("cal_mode_hist"))}</option></select></label>` : ""}
+    <label>${esc(t("cal_level"))}<select id="cal-level">${["country", "province", "district"].map((l) => `<option value="${l}" ${l === cal.level ? "selected" : ""}>${esc(t("lvl_" + l))}</option>`).join("")}</select></label>
+    <label>&nbsp;<select id="cal-place">${places[cal.level].map((p) => `<option value="${esc(p)}" ${p === cal.place ? "selected" : ""}>${esc(nm(p))}</option>`).join("")}</select></label>
+    ${fcMode ? "" : `<label>${esc(t("cal_type"))}<select id="cal-type">${types.map((ty) => `<option value="${ty}" ${ty === cal.type ? "selected" : ""}>${esc(t("ty_" + ty))}</option>`).join("")}</select></label>`}`;
+  if ($("#cal-mode")) $("#cal-mode").onchange = (e) => { cal.mode = e.target.value; renderCalendar(); };
+  $("#cal-level").onchange = (e) => { cal.level = e.target.value; cal.place = null; renderCalendar(); };
+  $("#cal-place").onchange = (e) => { cal.place = e.target.value; renderCalendar(); };
+  if ($("#cal-type")) $("#cal-type").onchange = (e) => { cal.type = e.target.value; renderCalendar(); };
+  const watchHead = (w) => `<th>${esc(WATCH[w].brand)}<span class="muted"> · ${esc(t("w_" + w))}</span></th>`;
+
+  if (fcMode) {
+    const node = F[cal.level][cal.place], sig = F.skill.signal;
+    const head = F.months.map((ym) => `<th>${esc(monthName(ym, true))}<br><span class="muted">${ym.slice(2, 4)}</span></th>`).join("");
+    const rain = cal.level === "district" ? `<tr><th>${esc(t("cal_row_rain"))}</th>${node.median.map((v, i) => `<td class="rain ${!sig[i] ? "" : v < 85 ? "dry" : v > 115 ? "wet" : ""}" title="${node.lo[i]} to ${node.hi[i]}%">${v}</td>`).join("")}</tr>` : "";
+    const rows = ["DryWatch", "FloodWatch", "SlopeWatch"].map((w) => `<tr>${watchHead(w)}${node.watch[w].map((p) => `<td style="--a:${Math.min(1, p)};--c:${WATCH[w].hex}" title="${esc(t("cal_cell_fc", { p: Math.round(p * 100) }))}">${Math.round(p * 100)}%</td>`).join("")}</tr>`).join("");
+    const conf = `<tr><th>${esc(t("cal_row_conf"))}</th>${sig.map((ok) => `<td class="conf ${ok ? "yes" : "no"}">${esc(t(ok ? "cal_conf_yes" : "cal_conf_no"))}</td>`).join("")}</tr>`;
+    const hits = F.skill.like_this_year.hit_rate.filter((_, i) => sig[i]);
+    const a = hits.length ? Math.round(10 * hits.reduce((x, y) => x + y, 0) / hits.length) : 3;
+    $("#cal-table").innerHTML = `<table class="cal"><tr><th></th>${head}</tr>${rain}${rows}${conf}</table>
+      <p class="cap">${esc(t("basis_model", { n: nYears, a }))} <span class="nasa-tag">NASA GPM IMERG + MERRA-2</span></p>
+      <p><button type="button" class="btn" id="cal-csv">${esc(t("cal_csv"))}</button></p>`;
+    $("#cal-csv").onclick = () => {
+      const lines = ["district,month,rain_median_pct_of_usual,rain_low_pct,rain_high_pct,chance_drier,chance_wetter,chance_DryWatch,chance_FloodWatch,chance_SlopeWatch,model_check"];
+      for (const [d, x] of Object.entries(F.district)) F.months.forEach((ym, i) => lines.push([d, ym, x.median[i], x.lo[i], x.hi[i], x.p_dry[i], x.p_wet[i], x.watch.DryWatch[i], x.watch.FloodWatch[i], x.watch.SlopeWatch[i], sig[i] ? "passed" : "no skill"].join(",")));
+      const a2 = document.createElement("a");
+      a2.href = URL.createObjectURL(new Blob([lines.join("\n")], { type: "text/csv" }));
+      a2.download = `biome-risk-calendar-${F.months[0]}.csv`;
+      document.body.appendChild(a2); a2.click(); a2.remove();
+    };
+    return;
+  }
   const rec = C[cal.level][cal.place][cal.type];
   const months = Array.from({ length: 12 }, (_, i) => monthName(`2001-${String(i + 1).padStart(2, "0")}`, true));
   const shade = (n, tot) => (tot ? Math.min(1, n / tot) : 0);
-  $("#cal-title").textContent = t("cal_title");
-  $("#cal-lede").textContent = t("cal_lede", { a: C.years?.[0], b: C.years?.[1] });
-  $("#cal-controls").innerHTML = `
-    <label>${esc(t("cal_level"))}<select id="cal-level">${["country", "province", "district"].map((l) => `<option value="${l}" ${l === cal.level ? "selected" : ""}>${esc(t("lvl_" + l))}</option>`).join("")}</select></label>
-    <label>&nbsp;<select id="cal-place">${places[cal.level].map((p) => `<option value="${esc(p)}" ${p === cal.place ? "selected" : ""}>${esc(nm(p))}</option>`).join("")}</select></label>
-    <label>${esc(t("cal_type"))}<select id="cal-type">${types.map((ty) => `<option value="${ty}" ${ty === cal.type ? "selected" : ""}>${esc(t("ty_" + ty))}</option>`).join("")}</select></label>`;
-  $("#cal-level").onchange = (e) => { cal.level = e.target.value; cal.place = null; renderCalendar(); };
-  $("#cal-place").onchange = (e) => { cal.place = e.target.value; renderCalendar(); };
-  $("#cal-type").onchange = (e) => { cal.type = e.target.value; renderCalendar(); };
   const tot = rec.years;
   $("#cal-table").innerHTML = `<table class="cal"><tr><th></th>${months.map((m) => `<th>${esc(m)}</th>`).join("")}</tr>
-    ${["DryWatch", "FloodWatch", "SlopeWatch"].map((w) => `<tr><th>${esc(WATCH[w].brand)}<span class="muted"> · ${esc(t("w_" + w))}</span></th>${rec[w].map((n) => `<td style="--a:${shade(n, tot)};--c:${WATCH[w].hex}" title="${esc(t("cal_cell", { n, t: tot }))}">${n}</td>`).join("")}</tr>`).join("")}
+    ${["DryWatch", "FloodWatch", "SlopeWatch"].map((w) => `<tr>${watchHead(w)}${rec[w].map((n) => `<td style="--a:${shade(n, tot)};--c:${WATCH[w].hex}" title="${esc(t("cal_cell", { n, t: tot }))}">${n}</td>`).join("")}</tr>`).join("")}
     </table><p class="cap">${esc(t("cal_cell", { n: "n", t: tot }))}</p>`;
 }
 
