@@ -104,7 +104,8 @@ READERS = {
 
 DEFAULT_RANGES = {
     "imerg_final": ("2000-06-01", None),
-    "imerg_late_daily": ("2026-01-01", None),
+    # from mid-2025: IMERG Final V07 monthly currently ends in Sep 2025, so Late fills the months after it
+    "imerg_late_daily": ("2025-06-01", None),
     "gldas": ("2000-01-01", None),
     # to 2010 so MERRA-2 has its own 1981-2010 normal for the older El Ninos
     "merra2_flx": ("1980-01-01", "2010-12-31"),

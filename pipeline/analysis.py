@@ -39,6 +39,9 @@ RULES = {
     "DryWatch": "3-month rain at or below 75% of normal and soil moisture in the driest 25% for this month",
     "FloodWatch": "rain at or above 150% of normal this month on soil already in the wettest 25%",
     "SlopeWatch": "a hill district where soil is in the wettest 25% and rain is at or above 130% of normal",
+    "ground_wetness": "GLDAS root-zone soil moisture when it is no more than a month old; GLDAS runs about 3 months "
+                      "behind, so for recent months the rank of the last 3 months of rain against the same months in "
+                      "2001-2025 stands in for it",
 }
 
 # Known events for the backtest. Each must be checked against a source before
@@ -64,6 +67,29 @@ def wide(key, var, value="value"):
     return df.pivot_table(index="time", columns="district", values=value).sort_index()
 
 
+GAP_FILLS = {}  # dataset -> {district: neighbour used}, reported in meta
+
+
+def fill_from_neighbour(df, key, districts):
+    """Give a district with no values in a dataset the values of its nearest
+    neighbour (by centroid). GLDAS treats most of the Jaffna peninsula as water,
+    so Jaffna borrows Kilinochchi's soil moisture; the swap is listed in meta."""
+    if df is None:
+        return None
+    missing = [d for d in districts if d not in df.columns or df[d].isna().all()]
+    if not missing:
+        return df.reindex(columns=districts)
+    from districts import load_districts
+    cent = {n: g.centroid for n, g in load_districts().items()}
+    df = df.copy()
+    for d in missing:
+        have = [n for n in df.columns if n != d and df[n].notna().any() and n in cent]
+        near = min(have, key=lambda n: cent[n].distance(cent[d]))
+        df[d] = df[near]
+        GAP_FILLS.setdefault(key, {})[d] = near
+    return df.reindex(columns=districts)
+
+
 def load_rain():
     """IMERG Final, extended with IMERG Late (early estimate) for recent months."""
     final = wide("imerg_final", "rain_mm")
@@ -83,6 +109,8 @@ def load_rain():
         late = late[full]
         final = pd.concat([final, late])
         source = pd.concat([source, pd.Series("IMERG Late (early estimate)", index=late.index)])
+    # a calendar gap would make the 3-month sums skip months, so keep every month (NaN if missing)
+    final = final.reindex(pd.date_range(final.index.min(), final.index.max(), freq="MS"))
     return final, source, partial
 
 
@@ -261,17 +289,28 @@ def trends(df, label, start=CLIM_START, end=CLIM_END, pct_base=None):
 
 # ------------------------------------------------------------------ watch flags
 
-def flag_for(district, rain1, rain3, smp, ndvi_anom=None):
-    """Return (watch, reason) for one district-month."""
+def flag_for(district, rain1, rain3, smp, ndvi_anom=None, wet_src="soil"):
+    """Return (watch, reason) for one district-month.
+
+    smp is how wet the ground is, as a percentile against the same month in
+    past years: GLDAS soil moisture when it is current, otherwise (GLDAS runs
+    about 3 months behind) the rank of the last 3 months of rain, which is how
+    much water the ground has been given (wet_src="rain3")."""
     hill = district in HILL_DISTRICTS
+    if wet_src == "rain3":
+        wet = lambda p: f"ground wetter than {p:.0f}% of past years (from 3 months of rain)"
+        dry = lambda p: f"ground drier than {100 - p:.0f}% of past years (from 3 months of rain)"
+    else:
+        wet = lambda p: f"soil wetter than {p:.0f}% of past years"
+        dry = lambda p: f"soil drier than {100 - p:.0f}% of past years"
     if hill and _ok(smp) and _ok(rain1) and smp >= 75 and rain1 >= 130:
-        return "SlopeWatch", f"Soil wetter than {smp:.0f}% of past years and rain {rain1:.0f}% of normal on hill country"
+        return "SlopeWatch", f"Rain {rain1:.0f}% of normal on hill country, {wet(smp)}"
     if _ok(smp) and _ok(rain1) and smp >= 75 and rain1 >= 150:
-        return "FloodWatch", f"Rain {rain1:.0f}% of normal on soil wetter than {smp:.0f}% of past years"
+        return "FloodWatch", f"Rain {rain1:.0f}% of normal, {wet(smp)}"
     if _ok(rain3) and _ok(smp) and rain3 <= 75 and smp <= 25:
         extra = f", plants {abs(ndvi_anom):.2f} NDVI below normal" if _ok(ndvi_anom) and ndvi_anom < 0 else ""
-        return "DryWatch", f"Three months of rain at {rain3:.0f}% of normal and soil drier than {100 - smp:.0f}% of past years{extra}"
-    return "Clear", "Rain and soil moisture are within the normal range for this month"
+        return "DryWatch", f"Three months of rain at {rain3:.0f}% of normal, {dry(smp)}{extra}"
+    return "Clear", "Rain and ground wetness are within the normal range for this month"
 
 
 def _ok(x):
@@ -309,7 +348,10 @@ def station_check(rain, rain_pct):
     return sorted(out, key=lambda x: -x["months"])
 
 
-def backtest(rain1, rain3, smp):
+def backtest(rain1, rain3, smp, wet3):
+    """What Biome would have said for known disasters. 'month_of' uses the
+    real-time rule (ground wetness from the rank of 3-month rain, because GLDAS
+    is not out yet when the rain falls); 'gldas' repeats it with GLDAS soil."""
     out = []
     for ev in BACKTEST_EVENTS:
         t = pd.Timestamp(ev["date"] + "-01")
@@ -317,11 +359,14 @@ def backtest(rain1, rain3, smp):
         d = ev["district"]
         row = {**ev}
         for label, when in (("month_of", t), ("month_before", before)):
-            if when in rain1.index and d in rain1:
-                w, why = flag_for(d, rain1.at[when, d], rain3.at[when, d], smp.at[when, d] if when in smp.index else np.nan)
-                row[label] = {"watch": w, "reason": why,
-                              "rain_pct": _r(rain1.at[when, d]),
-                              "soil_pct": _r(smp.at[when, d]) if when in smp.index else None}
+            if when in rain1.index and d in rain1 and _ok(rain1.at[when, d]):
+                w, why = flag_for(d, rain1.at[when, d], rain3.at[when, d], wet3.at[when, d], None, "rain3")
+                g = smp.at[when, d] if when in smp.index else np.nan
+                wg, _ = flag_for(d, rain1.at[when, d], rain3.at[when, d], g)
+                row[label] = {"watch": w, "reason": why, "rain_pct": _r(rain1.at[when, d]),
+                              "rain3_pct": _r(rain3.at[when, d]), "wet_pct": _r(wet3.at[when, d]),
+                              "gldas": {"watch": wg, "soil_pct": _r(g)}}
+        row["caught"] = row.get("month_of", {}).get("watch") not in (None, "Clear")
         out.append(row)
     return out
 
@@ -521,16 +566,17 @@ def main():
     rain1 = pct_of_normal(rain, rnorm)
     rain3 = rolling_pct(rain, rnorm, 3)
 
-    soil = wide("gldas", "RootMoist_inst")
+    soil = fill_from_neighbour(wide("gldas", "RootMoist_inst"), "gldas_soil", list(rain.columns))
+    wet3 = percentile_of(rain3)  # ground-wetness stand-in while GLDAS catches up
     smp = percentile_of(soil) if soil is not None else pd.DataFrame(index=rain.index, columns=rain.columns)
 
-    ndvi = wide("modis_ndvi", "ndvi")
+    ndvi = fill_from_neighbour(wide("modis_ndvi", "ndvi"), "modis_ndvi", list(rain.columns))
     ndvi_anom = ndvi - normal_of(ndvi).reindex(ndvi.index.month).set_index(ndvi.index) if ndvi is not None else None
 
     # MERRA-2 for the El Ninos before the satellite era, against its own 1981-2010 normal
     m_rain = wide("merra2_flx", "rain_mm")
     m_pct = pct_of_normal(m_rain, normal_of(m_rain, 1981, 2010)) if m_rain is not None else None
-    m_soil = wide("merra2_lnd", "GWETROOT")
+    m_soil = fill_from_neighbour(wide("merra2_lnd", "GWETROOT"), "merra2_soil", list(rain.columns))
     m_smp = percentile_of(m_soil, 1981, 2010) if m_soil is not None else None
 
     events, oni = el_nino_events(kind="el_nino")
@@ -574,9 +620,13 @@ def main():
 
     districts = {}
     for d in rain.columns:
-        sm_now, sm_month = last_value(smp, d, latest)
+        sm_now, sm_month = last_value(smp, d, latest, max_lag=1)
+        wet_src = "soil"
+        if not _ok(sm_now):  # GLDAS is months behind: use the rank of 3-month rain
+            sm_now, sm_month, wet_src = wet3.at[latest, d], latest.strftime("%Y-%m"), "rain3"
+        gl_now, gl_month = last_value(smp, d, latest, max_lag=6)
         nd_now, _ = last_value(ndvi_anom, d, latest)
-        watch, why = flag_for(d, rain1.at[latest, d], rain3.at[latest, d], sm_now, nd_now)
+        watch, why = flag_for(d, rain1.at[latest, d], rain3.at[latest, d], sm_now, nd_now, wet_src)
         flag_month = latest.strftime("%Y-%m")
 
         # the month in progress (IMERG Late, first N days), if at least a week is in
@@ -587,9 +637,13 @@ def main():
             prev2 = rain[d].iloc[-2:].sum() + partial["rain_mm"][d]
             normal3 = sum(rnorm.at[(pm - pd.DateOffset(months=k)).month, d] for k in range(3))
             p3 = 100 * prev2 / normal3
-            w2, why2 = flag_for(d, p1, p3, sm_now, nd_now)
+            hist = rain3[rain3.index.month == pm.month][d]
+            hist = hist[(hist.index.year >= CLIM_START) & (hist.index.year <= CLIM_END)].dropna().values
+            w3 = 100 * np.searchsorted(np.sort(hist), p3, side="right") / hist.size if hist.size else np.nan
+            w2, why2 = flag_for(d, p1, p3, w3, nd_now, "rain3")
+            sm_now, sm_month, wet_src = w3, pm.strftime("%Y-%m"), "rain3"
             so_far = {"month": pm.strftime("%Y-%m"), "days": partial["days"], "rain_pct": _r(p1),
-                      "rain3_pct": _r(p3), "watch": w2, "reason": why2}
+                      "rain3_pct": _r(p3), "wet_pct": _r(w3), "watch": w2, "reason": why2}
             watch, why, flag_month = w2, why2, pm.strftime("%Y-%m")
 
         nxt = None
@@ -613,12 +667,13 @@ def main():
             "watch": watch, "reason": why, "flag_month": flag_month, "next": nxt,
             "now": {"month": latest.strftime("%Y-%m"), "source": rain_source.get(latest, "IMERG Final"),
                     "rain_mm": _r(rain.at[latest, d]), "rain_pct": _r(rain1.at[latest, d]),
-                    "rain3_pct": _r(rain3.at[latest, d]), "soil_pct": _r(sm_now), "soil_month": sm_month,
+                    "rain3_pct": _r(rain3.at[latest, d]), "soil_pct": _r(gl_now), "soil_month": gl_month,
+                    "wet_pct": _r(sm_now), "wet_source": wet_src,
                     "ndvi_anom": _r(nd_now, 3)},
             "so_far": so_far,
             "flag_values": {"rain_pct": _r(so_far["rain_pct"] if so_far else rain1.at[latest, d]),
                             "rain3_pct": _r(so_far["rain3_pct"] if so_far else rain3.at[latest, d]),
-                            "soil_pct": _r(sm_now), "ndvi_anom": _r(nd_now, 3)},
+                            "soil_pct": _r(sm_now), "wet_source": wet_src, "ndvi_anom": _r(nd_now, 3)},
             "profile": prof_json(main_rain, main_soil),
             "profiles": {"el_nino": prof_json(rain_prof, soil_prof), "la_nina": prof_json(ln_rain_prof, ln_soil_prof)},
             "this_event": {"rain_pct": [_r(v) for v in window(rain1, y0_now)[d]],
@@ -651,7 +706,7 @@ def main():
             "latest_source": rain_source.get(latest, "IMERG Final"),
             "normal_period": f"{CLIM_START}-{CLIM_END}",
             "lag_labels": LAG_LABELS, "lag_now": int(lag_now),
-            "rules": RULES, "watch_counts": counts,
+            "rules": RULES, "watch_counts": counts, "gap_fills": GAP_FILLS,
             "data_ranges": {k: _range(v) for k, v in
                             {"rain": rain, "soil": soil, "ndvi": ndvi, "merra2_rain": m_rain}.items()},
         },
@@ -665,7 +720,7 @@ def main():
         "reservoirs": _safe(reservoirs, rain1),
         "rivers": _safe(river_gauges),
         "validation": {"stations": station_check(rain, rain1)},
-        "backtest": backtest(rain1, rain3, smp),
+        "backtest": backtest(rain1, rain3, smp, wet3),
     }
     WEB_DATA.mkdir(parents=True, exist_ok=True)
     path = WEB_DATA / "biome.json"
