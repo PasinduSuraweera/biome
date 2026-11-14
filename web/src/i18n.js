@@ -1,6 +1,8 @@
 // Every user-facing line in English, Sinhala and Tamil.
 // The Sinhala and Tamil text must be checked by native speakers before release.
 
+import { S } from "./i18n_simple.js";
+
 export const LANGS = { en: "English", si: "සිංහල", ta: "தமிழ்" };
 export const LOCALE = { en: "en-GB", si: "si-LK", ta: "ta-LK" };
 
@@ -145,6 +147,7 @@ const T = {
     "Biome යනු NASA Space Apps Challenge 2026 (මහනුවර) ව්‍යාපෘතියකි. එය අතීත වාර්තාවල රටා පෙන්වයි, කාලගුණ අනාවැකියක් නොවේ: අනතුරු ඇඟවීම් සඳහා කාලගුණ විද්‍යා දෙපාර්තමේන්තුව, NBRO සහ ආපදා කළමනාකරණ මධ්‍යස්ථානය අනුගමනය කරන්න.",
     "Biome என்பது NASA Space Apps Challenge 2026 (கண்டி) திட்டமாகும். இது கடந்த பதிவுகளின் போக்குகளைக் காட்டுகிறது, வானிலை முன்னறிவிப்பு அல்ல: எச்சரிக்கைகளுக்கு வளிமண்டலவியல் திணைக்களம், NBRO மற்றும் அனர்த்த முகாமைத்துவ நிலையத்தைப் பின்பற்றவும்."],
 };
+Object.assign(T, S);
 
 let lang = "en";
 try { lang = localStorage.getItem("biome-lang") || "en"; } catch { /* storage blocked */ }

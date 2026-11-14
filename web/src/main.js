@@ -2,6 +2,7 @@ import "./style.css";
 import { geoArea, geoMercator, geoPath } from "d3-geo";
 import * as Plot from "@observablehq/plot";
 import { LANGS, t, dName, pName, monthName, getLang, setLang } from "./i18n.js";
+import { VIEWS, COASTAL, buildReport, reportHTML, downloadPNG } from "./simple.js";
 
 const WATCH = {
   SlopeWatch: { hex: "#7d2e1c", brand: "SlopeWatch" },
@@ -36,6 +37,11 @@ function rewind(feature) {
 
 let DATA, GEO, FLOOD, current, profileKind = "el_nino", showFlood = false;
 let cal = { level: "district", place: null, type: "after_el_nino" };
+let view = "family"; // family, farmer, coast (plain language) or full (all the data)
+try { view = localStorage.getItem("biome-view") || "family"; } catch { /* storage blocked */ }
+if (!VIEWS.includes(view)) view = "family";
+const simple = () => view !== "full";
+const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
 async function load() {
   const [d, g] = await Promise.all([
@@ -49,13 +55,16 @@ async function load() {
   fetch("data/flood_nov2025.geojson").then((r) => (r.ok ? r.json() : null)).then((fl) => {
     if (fl) { fl.features.forEach(rewind); FLOOD = fl; }
   }).catch(() => {});
+  const parts = decodeURIComponent(location.hash.slice(1)).split("/");
+  if (VIEWS.includes(parts[0])) view = parts.shift();
+  const fromHash = parts[0] || "";
   renderAll();
-  const fromHash = decodeURIComponent(location.hash.slice(1));
   const names = Object.keys(DATA.districts);
   select(names.find((n) => slug(n) === fromHash) || pickDefault(names), false);
 }
 
 function pickDefault(names) {
+  if (view === "coast") names = names.filter((n) => COASTAL.has(n));
   for (const w of ORDER.slice(0, 3)) {
     const hit = names.find((n) => DATA.districts[n].watch === w);
     if (hit) return hit;
@@ -70,7 +79,9 @@ function renderAll() {
   $("#ov-title").textContent = t("headline");
   $("#how-title").textContent = t("how_title");
   $("#foot-text").textContent = t("foot");
+  document.body.dataset.view = view;
   renderLangs();
+  renderTabs();
   renderStatus();
   renderMap();
   renderLegend();
@@ -86,6 +97,21 @@ function renderLangs() {
   $("#langs").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { setLang(b.dataset.l); renderAll(); }));
 }
 
+function renderTabs() {
+  const el = $("#tabs");
+  el.setAttribute("aria-label", t("tabs_label"));
+  el.innerHTML = VIEWS.map((v) => `<button type="button" class="tab ${v === view ? "on" : ""}" data-v="${v}" aria-pressed="${v === view}">${esc(t("tab_" + v))}</button>`).join("");
+  el.querySelectorAll("button").forEach((b) => b.addEventListener("click", () => setView(b.dataset.v)));
+}
+
+function setView(v) {
+  view = v;
+  try { localStorage.setItem("biome-view", v); } catch { /* storage blocked */ }
+  if (v === "coast" && current && !COASTAL.has(current)) current = pickDefault(Object.keys(DATA.districts));
+  renderAll();
+  if (current) select(current);
+}
+
 function renderStatus() {
   const m = DATA.meta, cur = DATA.el_nino.current;
   const so = Object.values(DATA.districts).find((d) => d.so_far)?.so_far;
@@ -94,7 +120,7 @@ function renderStatus() {
   $("#status").innerHTML = `<b>${esc(nino)}</b> · ${esc(t("latest", { m: latest }))}`;
   const c = m.watch_counts || {};
   const parts = ["SlopeWatch", "FloodWatch", "DryWatch"].filter((w) => c[w]).map((w) => t("count", { n: c[w], w: WATCH[w].brand }));
-  $("#lede").textContent = parts.length ? t("lede", { list: parts.join(", ") }) : t("lede_none");
+  $("#lede").textContent = simple() ? t("simple_lede") : parts.length ? t("lede", { list: parts.join(", ") }) : t("lede_none");
 }
 
 function renderMap() {
@@ -105,8 +131,8 @@ function renderMap() {
   const path = geoPath(proj);
   const districts = GEO.features.map((f) => {
     const n = f.properties.name, w = DATA.districts[n]?.watch || "Clear";
-    const label = `${dName(n)}: ${watchLabel(w)}`;
-    return `<path class="district" data-name="${esc(n)}" d="${path(f)}" fill="${WATCH[w].hex}" tabindex="0" role="button" aria-label="${esc(label)}"><title>${esc(label)}</title></path>`;
+    const label = `${dName(n)}: ${simple() ? t("n_" + w) : watchLabel(w)}`;
+    return `<path class="district${view === "coast" && !COASTAL.has(n) ? " dim" : ""}" data-name="${esc(n)}" d="${path(f)}" fill="${WATCH[w].hex}" tabindex="0" role="button" aria-label="${esc(label)}"><title>${esc(label)}</title></path>`;
   }).join("");
   const flood = showFlood && FLOOD ? `<path class="flood" d="${path(FLOOD)}"/>` : "";
   const res = (DATA.reservoirs?.items || []).map((r) => {
@@ -117,7 +143,7 @@ function renderMap() {
     const [x, y] = proj([g.lon, g.lat]);
     return `<path class="gauge" d="M${x.toFixed(1)} ${(y - 6).toFixed(1)}l5 9h-10z"><title>${esc(g.gauge)}: ${esc(t("g_" + g.status))}</title></path>`;
   }).join("");
-  svg.innerHTML = districts + flood + `<g>${res}${gauges}</g><g id="map-label"></g>`;
+  svg.innerHTML = districts + (simple() ? "" : flood + `<g>${res}${gauges}</g>`) + `<g id="map-label"></g>`;
   svg.querySelectorAll("path.district").forEach((p) => {
     p.addEventListener("click", () => select(p.dataset.name));
     p.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(p.dataset.name); } });
@@ -127,6 +153,10 @@ function renderMap() {
 
 function renderLegend() {
   const c = DATA.meta.watch_counts || {};
+  if (simple()) {
+    $("#legend").innerHTML = ORDER.map((w) => `<li><span class="sw" style="background:${WATCH[w].hex}"></span>${esc(t("n_" + w))}</li>`).join("");
+    return;
+  }
   $("#legend").innerHTML = ORDER.map((w) => `<li><span class="sw" style="background:${WATCH[w].hex}"></span>${esc(w === "Clear" ? t("w_Clear") : WATCH[w].brand)} <span class="muted">(${c[w] || 0})</span></li>`).join("")
     + `<li><span class="sw dot"></span>${esc(t("lg_res"))}</li>`
     + (DATA.rivers ? `<li><span class="sw tri"></span>${esc(t("lg_gauge"))}</li>` : "")
@@ -151,7 +181,7 @@ function select(name, push = true) {
     const [x, y] = $("#map")._path.centroid(f);
     $("#map-label").innerHTML = `<text x="${x}" y="${y}" text-anchor="middle" dy="4">${esc(dName(name))}</text>`;
   }
-  if (push) history.replaceState(null, "", `#${slug(name)}`);
+  if (push) history.replaceState(null, "", `#${view}/${slug(name)}`);
   if (cal.level === "district") { cal.place = name; renderCalendar(); }
   renderPanel(name);
 }
@@ -161,7 +191,19 @@ function reasonText(d) {
   return t(`r_${d.watch}`, { s: r0(v.soil_pct), r: r0(v.rain_pct), r3: r0(v.rain3_pct), d: r0(100 - (v.soil_pct ?? 0)) });
 }
 
+function renderSimple(name) {
+  if (view === "coast" && !COASTAL.has(name)) {
+    $("#panel").innerHTML = `<div class="simple"><p class="aud">${esc(t("for_coast"))}</p><h2>${esc(dName(name))}</h2><p class="basis">${esc(t("coast_not", { d: dName(name) }))}</p></div>`;
+    return;
+  }
+  const model = buildReport(name, view, DATA);
+  $("#panel").innerHTML = reportHTML(model);
+  $("#dl-png").addEventListener("click", () => downloadPNG(model));
+  $("#dl-pdf").addEventListener("click", () => window.print());
+}
+
 function renderPanel(name) {
+  if (simple()) return renderSimple(name);
   const d = DATA.districts[name];
   const early = d.so_far ? ` (${t("early", { n: d.so_far.days })})` : "";
   const soilNote = d.flag_values?.wet_source === "rain3" ? t("wet_from_rain") + " "
@@ -298,7 +340,7 @@ function renderHow() {
     .sort((a, c) => a.year0 - c.year0)
     .map((x) => `<tr><td>${x.kind === "la_nina" ? "La Niña" : "El Niño"} ${x.year0} to ${x.year0 + 1}</td><td>${esc(x.strength)}</td><td>${x.peak}</td><td>${x.ongoing ? "this year" : (e.strong_used || []).includes(x.year0) || (e.la_nina_used || []).includes(x.year0) ? "in the profile" : "outside data"}</td></tr>`).join("");
   const stRows = (v.stations || []).map((s) => `<tr><td>${esc(s.station)}</td><td>${esc(s.district)}</td><td>${s.months}</td><td>${s.r_monthly}</td><td>${s.r_anomaly}</td><td>${s.bias_pct > 0 ? "+" : ""}${s.bias_pct}%</td></tr>`).join("");
-  const btRows = (b || []).map((x) => `<tr><td>${esc(x.event)}</td><td>${esc(x.district)}</td><td>${esc(x.month_before?.watch ?? "n/a")} (soil rank ${x.month_before?.soil_pct ?? "n/a"})</td><td>${esc(x.month_of?.watch ?? "n/a")}</td></tr>`).join("");
+  const btRows = (b || []).map((x) => `<tr><td>${esc(x.event)}</td><td>${esc(x.district)}</td><td>${esc(x.month_before?.watch ?? "n/a")} (ground wetness rank ${x.month_before?.wet_pct ?? "n/a"})</td><td>${esc(x.month_of?.watch ?? "n/a")}</td></tr>`).join("");
   $("#how-body").innerHTML = `
     ${getLang() !== "en" ? `<p class="muted">${esc(t("how_note"))}</p>` : ""}
     <p>Biome is a trend detective, not a weather forecast. It learns what is normal for each district, looks at how past El Niños and La Niñas hit it, and places this year inside that pattern. Every number on this page is computed from the public data below, with code you can rerun.</p>

@@ -313,6 +313,71 @@ def flag_for(district, rain1, rain3, smp, ndvi_anom=None, wet_src="soil"):
     return "Clear", "Rain and ground wetness are within the normal range for this month"
 
 
+def level_of(p):
+    """Plain-language rain level for a % of normal."""
+    if not _ok(p):
+        return None
+    return ("much_drier" if p < 60 else "drier" if p < 85 else "normal" if p <= 115
+            else "wetter" if p <= 140 else "much_wetter")
+
+
+def outlook(d, rain_all, rnorm, analog_years, y0_now, start, cal_d, kind):
+    """What the next 12 months looked like in past years of the same kind.
+
+    For each coming month, take the same calendar month at the same point of
+    each past event (a strong El Nino or a La Nina) and average its rain as %
+    of normal. Horizons (1, 3, 6, 12 months) compare total rain with the normal
+    total, event by event, and count how many events went the same way. Risk
+    shares come from the risk calendar for that kind of year. This is a pattern
+    from past years, not a weather forecast.
+    """
+    months = pd.date_range(start, periods=12, freq="MS")
+    per_event = {}
+    for y in analog_years or []:
+        vals = []
+        for t in months:
+            ts = pd.Timestamp(y + (t.year - y0_now), t.month, 1)
+            vals.append(rain_all.at[ts, d] if ts in rain_all.index and d in rain_all else np.nan)
+        vals = np.array(vals, float)
+        if np.isfinite(vals).sum() >= 6:
+            per_event[int(y)] = vals
+    w = np.array([rnorm.at[t.month, d] for t in months], float)
+
+    def ytype(t):
+        if kind == "el_nino":
+            return "el_nino" if t.year == y0_now else "after_el_nino" if t.year == y0_now + 1 else "all"
+        if kind == "la_nina":
+            return "la_nina" if t.year == y0_now else "all"
+        return "neutral"
+
+    rows = []
+    for i, t in enumerate(months):
+        v = np.array([p[i] for p in per_event.values()], float)
+        v = v[np.isfinite(v)]
+        c = (cal_d or {}).get(ytype(t)) or (cal_d or {}).get("all")
+        mean = float(v.mean()) if v.size else np.nan
+        rows.append({"month": t.strftime("%Y-%m"), "rain_pct": _r(mean), "level": level_of(mean) or "normal",
+                     "n": int(v.size),
+                     "risk": {wn: (c[wn][t.month - 1] if c else 0) for wn in WATCHES},
+                     "risk_years": c["years"] if c else 0})
+    horizons = {}
+    for h in (1, 3, 6, 12):
+        tot = [float((p[:h] * w[:h]).sum() / w[:h].sum()) for p in per_event.values() if np.isfinite(p[:h]).all()]
+        if tot:
+            mean = float(np.mean(tot))
+            lvl = level_of(mean)
+            agree = sum((v < 90) if lvl in ("drier", "much_drier") else (v > 110) if lvl in ("wetter", "much_wetter")
+                        else (85 <= v <= 115) for v in tot)
+            horizons[str(h)] = {"rain_pct": _r(mean), "level": lvl, "agree": int(agree), "n": len(tot)}
+        else:
+            horizons[str(h)] = {"rain_pct": None, "level": "normal", "agree": 0, "n": 0}
+        horizons[str(h)]["months"] = [months[0].strftime("%Y-%m"), months[h - 1].strftime("%Y-%m")]
+    return {"start": months[0].strftime("%Y-%m"), "basis": kind if per_event else None,
+            "years": sorted(per_event), "months": rows, "horizons": horizons,
+            "normal_mm": [_r(v) for v in w],
+            "events": {str(y): [_r(v) for v in p] for y, p in sorted(per_event.items())}}
+
+
 def _ok(x):
     return x is not None and not (isinstance(x, float) and math.isnan(x))
 
@@ -697,6 +762,15 @@ def main():
     full_years = [y for y in sorted(set(cal_r1.index.year)) if (cal_r1.index.year == y).sum() == 12 and y <= CLIM_END]
     types = year_types([e for e in events if e["strength"] in ("strong", "very strong")], la_nina, full_years)
     calendar = risk_calendar(cal_r1, cal_r3, cal_sm, types)
+
+    # plain-language outlook for the next 12 months, from past years of the same kind
+    kind_now = current["kind"] if current else None
+    analog = (ln_used if kind_now == "la_nina" else rain_events) if kind_now else []
+    first_flag = next(iter(districts.values()))["flag_month"]
+    start = pd.Timestamp(first_flag + "-01") + pd.DateOffset(months=1)
+    for d in districts:
+        districts[d]["outlook"] = outlook(d, rain_all, rnorm, analog, y0_now, start,
+                                          calendar["district"].get(d), kind_now)
 
     counts = pd.Series([v["watch"] for v in districts.values()]).value_counts().to_dict()
     out = {
