@@ -164,7 +164,8 @@ function reasonText(d) {
 function renderPanel(name) {
   const d = DATA.districts[name];
   const early = d.so_far ? ` (${t("early", { n: d.so_far.days })})` : "";
-  const soilNote = d.now.soil_month && d.now.soil_month !== d.flag_month ? t("soil_from", { m: monthName(d.now.soil_month) }) + " " : "";
+  const soilNote = d.flag_values?.wet_source === "rain3" ? t("wet_from_rain") + " "
+    : d.now.soil_month && d.now.soil_month !== d.flag_month ? t("soil_from", { m: monthName(d.now.soil_month) }) + " " : "";
   const hasLN = !!d.profiles?.la_nina;
   const yr = DATA.el_nino.current?.year0 ?? "";
   $("#panel").innerHTML = `
