@@ -127,5 +127,1657 @@
    "mean_elev_m": 74,
    "max_elev_m": 178
   }
+ },
+ "towns": {
+  "Batticaloa|Manmunai South & Eruvil Pattu": {
+   "steep_share": 0.0,
+   "mean_elev_m": 4,
+   "max_elev_m": 20
+  },
+  "Batticaloa|Koralai Pattu West": {
+   "steep_share": 0.0,
+   "mean_elev_m": 7,
+   "max_elev_m": 21
+  },
+  "Jaffna|Thenmaradchi (Chavakachcheri)": {
+   "steep_share": 0.0,
+   "mean_elev_m": 5,
+   "max_elev_m": 16
+  },
+  "Batticaloa|Manmunai South West": {
+   "steep_share": 0.006,
+   "mean_elev_m": 28,
+   "max_elev_m": 310
+  },
+  "Batticaloa|Manmunai Pattu": {
+   "steep_share": 0.0,
+   "mean_elev_m": 5,
+   "max_elev_m": 14
+  },
+  "Batticaloa|Koralai Pattu": {
+   "steep_share": 0.0,
+   "mean_elev_m": 6,
+   "max_elev_m": 13
+  },
+  "Batticaloa|Porativu Pattu": {
+   "steep_share": 0.0,
+   "mean_elev_m": 13,
+   "max_elev_m": 40
+  },
+  "Batticaloa|Eravur Pattu": {
+   "steep_share": 0.025,
+   "mean_elev_m": 36,
+   "max_elev_m": 380
+  },
+  "Puttalam|Mundel": {
+   "steep_share": 0.0,
+   "mean_elev_m": 7,
+   "max_elev_m": 42
+  },
+  "Ampara|Addalaichenai": {
+   "steep_share": 0.0,
+   "mean_elev_m": 10,
+   "max_elev_m": 41
+  },
+  "Kalutara|Agalawatta": {
+   "steep_share": 0.297,
+   "mean_elev_m": 74,
+   "max_elev_m": 289
+  },
+  "Ampara|Akkaraipattu": {
+   "steep_share": 0.0,
+   "mean_elev_m": 11,
+   "max_elev_m": 36
+  },
+  "Galle|Akmeemana": {
+   "steep_share": 0.112,
+   "mean_elev_m": 46,
+   "max_elev_m": 178
+  },
+  "Kandy|Akurana": {
+   "steep_share": 0.4,
+   "mean_elev_m": 575,
+   "max_elev_m": 750
+  },
+  "Matara|Akuressa": {
+   "steep_share": 0.36,
+   "mean_elev_m": 101,
+   "max_elev_m": 404
+  },
+  "Kurunegala|Alawwa": {
+   "steep_share": 0.161,
+   "mean_elev_m": 89,
+   "max_elev_m": 308
+  },
+  "Ampara|Alayadivembu": {
+   "steep_share": 0.003,
+   "mean_elev_m": 6,
+   "max_elev_m": 61
+  },
+  "Nuwara Eliya|Ambagamuwa": {
+   "steep_share": 0.498,
+   "mean_elev_m": 1212,
+   "max_elev_m": 2303
+  },
+  "Galle|Ambalangoda": {
+   "steep_share": 0.005,
+   "mean_elev_m": 16,
+   "max_elev_m": 64
+  },
+  "Hambantota|Ambalantota": {
+   "steep_share": 0.0,
+   "mean_elev_m": 20,
+   "max_elev_m": 65
+  },
+  "Matale|Ambanganga": {
+   "steep_share": 0.517,
+   "mean_elev_m": 555,
+   "max_elev_m": 1280
+  },
+  "Kurunegala|Ambanpola": {
+   "steep_share": 0.0,
+   "mean_elev_m": 84,
+   "max_elev_m": 127
+  },
+  "Ampara|Ampara": {
+   "steep_share": 0.033,
+   "mean_elev_m": 62,
+   "max_elev_m": 462
+  },
+  "Puttalam|Anamaduwa": {
+   "steep_share": 0.0,
+   "mean_elev_m": 51,
+   "max_elev_m": 90
+  },
+  "Hambantota|Angunakolapelessa": {
+   "steep_share": 0.01,
+   "mean_elev_m": 55,
+   "max_elev_m": 261
+  },
+  "Puttalam|Arachchikattuwa": {
+   "steep_share": 0.0,
+   "mean_elev_m": 11,
+   "max_elev_m": 39
+  },
+  "Kegalle|Aranayake": {
+   "steep_share": 0.505,
+   "mean_elev_m": 425,
+   "max_elev_m": 1174
+  },
+  "Matara|Athuraliya": {
+   "steep_share": 0.176,
+   "mean_elev_m": 47,
+   "max_elev_m": 312
+  },
+  "Gampaha|Attanagalla": {
+   "steep_share": 0.068,
+   "mean_elev_m": 51,
+   "max_elev_m": 257
+  },
+  "Ratnapura|Ayagama": {
+   "steep_share": 0.513,
+   "mean_elev_m": 222,
+   "max_elev_m": 888
+  },
+  "Monaragala|Badalkumbura": {
+   "steep_share": 0.364,
+   "mean_elev_m": 421,
+   "max_elev_m": 1497
+  },
+  "Galle|Baddegama": {
+   "steep_share": 0.101,
+   "mean_elev_m": 28,
+   "max_elev_m": 125
+  },
+  "Badulla|Badulla": {
+   "steep_share": 0.515,
+   "mean_elev_m": 912,
+   "max_elev_m": 1688
+  },
+  "Ratnapura|Balangoda": {
+   "steep_share": 0.35,
+   "mean_elev_m": 488,
+   "max_elev_m": 1509
+  },
+  "Galle|Balapitiya": {
+   "steep_share": 0.009,
+   "mean_elev_m": 9,
+   "max_elev_m": 49
+  },
+  "Kurunegala|Bamunakotuwa": {
+   "steep_share": 0.026,
+   "mean_elev_m": 88,
+   "max_elev_m": 335
+  },
+  "Kalutara|Bandaragama": {
+   "steep_share": 0.002,
+   "mean_elev_m": 11,
+   "max_elev_m": 39
+  },
+  "Badulla|Bandarawela": {
+   "steep_share": 0.489,
+   "mean_elev_m": 1271,
+   "max_elev_m": 1935
+  },
+  "Hambantota|Beliatta": {
+   "steep_share": 0.039,
+   "mean_elev_m": 56,
+   "max_elev_m": 206
+  },
+  "Galle|Bentota": {
+   "steep_share": 0.009,
+   "mean_elev_m": 7,
+   "max_elev_m": 80
+  },
+  "Kalutara|Beruwala": {
+   "steep_share": 0.008,
+   "mean_elev_m": 12,
+   "max_elev_m": 65
+  },
+  "Monaragala|Bibile": {
+   "steep_share": 0.217,
+   "mean_elev_m": 287,
+   "max_elev_m": 1480
+  },
+  "Kurunegala|Bingiriya": {
+   "steep_share": 0.0,
+   "mean_elev_m": 30,
+   "max_elev_m": 61
+  },
+  "Gampaha|Biyagama": {
+   "steep_share": 0.004,
+   "mean_elev_m": 19,
+   "max_elev_m": 107
+  },
+  "Galle|Bope-Poddala": {
+   "steep_share": 0.023,
+   "mean_elev_m": 18,
+   "max_elev_m": 76
+  },
+  "Kegalle|Bulathkohipitiya": {
+   "steep_share": 0.575,
+   "mean_elev_m": 346,
+   "max_elev_m": 1211
+  },
+  "Kalutara|Bulathsinhala": {
+   "steep_share": 0.291,
+   "mean_elev_m": 65,
+   "max_elev_m": 317
+  },
+  "Monaragala|Buttala": {
+   "steep_share": 0.044,
+   "mean_elev_m": 132,
+   "max_elev_m": 629
+  },
+  "Puttalam|Chilaw": {
+   "steep_share": 0.0,
+   "mean_elev_m": 8,
+   "max_elev_m": 35
+  },
+  "Colombo|Colombo": {
+   "steep_share": 0.003,
+   "mean_elev_m": 7,
+   "max_elev_m": 27
+  },
+  "Ampara|Damana": {
+   "steep_share": 0.057,
+   "mean_elev_m": 74,
+   "max_elev_m": 672
+  },
+  "Matale|Dambulla": {
+   "steep_share": 0.142,
+   "mean_elev_m": 223,
+   "max_elev_m": 861
+  },
+  "Puttalam|Dankotuwa": {
+   "steep_share": 0.0,
+   "mean_elev_m": 21,
+   "max_elev_m": 63
+  },
+  "Ampara|Dehiattakandiya": {
+   "steep_share": 0.018,
+   "mean_elev_m": 96,
+   "max_elev_m": 384
+  },
+  "Kegalle|Dehiowita": {
+   "steep_share": 0.453,
+   "mean_elev_m": 135,
+   "max_elev_m": 388
+  },
+  "Colombo|Dehiwala": {
+   "steep_share": 0.0,
+   "mean_elev_m": 12,
+   "max_elev_m": 29
+  },
+  "Jaffna|Delft": {
+   "steep_share": 0.0,
+   "mean_elev_m": 1,
+   "max_elev_m": 9
+  },
+  "Kandy|Deltota": {
+   "steep_share": 0.468,
+   "mean_elev_m": 975,
+   "max_elev_m": 1563
+  },
+  "Kegalle|Deraniyagala": {
+   "steep_share": 0.612,
+   "mean_elev_m": 482,
+   "max_elev_m": 1895
+  },
+  "Matara|Devinuwara": {
+   "steep_share": 0.049,
+   "mean_elev_m": 40,
+   "max_elev_m": 138
+  },
+  "Matara|Dikwella": {
+   "steep_share": 0.048,
+   "mean_elev_m": 53,
+   "max_elev_m": 190
+  },
+  "Polonnaruwa|Dimbulagala": {
+   "steep_share": 0.023,
+   "mean_elev_m": 67,
+   "max_elev_m": 526
+  },
+  "Gampaha|Divulapitiya": {
+   "steep_share": 0.014,
+   "mean_elev_m": 36,
+   "max_elev_m": 229
+  },
+  "Kalutara|Dodangoda": {
+   "steep_share": 0.145,
+   "mean_elev_m": 39,
+   "max_elev_m": 272
+  },
+  "Kandy|Doluwa": {
+   "steep_share": 0.487,
+   "mean_elev_m": 868,
+   "max_elev_m": 1685
+  },
+  "Gampaha|Dompe": {
+   "steep_share": 0.042,
+   "mean_elev_m": 33,
+   "max_elev_m": 171
+  },
+  "Ratnapura|Eheliyagoda": {
+   "steep_share": 0.344,
+   "mean_elev_m": 134,
+   "max_elev_m": 515
+  },
+  "Kurunegala|Ehetuwewa": {
+   "steep_share": 0.026,
+   "mean_elev_m": 113,
+   "max_elev_m": 426
+  },
+  "Polonnaruwa|Elahera": {
+   "steep_share": 0.092,
+   "mean_elev_m": 142,
+   "max_elev_m": 524
+  },
+  "Ratnapura|Elapatha": {
+   "steep_share": 0.384,
+   "mean_elev_m": 130,
+   "max_elev_m": 797
+  },
+  "Badulla|Ella": {
+   "steep_share": 0.676,
+   "mean_elev_m": 1005,
+   "max_elev_m": 1639
+  },
+  "Galle|Elpitiya": {
+   "steep_share": 0.205,
+   "mean_elev_m": 44,
+   "max_elev_m": 206
+  },
+  "Ratnapura|Embilipitiya": {
+   "steep_share": 0.117,
+   "mean_elev_m": 123,
+   "max_elev_m": 642
+  },
+  "Batticaloa|Eravur Town": {
+   "steep_share": 0.0,
+   "mean_elev_m": 7,
+   "max_elev_m": 11
+  },
+  "Anuradhapura|Galenbidunuwewa": {
+   "steep_share": 0.011,
+   "mean_elev_m": 129,
+   "max_elev_m": 365
+  },
+  "Matale|Galewela": {
+   "steep_share": 0.119,
+   "mean_elev_m": 238,
+   "max_elev_m": 577
+  },
+  "Kurunegala|Galgamuwa": {
+   "steep_share": 0.002,
+   "mean_elev_m": 87,
+   "max_elev_m": 167
+  },
+  "Kegalle|Galigamuwa": {
+   "steep_share": 0.329,
+   "mean_elev_m": 161,
+   "max_elev_m": 369
+  },
+  "Galle|Galle4Gravets": {
+   "steep_share": 0.003,
+   "mean_elev_m": 13,
+   "max_elev_m": 51
+  },
+  "Anuradhapura|Galnewa": {
+   "steep_share": 0.004,
+   "mean_elev_m": 122,
+   "max_elev_m": 257
+  },
+  "Gampaha|Gampaha": {
+   "steep_share": 0.0,
+   "mean_elev_m": 23,
+   "max_elev_m": 55
+  },
+  "Kurunegala|Ganewatta": {
+   "steep_share": 0.045,
+   "mean_elev_m": 106,
+   "max_elev_m": 583
+  },
+  "Kandy|Ganga Ihala Korale": {
+   "steep_share": 0.596,
+   "mean_elev_m": 791,
+   "max_elev_m": 1457
+  },
+  "Kandy|Gangawata Korale": {
+   "steep_share": 0.406,
+   "mean_elev_m": 581,
+   "max_elev_m": 1033
+  },
+  "Kurunegala|Giribawa": {
+   "steep_share": 0.018,
+   "mean_elev_m": 75,
+   "max_elev_m": 252
+  },
+  "Ratnapura|Godakawela": {
+   "steep_share": 0.368,
+   "mean_elev_m": 376,
+   "max_elev_m": 1258
+  },
+  "Trincomalee|Gomarankadawala": {
+   "steep_share": 0.005,
+   "mean_elev_m": 37,
+   "max_elev_m": 125
+  },
+  "Galle|Gonapinuwala": {
+   "steep_share": 0.0,
+   "mean_elev_m": 14,
+   "max_elev_m": 35
+  },
+  "Galle|Habaraduwa": {
+   "steep_share": 0.033,
+   "mean_elev_m": 15,
+   "max_elev_m": 77
+  },
+  "Matara|Hakmana": {
+   "steep_share": 0.145,
+   "mean_elev_m": 93,
+   "max_elev_m": 235
+  },
+  "Badulla|Haldummulla": {
+   "steep_share": 0.445,
+   "mean_elev_m": 563,
+   "max_elev_m": 2188
+  },
+  "Badulla|Hali-Ela": {
+   "steep_share": 0.571,
+   "mean_elev_m": 1003,
+   "max_elev_m": 1963
+  },
+  "Hambantota|Hambantota": {
+   "steep_share": 0.001,
+   "mean_elev_m": 25,
+   "max_elev_m": 120
+  },
+  "Nuwara Eliya|Hanguranketa": {
+   "steep_share": 0.582,
+   "mean_elev_m": 1126,
+   "max_elev_m": 2430
+  },
+  "Badulla|Haputale": {
+   "steep_share": 0.505,
+   "mean_elev_m": 1359,
+   "max_elev_m": 1918
+  },
+  "Kandy|Harispattuwa": {
+   "steep_share": 0.237,
+   "mean_elev_m": 539,
+   "max_elev_m": 729
+  },
+  "Kandy|Hatharaliyadda": {
+   "steep_share": 0.543,
+   "mean_elev_m": 311,
+   "max_elev_m": 988
+  },
+  "Polonnaruwa|Higurakgoda": {
+   "steep_share": 0.045,
+   "mean_elev_m": 118,
+   "max_elev_m": 322
+  },
+  "Galle|Hikkaduwa": {
+   "steep_share": 0.003,
+   "mean_elev_m": 12,
+   "max_elev_m": 51
+  },
+  "Colombo|Homagama": {
+   "steep_share": 0.002,
+   "mean_elev_m": 21,
+   "max_elev_m": 76
+  },
+  "Kalutara|Horana": {
+   "steep_share": 0.043,
+   "mean_elev_m": 29,
+   "max_elev_m": 130
+  },
+  "Anuradhapura|Horowpathana": {
+   "steep_share": 0.016,
+   "mean_elev_m": 92,
+   "max_elev_m": 256
+  },
+  "Kurunegala|Ibbagamuwa": {
+   "steep_share": 0.111,
+   "mean_elev_m": 160,
+   "max_elev_m": 611
+  },
+  "Galle|Imaduwa": {
+   "steep_share": 0.145,
+   "mean_elev_m": 38,
+   "max_elev_m": 157
+  },
+  "Ratnapura|Imbulpe": {
+   "steep_share": 0.506,
+   "mean_elev_m": 856,
+   "max_elev_m": 2174
+  },
+  "Kalutara|Ingiriya": {
+   "steep_share": 0.204,
+   "mean_elev_m": 61,
+   "max_elev_m": 314
+  },
+  "Anuradhapura|Ipalogama": {
+   "steep_share": 0.005,
+   "mean_elev_m": 125,
+   "max_elev_m": 354
+  },
+  "Ampara|Irakkamam": {
+   "steep_share": 0.007,
+   "mean_elev_m": 26,
+   "max_elev_m": 67
+  },
+  "Jaffna|Islands North (Kayts)": {
+   "steep_share": 0.0,
+   "mean_elev_m": 2,
+   "max_elev_m": 9
+  },
+  "Jaffna|Islands South (Velanai)": {
+   "steep_share": 0.0,
+   "mean_elev_m": 2,
+   "max_elev_m": 15
+  },
+  "Gampaha|Ja Ela": {
+   "steep_share": 0.0,
+   "mean_elev_m": 13,
+   "max_elev_m": 56
+  },
+  "Jaffna|Jaffna": {
+   "steep_share": 0.0,
+   "mean_elev_m": 5,
+   "max_elev_m": 13
+  },
+  "Matara|Kaburupitiya": {
+   "steep_share": 0.089,
+   "mean_elev_m": 33,
+   "max_elev_m": 142
+  },
+  "Colombo|Kaduwela": {
+   "steep_share": 0.009,
+   "mean_elev_m": 16,
+   "max_elev_m": 122
+  },
+  "Anuradhapura|Kahatagasdigiliya": {
+   "steep_share": 0.006,
+   "mean_elev_m": 111,
+   "max_elev_m": 384
+  },
+  "Ratnapura|Kahawattha": {
+   "steep_share": 0.427,
+   "mean_elev_m": 402,
+   "max_elev_m": 1177
+  },
+  "Ratnapura|Kalawana": {
+   "steep_share": 0.509,
+   "mean_elev_m": 528,
+   "max_elev_m": 1347
+  },
+  "Ampara|Kalmunai": {
+   "steep_share": 0.0,
+   "mean_elev_m": 3,
+   "max_elev_m": 14
+  },
+  "Puttalam|Kalpitiya": {
+   "steep_share": 0.0,
+   "mean_elev_m": 3,
+   "max_elev_m": 14
+  },
+  "Kalutara|Kalutara": {
+   "steep_share": 0.002,
+   "mean_elev_m": 10,
+   "max_elev_m": 41
+  },
+  "Kilinochchi|Kandavalai": {
+   "steep_share": 0.0,
+   "mean_elev_m": 7,
+   "max_elev_m": 50
+  },
+  "Badulla|Kandeketiya": {
+   "steep_share": 0.511,
+   "mean_elev_m": 389,
+   "max_elev_m": 1338
+  },
+  "Trincomalee|Kantale": {
+   "steep_share": 0.016,
+   "mean_elev_m": 42,
+   "max_elev_m": 244
+  },
+  "Kilinochchi|Karachchi": {
+   "steep_share": 0.0,
+   "mean_elev_m": 19,
+   "max_elev_m": 55
+  },
+  "Jaffna|Karainagar": {
+   "steep_share": 0.0,
+   "mean_elev_m": 5,
+   "max_elev_m": 14
+  },
+  "Ampara|Karaitivu": {
+   "steep_share": 0.006,
+   "mean_elev_m": 3,
+   "max_elev_m": 11
+  },
+  "Galle|Karandeniya": {
+   "steep_share": 0.015,
+   "mean_elev_m": 15,
+   "max_elev_m": 95
+  },
+  "Puttalam|Karuwalagaswewa": {
+   "steep_share": 0.0,
+   "mean_elev_m": 45,
+   "max_elev_m": 127
+  },
+  "Gampaha|Katana": {
+   "steep_share": 0.0,
+   "mean_elev_m": 12,
+   "max_elev_m": 36
+  },
+  "Monaragala|Katharagama": {
+   "steep_share": 0.016,
+   "mean_elev_m": 67,
+   "max_elev_m": 396
+  },
+  "Batticaloa|Kattankudy": {
+   "steep_share": 0.0,
+   "mean_elev_m": 7,
+   "max_elev_m": 11
+  },
+  "Hambantota|Katuwana": {
+   "steep_share": 0.181,
+   "mean_elev_m": 174,
+   "max_elev_m": 682
+  },
+  "Anuradhapura|Kebithigollewa": {
+   "steep_share": 0.004,
+   "mean_elev_m": 91,
+   "max_elev_m": 207
+  },
+  "Kegalle|Kegalle": {
+   "steep_share": 0.365,
+   "mean_elev_m": 239,
+   "max_elev_m": 822
+  },
+  "Anuradhapura|Kekirawa": {
+   "steep_share": 0.045,
+   "mean_elev_m": 157,
+   "max_elev_m": 713
+  },
+  "Gampaha|Kelaniya": {
+   "steep_share": 0.0,
+   "mean_elev_m": 8,
+   "max_elev_m": 27
+  },
+  "Colombo|Kesbewa": {
+   "steep_share": 0.0,
+   "mean_elev_m": 13,
+   "max_elev_m": 38
+  },
+  "Trincomalee|Kinniya": {
+   "steep_share": 0.0,
+   "mean_elev_m": 8,
+   "max_elev_m": 37
+  },
+  "Ratnapura|Kiriella": {
+   "steep_share": 0.271,
+   "mean_elev_m": 78,
+   "max_elev_m": 467
+  },
+  "Matara|Kirinda Puhulwella": {
+   "steep_share": 0.155,
+   "mean_elev_m": 75,
+   "max_elev_m": 198
+  },
+  "Kurunegala|Kobeigane": {
+   "steep_share": 0.0,
+   "mean_elev_m": 49,
+   "max_elev_m": 84
+  },
+  "Ratnapura|Kolonna": {
+   "steep_share": 0.512,
+   "mean_elev_m": 562,
+   "max_elev_m": 1323
+  },
+  "Colombo|Kolonnawa": {
+   "steep_share": 0.0,
+   "mean_elev_m": 9,
+   "max_elev_m": 33
+  },
+  "Batticaloa|Koralai Pattu Central": {
+   "steep_share": 0.0,
+   "mean_elev_m": 9,
+   "max_elev_m": 21
+  },
+  "Batticaloa|Koralai Pattu North": {
+   "steep_share": 0.001,
+   "mean_elev_m": 16,
+   "max_elev_m": 111
+  },
+  "Batticaloa|Koralai Pattu South": {
+   "steep_share": 0.006,
+   "mean_elev_m": 36,
+   "max_elev_m": 224
+  },
+  "Matara|Kotapola": {
+   "steep_share": 0.459,
+   "mean_elev_m": 420,
+   "max_elev_m": 1206
+  },
+  "Kurunegala|Kotawehera": {
+   "steep_share": 0.0,
+   "mean_elev_m": 73,
+   "max_elev_m": 112
+  },
+  "Nuwara Eliya|Kothmale": {
+   "steep_share": 0.493,
+   "mean_elev_m": 1208,
+   "max_elev_m": 2296
+  },
+  "Trincomalee|Kuchchaweli": {
+   "steep_share": 0.003,
+   "mean_elev_m": 10,
+   "max_elev_m": 105
+  },
+  "Kurunegala|Kuliyapitiya East": {
+   "steep_share": 0.008,
+   "mean_elev_m": 69,
+   "max_elev_m": 175
+  },
+  "Kurunegala|Kuliyapitiya West": {
+   "steep_share": 0.003,
+   "mean_elev_m": 42,
+   "max_elev_m": 112
+  },
+  "Kandy|Kundasale": {
+   "steep_share": 0.191,
+   "mean_elev_m": 526,
+   "max_elev_m": 900
+  },
+  "Kurunegala|Kurunegala": {
+   "steep_share": 0.106,
+   "mean_elev_m": 128,
+   "max_elev_m": 415
+  },
+  "Ratnapura|Kuruvita": {
+   "steep_share": 0.295,
+   "mean_elev_m": 178,
+   "max_elev_m": 1321
+  },
+  "Matale|Laggala": {
+   "steep_share": 0.455,
+   "mean_elev_m": 513,
+   "max_elev_m": 1860
+  },
+  "Ampara|Lahugala": {
+   "steep_share": 0.002,
+   "mean_elev_m": 36,
+   "max_elev_m": 165
+  },
+  "Polonnaruwa|Lankapura": {
+   "steep_share": 0.0,
+   "mean_elev_m": 32,
+   "max_elev_m": 62
+  },
+  "Badulla|Lunugala": {
+   "steep_share": 0.621,
+   "mean_elev_m": 833,
+   "max_elev_m": 1492
+  },
+  "Hambantota|Lunugamwehera": {
+   "steep_share": 0.002,
+   "mean_elev_m": 57,
+   "max_elev_m": 192
+  },
+  "Puttalam|Madampe": {
+   "steep_share": 0.0,
+   "mean_elev_m": 16,
+   "max_elev_m": 61
+  },
+  "Mannar|Madhu": {
+   "steep_share": 0.0,
+   "mean_elev_m": 52,
+   "max_elev_m": 99
+  },
+  "Monaragala|Madulla": {
+   "steep_share": 0.212,
+   "mean_elev_m": 182,
+   "max_elev_m": 848
+  },
+  "Kalutara|Madurawala": {
+   "steep_share": 0.117,
+   "mean_elev_m": 32,
+   "max_elev_m": 254
+  },
+  "Puttalam|Mahakumbukkadawala": {
+   "steep_share": 0.0,
+   "mean_elev_m": 35,
+   "max_elev_m": 93
+  },
+  "Ampara|Mahaoya": {
+   "steep_share": 0.076,
+   "mean_elev_m": 90,
+   "max_elev_m": 552
+  },
+  "Gampaha|Mahara": {
+   "steep_share": 0.013,
+   "mean_elev_m": 32,
+   "max_elev_m": 153
+  },
+  "Colombo|Maharagama": {
+   "steep_share": 0.0,
+   "mean_elev_m": 19,
+   "max_elev_m": 45
+  },
+  "Puttalam|Mahawewa": {
+   "steep_share": 0.001,
+   "mean_elev_m": 11,
+   "max_elev_m": 35
+  },
+  "Anuradhapura|Mahawilachchiya": {
+   "steep_share": 0.0,
+   "mean_elev_m": 61,
+   "max_elev_m": 98
+  },
+  "Badulla|Mahiyanganaya": {
+   "steep_share": 0.05,
+   "mean_elev_m": 121,
+   "max_elev_m": 651
+  },
+  "Kurunegala|Maho": {
+   "steep_share": 0.003,
+   "mean_elev_m": 94,
+   "max_elev_m": 239
+  },
+  "Matara|Malimbada": {
+   "steep_share": 0.1,
+   "mean_elev_m": 24,
+   "max_elev_m": 120
+  },
+  "Kurunegala|Mallawapitiya": {
+   "steep_share": 0.172,
+   "mean_elev_m": 172,
+   "max_elev_m": 647
+  },
+  "Batticaloa|Manmunai North": {
+   "steep_share": 0.0,
+   "mean_elev_m": 5,
+   "max_elev_m": 18
+  },
+  "Batticaloa|Manmunai West": {
+   "steep_share": 0.003,
+   "mean_elev_m": 23,
+   "max_elev_m": 272
+  },
+  "Mannar|Mannar Town": {
+   "steep_share": 0.0,
+   "mean_elev_m": 5,
+   "max_elev_m": 29
+  },
+  "Mullaitivu|Manthai East": {
+   "steep_share": 0.0,
+   "mean_elev_m": 48,
+   "max_elev_m": 91
+  },
+  "Mannar|Manthai West": {
+   "steep_share": 0.0,
+   "mean_elev_m": 15,
+   "max_elev_m": 51
+  },
+  "Mullaitivu|Maritimepattu": {
+   "steep_share": 0.0,
+   "mean_elev_m": 22,
+   "max_elev_m": 92
+  },
+  "Kurunegala|Maspotha": {
+   "steep_share": 0.034,
+   "mean_elev_m": 103,
+   "max_elev_m": 261
+  },
+  "Matale|Matale": {
+   "steep_share": 0.328,
+   "mean_elev_m": 422,
+   "max_elev_m": 1116
+  },
+  "Matara|Matara Four Gravets": {
+   "steep_share": 0.029,
+   "mean_elev_m": 25,
+   "max_elev_m": 109
+  },
+  "Kalutara|Matugama": {
+   "steep_share": 0.166,
+   "mean_elev_m": 37,
+   "max_elev_m": 228
+  },
+  "Kegalle|Mawanella": {
+   "steep_share": 0.342,
+   "mean_elev_m": 284,
+   "max_elev_m": 820
+  },
+  "Kurunegala|Mawathagama": {
+   "steep_share": 0.241,
+   "mean_elev_m": 206,
+   "max_elev_m": 741
+  },
+  "Kandy|Medadumbara": {
+   "steep_share": 0.6,
+   "mean_elev_m": 761,
+   "max_elev_m": 1678
+  },
+  "Monaragala|Medagama": {
+   "steep_share": 0.223,
+   "mean_elev_m": 294,
+   "max_elev_m": 840
+  },
+  "Anuradhapura|Medawachchiya": {
+   "steep_share": 0.002,
+   "mean_elev_m": 97,
+   "max_elev_m": 245
+  },
+  "Polonnaruwa|Medirigiriya": {
+   "steep_share": 0.0,
+   "mean_elev_m": 46,
+   "max_elev_m": 119
+  },
+  "Badulla|Meegahakiula": {
+   "steep_share": 0.543,
+   "mean_elev_m": 546,
+   "max_elev_m": 1426
+  },
+  "Anuradhapura|Mihinthale": {
+   "steep_share": 0.01,
+   "mean_elev_m": 108,
+   "max_elev_m": 370
+  },
+  "Kalutara|Millaniya": {
+   "steep_share": 0.039,
+   "mean_elev_m": 16,
+   "max_elev_m": 122
+  },
+  "Kandy|Minipe": {
+   "steep_share": 0.346,
+   "mean_elev_m": 286,
+   "max_elev_m": 1470
+  },
+  "Gampaha|Minuwangoda": {
+   "steep_share": 0.0,
+   "mean_elev_m": 25,
+   "max_elev_m": 56
+  },
+  "Gampaha|Mirigama": {
+   "steep_share": 0.097,
+   "mean_elev_m": 65,
+   "max_elev_m": 272
+  },
+  "Monaragala|Monaragala": {
+   "steep_share": 0.198,
+   "mean_elev_m": 220,
+   "max_elev_m": 1083
+  },
+  "Colombo|Moratuwa": {
+   "steep_share": 0.0,
+   "mean_elev_m": 8,
+   "max_elev_m": 26
+  },
+  "Trincomalee|Morawewa": {
+   "steep_share": 0.01,
+   "mean_elev_m": 52,
+   "max_elev_m": 200
+  },
+  "Matara|Mulatiyana": {
+   "steep_share": 0.267,
+   "mean_elev_m": 123,
+   "max_elev_m": 427
+  },
+  "Mannar|Musali": {
+   "steep_share": 0.0,
+   "mean_elev_m": 31,
+   "max_elev_m": 84
+  },
+  "Trincomalee|Muthur": {
+   "steep_share": 0.003,
+   "mean_elev_m": 6,
+   "max_elev_m": 63
+  },
+  "Anuradhapura|Nachchaduwa": {
+   "steep_share": 0.0,
+   "mean_elev_m": 101,
+   "max_elev_m": 133
+  },
+  "Galle|Nagoda": {
+   "steep_share": 0.261,
+   "mean_elev_m": 77,
+   "max_elev_m": 359
+  },
+  "Jaffna|Nallur": {
+   "steep_share": 0.0,
+   "mean_elev_m": 7,
+   "max_elev_m": 16
+  },
+  "Mannar|Nanaddan": {
+   "steep_share": 0.0,
+   "mean_elev_m": 8,
+   "max_elev_m": 30
+  },
+  "Kurunegala|Narammala": {
+   "steep_share": 0.04,
+   "mean_elev_m": 72,
+   "max_elev_m": 320
+  },
+  "Puttalam|Nattandiya": {
+   "steep_share": 0.0,
+   "mean_elev_m": 14,
+   "max_elev_m": 40
+  },
+  "Matale|Naula": {
+   "steep_share": 0.362,
+   "mean_elev_m": 315,
+   "max_elev_m": 1175
+  },
+  "Ampara|Navithanveli": {
+   "steep_share": 0.0,
+   "mean_elev_m": 9,
+   "max_elev_m": 36
+  },
+  "Puttalam|Nawagattegama": {
+   "steep_share": 0.002,
+   "mean_elev_m": 57,
+   "max_elev_m": 128
+  },
+  "Gampaha|Negombo": {
+   "steep_share": 0.004,
+   "mean_elev_m": 6,
+   "max_elev_m": 18
+  },
+  "Galle|Neluwa": {
+   "steep_share": 0.446,
+   "mean_elev_m": 246,
+   "max_elev_m": 804
+  },
+  "Kurunegala|Nikaweratiya": {
+   "steep_share": 0.0,
+   "mean_elev_m": 57,
+   "max_elev_m": 100
+  },
+  "Ampara|Nintavur": {
+   "steep_share": 0.0,
+   "mean_elev_m": 4,
+   "max_elev_m": 13
+  },
+  "Ratnapura|Nivithigala": {
+   "steep_share": 0.431,
+   "mean_elev_m": 259,
+   "max_elev_m": 1000
+  },
+  "Galle|Niyagama": {
+   "steep_share": 0.26,
+   "mean_elev_m": 74,
+   "max_elev_m": 306
+  },
+  "Anuradhapura|Nochchiyagama": {
+   "steep_share": 0.0,
+   "mean_elev_m": 72,
+   "max_elev_m": 122
+  },
+  "Nuwara Eliya|Nuwara Eliya": {
+   "steep_share": 0.417,
+   "mean_elev_m": 1694,
+   "max_elev_m": 2502
+  },
+  "Anuradhapura|Nuwaragam Palatha Central": {
+   "steep_share": 0.0,
+   "mean_elev_m": 78,
+   "max_elev_m": 115
+  },
+  "Anuradhapura|Nuwaragam Palatha East": {
+   "steep_share": 0.0,
+   "mean_elev_m": 94,
+   "max_elev_m": 121
+  },
+  "Mullaitivu|Oddusuddan": {
+   "steep_share": 0.0,
+   "mean_elev_m": 51,
+   "max_elev_m": 92
+  },
+  "Hambantota|Okewela": {
+   "steep_share": 0.103,
+   "mean_elev_m": 83,
+   "max_elev_m": 220
+  },
+  "Ratnapura|Opanayake": {
+   "steep_share": 0.462,
+   "mean_elev_m": 398,
+   "max_elev_m": 1447
+  },
+  "Kilinochchi|Pachchilaipalli": {
+   "steep_share": 0.0,
+   "mean_elev_m": 6,
+   "max_elev_m": 16
+  },
+  "Trincomalee|Padavi Sri Pura": {
+   "steep_share": 0.0,
+   "mean_elev_m": 20,
+   "max_elev_m": 47
+  },
+  "Anuradhapura|Padaviya": {
+   "steep_share": 0.001,
+   "mean_elev_m": 45,
+   "max_elev_m": 99
+  },
+  "Ampara|Padiyathalawa": {
+   "steep_share": 0.121,
+   "mean_elev_m": 143,
+   "max_elev_m": 825
+  },
+  "Colombo|Padukka": {
+   "steep_share": 0.159,
+   "mean_elev_m": 69,
+   "max_elev_m": 410
+  },
+  "Anuradhapura|Palagala": {
+   "steep_share": 0.03,
+   "mean_elev_m": 166,
+   "max_elev_m": 392
+  },
+  "Kalutara|Palindanuwara": {
+   "steep_share": 0.378,
+   "mean_elev_m": 141,
+   "max_elev_m": 629
+  },
+  "Puttalam|Pallama": {
+   "steep_share": 0.0,
+   "mean_elev_m": 31,
+   "max_elev_m": 62
+  },
+  "Matale|Pallepola": {
+   "steep_share": 0.225,
+   "mean_elev_m": 410,
+   "max_elev_m": 1174
+  },
+  "Anuradhapura|Palugaswewa": {
+   "steep_share": 0.007,
+   "mean_elev_m": 168,
+   "max_elev_m": 439
+  },
+  "Kalutara|Panadura": {
+   "steep_share": 0.0,
+   "mean_elev_m": 9,
+   "max_elev_m": 32
+  },
+  "Kurunegala|Panduwasnuwara East": {
+   "steep_share": 0.03,
+   "mean_elev_m": 59,
+   "max_elev_m": 261
+  },
+  "Kurunegala|Panduwasnuwara West": {
+   "steep_share": 0.0,
+   "mean_elev_m": 44,
+   "max_elev_m": 86
+  },
+  "Kurunegala|Pannala": {
+   "steep_share": 0.009,
+   "mean_elev_m": 41,
+   "max_elev_m": 192
+  },
+  "Kandy|Panvila": {
+   "steep_share": 0.585,
+   "mean_elev_m": 1070,
+   "max_elev_m": 1769
+  },
+  "Kandy|Pasbagekorale": {
+   "steep_share": 0.45,
+   "mean_elev_m": 936,
+   "max_elev_m": 1698
+  },
+  "Matara|Pasgoda": {
+   "steep_share": 0.391,
+   "mean_elev_m": 338,
+   "max_elev_m": 889
+  },
+  "Badulla|Passara": {
+   "steep_share": 0.71,
+   "mean_elev_m": 936,
+   "max_elev_m": 2026
+  },
+  "Kandy|Pathadumbara": {
+   "steep_share": 0.275,
+   "mean_elev_m": 532,
+   "max_elev_m": 1217
+  },
+  "Kandy|Pathahewaheta": {
+   "steep_share": 0.483,
+   "mean_elev_m": 692,
+   "max_elev_m": 1312
+  },
+  "Ratnapura|Pelmadulla": {
+   "steep_share": 0.383,
+   "mean_elev_m": 235,
+   "max_elev_m": 916
+  },
+  "Matara|Pitabaddara": {
+   "steep_share": 0.37,
+   "mean_elev_m": 143,
+   "max_elev_m": 650
+  },
+  "Kurunegala|Polgahawela": {
+   "steep_share": 0.109,
+   "mean_elev_m": 119,
+   "max_elev_m": 394
+  },
+  "Kurunegala|Polpitigama": {
+   "steep_share": 0.066,
+   "mean_elev_m": 148,
+   "max_elev_m": 562
+  },
+  "Kandy|Poojapitiya": {
+   "steep_share": 0.42,
+   "mean_elev_m": 549,
+   "max_elev_m": 840
+  },
+  "Kilinochchi|Poonakary": {
+   "steep_share": 0.0,
+   "mean_elev_m": 6,
+   "max_elev_m": 27
+  },
+  "Ampara|Pottuvil": {
+   "steep_share": 0.005,
+   "mean_elev_m": 25,
+   "max_elev_m": 192
+  },
+  "Mullaitivu|Puthukkudiyiruppu": {
+   "steep_share": 0.0,
+   "mean_elev_m": 33,
+   "max_elev_m": 90
+  },
+  "Puttalam|Puttalam": {
+   "steep_share": 0.0,
+   "mean_elev_m": 20,
+   "max_elev_m": 78
+  },
+  "Anuradhapura|Rajanganaya": {
+   "steep_share": 0.001,
+   "mean_elev_m": 55,
+   "max_elev_m": 88
+  },
+  "Anuradhapura|Rambewa": {
+   "steep_share": 0.002,
+   "mean_elev_m": 98,
+   "max_elev_m": 235
+  },
+  "Kegalle|Rambukkana": {
+   "steep_share": 0.249,
+   "mean_elev_m": 151,
+   "max_elev_m": 736
+  },
+  "Kurunegala|Rasnayakapura": {
+   "steep_share": 0.0,
+   "mean_elev_m": 47,
+   "max_elev_m": 80
+  },
+  "Colombo|Ratmalana": {
+   "steep_share": 0.0,
+   "mean_elev_m": 8,
+   "max_elev_m": 21
+  },
+  "Ratnapura|Ratnapura": {
+   "steep_share": 0.472,
+   "mean_elev_m": 505,
+   "max_elev_m": 2088
+  },
+  "Matale|Rattota": {
+   "steep_share": 0.52,
+   "mean_elev_m": 664,
+   "max_elev_m": 1601
+  },
+  "Kurunegala|Rideegama": {
+   "steep_share": 0.319,
+   "mean_elev_m": 255,
+   "max_elev_m": 1005
+  },
+  "Badulla|Rideemaliyadda": {
+   "steep_share": 0.167,
+   "mean_elev_m": 213,
+   "max_elev_m": 1262
+  },
+  "Kegalle|Ruwanwella": {
+   "steep_share": 0.356,
+   "mean_elev_m": 122,
+   "max_elev_m": 377
+  },
+  "Ampara|Sainthamaruthu": {
+   "steep_share": 0.0,
+   "mean_elev_m": 4,
+   "max_elev_m": 11
+  },
+  "Ampara|Sammanthurai": {
+   "steep_share": 0.0,
+   "mean_elev_m": 13,
+   "max_elev_m": 37
+  },
+  "Colombo|Seethawaka": {
+   "steep_share": 0.17,
+   "mean_elev_m": 62,
+   "max_elev_m": 371
+  },
+  "Trincomalee|Seruvila": {
+   "steep_share": 0.001,
+   "mean_elev_m": 15,
+   "max_elev_m": 35
+  },
+  "Monaragala|Sevanagala": {
+   "steep_share": 0.001,
+   "mean_elev_m": 70,
+   "max_elev_m": 109
+  },
+  "Monaragala|Siyambalanduwa": {
+   "steep_share": 0.079,
+   "mean_elev_m": 108,
+   "max_elev_m": 1072
+  },
+  "Hambantota|Sooriyawewa": {
+   "steep_share": 0.001,
+   "mean_elev_m": 55,
+   "max_elev_m": 101
+  },
+  "Badulla|Soranathota": {
+   "steep_share": 0.696,
+   "mean_elev_m": 751,
+   "max_elev_m": 1544
+  },
+  "Colombo|Sri Jayawardanapura Kotte": {
+   "steep_share": 0.0,
+   "mean_elev_m": 10,
+   "max_elev_m": 32
+  },
+  "Hambantota|Tangalle": {
+   "steep_share": 0.004,
+   "mean_elev_m": 19,
+   "max_elev_m": 72
+  },
+  "Anuradhapura|Thalawa": {
+   "steep_share": 0.0,
+   "mean_elev_m": 104,
+   "max_elev_m": 161
+  },
+  "Polonnaruwa|Thamankaduwa": {
+   "steep_share": 0.027,
+   "mean_elev_m": 67,
+   "max_elev_m": 481
+  },
+  "Trincomalee|Thambalagamuwa": {
+   "steep_share": 0.06,
+   "mean_elev_m": 64,
+   "max_elev_m": 218
+  },
+  "Anuradhapura|Thambuththegama": {
+   "steep_share": 0.0,
+   "mean_elev_m": 87,
+   "max_elev_m": 118
+  },
+  "Monaragala|Thanamalwila": {
+   "steep_share": 0.024,
+   "mean_elev_m": 111,
+   "max_elev_m": 594
+  },
+  "Galle|Thawalama": {
+   "steep_share": 0.408,
+   "mean_elev_m": 145,
+   "max_elev_m": 622
+  },
+  "Matara|Thihagoda": {
+   "steep_share": 0.028,
+   "mean_elev_m": 17,
+   "max_elev_m": 108
+  },
+  "Colombo|Thimbirigasyaya": {
+   "steep_share": 0.0,
+   "mean_elev_m": 10,
+   "max_elev_m": 25
+  },
+  "Anuradhapura|Thirappane": {
+   "steep_share": 0.015,
+   "mean_elev_m": 125,
+   "max_elev_m": 440
+  },
+  "Hambantota|Thissamaharama": {
+   "steep_share": 0.013,
+   "mean_elev_m": 29,
+   "max_elev_m": 252
+  },
+  "Mullaitivu|Thunukkai": {
+   "steep_share": 0.0,
+   "mean_elev_m": 36,
+   "max_elev_m": 69
+  },
+  "Ampara|Tirukkovil": {
+   "steep_share": 0.018,
+   "mean_elev_m": 21,
+   "max_elev_m": 187
+  },
+  "Trincomalee|Town & Gravets": {
+   "steep_share": 0.025,
+   "mean_elev_m": 20,
+   "max_elev_m": 145
+  },
+  "Kandy|Tumpane": {
+   "steep_share": 0.367,
+   "mean_elev_m": 346,
+   "max_elev_m": 621
+  },
+  "Kandy|Udapalatha": {
+   "steep_share": 0.429,
+   "mean_elev_m": 827,
+   "max_elev_m": 1519
+  },
+  "Kurunegala|Udubaddawa": {
+   "steep_share": 0.0,
+   "mean_elev_m": 26,
+   "max_elev_m": 61
+  },
+  "Kandy|Ududumbara": {
+   "steep_share": 0.637,
+   "mean_elev_m": 750,
+   "max_elev_m": 1822
+  },
+  "Kandy|Udunuwara": {
+   "steep_share": 0.335,
+   "mean_elev_m": 543,
+   "max_elev_m": 798
+  },
+  "Ampara|Uhana": {
+   "steep_share": 0.127,
+   "mean_elev_m": 88,
+   "max_elev_m": 660
+  },
+  "Matale|Ukuwela": {
+   "steep_share": 0.481,
+   "mean_elev_m": 610,
+   "max_elev_m": 1381
+  },
+  "Badulla|Uvaparanagama": {
+   "steep_share": 0.497,
+   "mean_elev_m": 1095,
+   "max_elev_m": 1805
+  },
+  "Jaffna|Vadamaradchchi East": {
+   "steep_share": 0.0,
+   "mean_elev_m": 4,
+   "max_elev_m": 14
+  },
+  "Jaffna|Vadamaradchchi South-West (Karaveddy)": {
+   "steep_share": 0.0,
+   "mean_elev_m": 4,
+   "max_elev_m": 21
+  },
+  "Jaffna|Vadamaradchi North (Point Pedro)": {
+   "steep_share": 0.0,
+   "mean_elev_m": 7,
+   "max_elev_m": 23
+  },
+  "Jaffna|Valikamam East (Kopay)": {
+   "steep_share": 0.0,
+   "mean_elev_m": 5,
+   "max_elev_m": 15
+  },
+  "Jaffna|Valikamam North (Thllippalai)": {
+   "steep_share": 0.0,
+   "mean_elev_m": 9,
+   "max_elev_m": 20
+  },
+  "Jaffna|Valikamam South (Uduvil)": {
+   "steep_share": 0.0,
+   "mean_elev_m": 8,
+   "max_elev_m": 16
+  },
+  "Jaffna|Valikamam South West (Sandilipay)": {
+   "steep_share": 0.0,
+   "mean_elev_m": 6,
+   "max_elev_m": 17
+  },
+  "Jaffna|Valikamam West (Chankanai)": {
+   "steep_share": 0.0,
+   "mean_elev_m": 4,
+   "max_elev_m": 17
+  },
+  "Puttalam|Vanathavilluwa": {
+   "steep_share": 0.0,
+   "mean_elev_m": 29,
+   "max_elev_m": 100
+  },
+  "Vavuniya|Vavuniya": {
+   "steep_share": 0.0,
+   "mean_elev_m": 85,
+   "max_elev_m": 135
+  },
+  "Vavuniya|Vavuniya North": {
+   "steep_share": 0.0,
+   "mean_elev_m": 72,
+   "max_elev_m": 118
+  },
+  "Vavuniya|Vavuniya South": {
+   "steep_share": 0.003,
+   "mean_elev_m": 95,
+   "max_elev_m": 178
+  },
+  "Vavuniya|Vengalacheddikulam": {
+   "steep_share": 0.0,
+   "mean_elev_m": 57,
+   "max_elev_m": 96
+  },
+  "Trincomalee|Verugal": {
+   "steep_share": 0.001,
+   "mean_elev_m": 7,
+   "max_elev_m": 41
+  },
+  "Kalutara|Walallawita": {
+   "steep_share": 0.301,
+   "mean_elev_m": 76,
+   "max_elev_m": 616
+  },
+  "Nuwara Eliya|Walapane": {
+   "steep_share": 0.63,
+   "mean_elev_m": 944,
+   "max_elev_m": 2058
+  },
+  "Hambantota|Walasmulla": {
+   "steep_share": 0.159,
+   "mean_elev_m": 143,
+   "max_elev_m": 814
+  },
+  "Kegalle|Warakapola": {
+   "steep_share": 0.343,
+   "mean_elev_m": 135,
+   "max_elev_m": 350
+  },
+  "Kurunegala|Wariyapola": {
+   "steep_share": 0.01,
+   "mean_elev_m": 78,
+   "max_elev_m": 329
+  },
+  "Gampaha|Wattala": {
+   "steep_share": 0.0,
+   "mean_elev_m": 5,
+   "max_elev_m": 41
+  },
+  "Kurunegala|Weerabugedara": {
+   "steep_share": 0.033,
+   "mean_elev_m": 100,
+   "max_elev_m": 239
+  },
+  "Hambantota|Weeraketiya": {
+   "steep_share": 0.022,
+   "mean_elev_m": 74,
+   "max_elev_m": 264
+  },
+  "Matara|Weligama": {
+   "steep_share": 0.01,
+   "mean_elev_m": 15,
+   "max_elev_m": 51
+  },
+  "Ratnapura|Weligepola": {
+   "steep_share": 0.263,
+   "mean_elev_m": 240,
+   "max_elev_m": 867
+  },
+  "Polonnaruwa|Welikanda": {
+   "steep_share": 0.001,
+   "mean_elev_m": 35,
+   "max_elev_m": 101
+  },
+  "Badulla|Welimada": {
+   "steep_share": 0.43,
+   "mean_elev_m": 1415,
+   "max_elev_m": 2295
+  },
+  "Mullaitivu|Welioya": {
+   "steep_share": 0.0,
+   "mean_elev_m": 25,
+   "max_elev_m": 74
+  },
+  "Matara|Welipitiya": {
+   "steep_share": 0.116,
+   "mean_elev_m": 34,
+   "max_elev_m": 171
+  },
+  "Galle|Welivitiya-Divitura": {
+   "steep_share": 0.121,
+   "mean_elev_m": 26,
+   "max_elev_m": 174
+  },
+  "Monaragala|Wellawaya": {
+   "steep_share": 0.109,
+   "mean_elev_m": 178,
+   "max_elev_m": 1179
+  },
+  "Puttalam|Wennappuwa": {
+   "steep_share": 0.0,
+   "mean_elev_m": 11,
+   "max_elev_m": 36
+  },
+  "Matale|Wilgamuwa": {
+   "steep_share": 0.118,
+   "mean_elev_m": 122,
+   "max_elev_m": 512
+  },
+  "Galle|Yakkalamulla": {
+   "steep_share": 0.269,
+   "mean_elev_m": 74,
+   "max_elev_m": 306
+  },
+  "Matale|Yatawatta": {
+   "steep_share": 0.429,
+   "mean_elev_m": 512,
+   "max_elev_m": 1178
+  },
+  "Kandy|Yatinuwara": {
+   "steep_share": 0.321,
+   "mean_elev_m": 559,
+   "max_elev_m": 864
+  },
+  "Kegalle|Yatiyantota": {
+   "steep_share": 0.582,
+   "mean_elev_m": 330,
+   "max_elev_m": 1278
+  }
  }
 }
