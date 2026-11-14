@@ -327,6 +327,189 @@ def _r(x, n=1):
     return None if not _ok(x) else round(float(x), n)
 
 
+# ------------------------------------------------------------------ reservoirs (supporting data)
+
+def _num(s):
+    return pd.to_numeric(s.astype(str).str.replace(",", "", regex=False).str.strip(), errors="coerce")
+
+
+def reservoir_history():
+    """Irrigation Department season sheets -> long table (reservoir, date, storage_acft).
+
+    Maha sheet: one row per calendar day (dated in the current season) and one
+    column per season (ES_20_21_Acft = Maha 2020/21). Yala sheet: one column
+    per year. Days from September on belong to the season's first year.
+    """
+    rows = []
+    for name in ("reservoirs_maha", "reservoirs_yala"):
+        p = PROCESSED / f"{name}.csv"
+        if not p.exists():
+            continue
+        df = pd.read_csv(p, dtype=str)
+        date_col = next(c for c in df.columns if "DATE" in c.upper())
+        res_col = next(c for c in df.columns if c.upper() == "RESERVOIR")
+        day = pd.to_datetime(df[date_col], errors="coerce", format="mixed")
+        for c in df.columns:
+            cu = c.upper()
+            if name.endswith("maha") and cu.startswith("ES_"):
+                y1 = 2000 + int(cu.split("_")[1])
+                years = np.where(day.dt.month >= 9, y1, y1 + 1)
+            elif name.endswith("yala") and "EFFECTIVE" in cu and cu[-4:].isdigit():
+                years = np.full(len(df), int(cu[-4:]))
+            else:
+                continue
+            dates = pd.to_datetime(dict(year=years, month=day.dt.month, day=day.dt.day), errors="coerce")
+            rows.append(pd.DataFrame({"reservoir": df[res_col].str.strip(), "date": dates,
+                                      "storage_acft": _num(df[c]),
+                                      "active_acft": _num(df[next(x for x in df.columns if "ACTIVE" in x.upper())])}))
+    if not rows:
+        return None
+    h = pd.concat(rows).dropna(subset=["date", "storage_acft"])
+    h = h[h["date"] <= pd.Timestamp.today()]
+    return h.drop_duplicates(["reservoir", "date"])
+
+
+def reservoirs(rain1):
+    """Today's status per reservoir, its district, monthly history and its link to NASA rain."""
+    p = PROCESSED / "reservoirs_today.csv"
+    if not p.exists():
+        return None
+    import shapely
+    from districts import load_districts
+    geoms = load_districts()
+    today = pd.read_csv(p, dtype=str)
+    hist = reservoir_history()
+    out = []
+    for r in today.itertuples():
+        lat, lon = float(r.Latitude), float(r.Longitude)
+        d = next((n for n, g in geoms.items() if shapely.contains_xy(g, lon, lat)), None)
+        active = float(_num(pd.Series([r.Active_Storage_Acft])).iloc[0] or np.nan)
+        item = {"name": r.Reservoir.strip(), "district": d, "lat": round(lat, 4), "lon": round(lon, 4),
+                "range": r.Range, "pct_full": _r(float(_num(pd.Series([r.Effective_Storage_per])).iloc[0])),
+                "spilling": str(r.Spilling).strip().lower() == "yes",
+                "spill_cusec": _r(float(_num(pd.Series([r.Spilling_Cusec])).iloc[0]), 0),
+                "rain_yesterday_mm": _r(float(_num(pd.Series([r.Rainfall_Preceding_Day_mm])).iloc[0])),
+                "date": r.Update_Date}
+        if hist is not None and d in rain1:
+            h = hist[hist["reservoir"].str.lower() == item["name"].lower()]
+            if len(h) > 60 and active > 0:
+                m = h.set_index("date")["storage_acft"].resample("MS").mean() / active * 100
+                change = m.diff()
+                both = pd.concat([change, rain1[d]], axis=1, keys=["change", "rain"]).dropna()
+                item["history"] = {"months": [t.strftime("%Y-%m") for t in m.index],
+                                   "pct_full": [_r(v) for v in m.values]}
+                if len(both) >= 12:
+                    item["r_rain_vs_storage_change"] = _r(both["change"].corr(both["rain"]), 2)
+                    item["months_compared"] = int(len(both))
+        out.append(item)
+    rs = [x["r_rain_vs_storage_change"] for x in out if x.get("r_rain_vs_storage_change") is not None]
+    return {"date": today["Update_Date"].iloc[0] if len(today) else None,
+            "count": len(out), "spilling": sum(x["spilling"] for x in out),
+            "median_r_rain_vs_storage": _r(float(np.median(rs)), 2) if rs else None,
+            "items": out}
+
+
+def river_gauges():
+    """Latest reading per river gauge with its flood thresholds and location."""
+    g_p, s_p = PROCESSED / "river_gauges_7d.csv", PROCESSED / "hydrostations.csv"
+    if not (g_p.exists() and s_p.exists()):
+        return None
+    import shapely
+    from districts import load_districts
+    geoms = load_districts()
+    g = pd.read_csv(g_p)
+    g["CreationDate"] = pd.to_datetime(g["CreationDate"], errors="coerce", utc=True)
+    st = pd.read_csv(s_p)
+    latest = g.sort_values("CreationDate").groupby("gauge").tail(1)
+    out = []
+    for r in latest.itertuples():
+        s = st[st["station"].astype(str).str.strip().str.lower() == str(r.gauge).strip().lower()]
+        lat = float(s["latitude"].iloc[0]) if len(s) else None
+        lon = float(s["longitude"].iloc[0]) if len(s) else None
+        d = next((n for n, gm in geoms.items() if lat and shapely.contains_xy(gm, lon, lat)), None)
+        lvl = r.water_level
+        status = ("major flood" if lvl >= r.majorpull else "minor flood" if lvl >= r.minorpull
+                  else "alert" if lvl >= r.alertpull else "normal")
+        out.append({"gauge": r.gauge, "basin": r.basin, "district": d, "lat": lat, "lon": lon,
+                    "level_m": _r(lvl, 2), "alert_m": _r(r.alertpull, 2), "minor_m": _r(r.minorpull, 2),
+                    "major_m": _r(r.majorpull, 2), "status": status,
+                    "time": r.CreationDate.tz_convert("Asia/Colombo").strftime("%Y-%m-%d %H:%M")})
+    return {"latest": max(x["time"] for x in out) if out else None, "items": out}
+
+
+# ------------------------------------------------------------------ risk calendar
+
+PROVINCES = {
+    "Western": ["Colombo", "Gampaha", "Kalutara"],
+    "Central": ["Kandy", "Matale", "Nuwara Eliya"],
+    "Southern": ["Galle", "Matara", "Hambantota"],
+    "Northern": ["Jaffna", "Kilinochchi", "Mannar", "Vavuniya", "Mullaitivu"],
+    "Eastern": ["Batticaloa", "Ampara", "Trincomalee"],
+    "North Western": ["Kurunegala", "Puttalam"],
+    "North Central": ["Anuradhapura", "Polonnaruwa"],
+    "Uva": ["Badulla", "Monaragala"],
+    "Sabaragamuwa": ["Ratnapura", "Kegalle"],
+}
+WATCHES = ["DryWatch", "FloodWatch", "SlopeWatch"]
+
+
+def year_types(el_ninos, la_ninas, years):
+    """Label each calendar year: el_nino (building), after_el_nino, la_nina, neutral."""
+    t = {y: "neutral" for y in years}
+    for e in la_ninas:
+        t[e["year0"]] = "la_nina"
+    for e in el_ninos:
+        if e["year0"] in t:
+            t[e["year0"]] = "el_nino"
+        if e["year0"] + 1 in t:
+            t[e["year0"] + 1] = "after_el_nino"
+    return t
+
+
+def risk_calendar(rain1, rain3, smp, types):
+    """How many years each Watch was on, per place and calendar month.
+
+    Returns {"district": {...}, "province": {...}, "country": {...}}; each place
+    maps year type ("all" plus each type) -> {watch: [count Jan..Dec], "years": n}.
+    A province or the country counts a year when any of its districts was on watch.
+    """
+    years = sorted(set(rain1.index.year) & set(types))
+    flags = {}  # (district, year, month) -> watch
+    for d in rain1.columns:
+        for y in years:
+            for m in range(1, 13):
+                t = pd.Timestamp(y, m, 1)
+                if t not in rain1.index or t not in smp.index:
+                    continue
+                w, _ = flag_for(d, rain1.at[t, d], rain3.at[t, d], smp.at[t, d])
+                if _ok(rain1.at[t, d]) and _ok(smp.at[t, d]):
+                    flags[(d, y, m)] = w
+    places = {"district": {d: [d] for d in rain1.columns},
+              "province": {p: [d for d in ds if d in rain1.columns] for p, ds in PROVINCES.items()},
+              "country": {"Sri Lanka": list(rain1.columns)}}
+    out = {}
+    for level, groups in places.items():
+        out[level] = {}
+        for name, members in groups.items():
+            res = {}
+            for ytype in ["all", "el_nino", "after_el_nino", "la_nina", "neutral"]:
+                ys = [y for y in years if ytype == "all" or types[y] == ytype]
+                counts = {w: [0] * 12 for w in WATCHES}
+                n_years = 0
+                for y in ys:
+                    seen = any((d, y, m) in flags for d in members for m in range(1, 13))
+                    if not seen:
+                        continue
+                    n_years += 1
+                    for m in range(1, 13):
+                        on = {flags.get((d, y, m)) for d in members}
+                        for w in WATCHES:
+                            counts[w][m - 1] += int(w in on)
+                res[ytype] = {**counts, "years": n_years}
+            out[level][name] = res
+    return out
+
+
 # ------------------------------------------------------------------ main
 
 def main():
@@ -347,12 +530,23 @@ def main():
     m_soil = wide("merra2_lnd", "GWETROOT")
     m_smp = percentile_of(m_soil, 1981, 2010) if m_soil is not None else None
 
-    events, oni = el_nino_events()
+    events, oni = el_nino_events(kind="el_nino")
+    ln_events, _ = el_nino_events(kind="la_nina")
     strong = [e for e in events if e["strength"] in ("strong", "very strong") and not e["ongoing"]]
-    current = next((e for e in events if e["ongoing"]), None)
+    la_nina = [e for e in ln_events if e["strength"] != "weak" and not e["ongoing"]]
+    current = next((e for e in events + ln_events if e["ongoing"]), None)
 
-    rain_prof, rain_events = profile([(rain1, 2001, 2100), (m_pct, 1980, 2000)], strong)
-    soil_prof, _ = profile([(smp, 2001, 2100), (m_smp, 1980, 2000)], strong)
+    sources_rain = [(rain1, 2001, 2100), (m_pct, 1980, 2000)]
+    sources_soil = [(smp, 2001, 2100), (m_smp, 1980, 2000)]
+    rain_prof, rain_events = profile(sources_rain, strong)
+    soil_prof, _ = profile(sources_soil, strong)
+    ln_rain_prof, ln_used = profile(sources_rain, la_nina)
+    ln_soil_prof, _ = profile(sources_soil, la_nina)
+    # show the profile of this year's type; El Nino if the year is neutral
+    if current and current["kind"] == "la_nina" and ln_rain_prof is not None:
+        main_rain, main_soil, main_label = ln_rain_prof, ln_soil_prof, "la_nina"
+    else:
+        main_rain, main_soil, main_label = rain_prof, soil_prof, "el_nino"
 
     # one combined rain-% table for significance: MERRA-2 before 2001, IMERG after
     rain_all = (pd.concat([m_pct[m_pct.index.year < 2001], rain1[rain1.index.year >= 2001]])
@@ -392,16 +586,23 @@ def main():
             p3 = 100 * prev2 / normal3
             w2, why2 = flag_for(d, p1, p3, sm_now, nd_now)
             so_far = {"month": pm.strftime("%Y-%m"), "days": partial["days"], "rain_pct": _r(p1),
-                      "watch": w2, "reason": why2}
+                      "rain3_pct": _r(p3), "watch": w2, "reason": why2}
             watch, why, flag_month = w2, why2, pm.strftime("%Y-%m")
 
         nxt = None
-        if rain_prof is not None and 0 <= lag_now < LAGS - 1:
+        if main_rain is not None and 0 <= lag_now < LAGS - 1:
             ahead = list(range(lag_now + 1, min(lag_now + 4, LAGS)))
-            vals = rain_prof["mean"].loc[ahead, d]
-            nxt = {"months": [LAG_LABELS[i] for i in ahead], "rain_pct": _r(vals.mean()),
+            vals = main_rain["mean"].loc[ahead, d]
+            nxt = {"months": [LAG_LABELS[i] for i in ahead], "lags": ahead, "rain_pct": _r(vals.mean()),
                    "text": (f"In past strong El Ninos, the next {len(ahead)} months here brought "
                             f"{vals.mean():.0f}% of normal rain")}
+
+        def prof_json(rp, sp):
+            if rp is None:
+                return None
+            return {"rain_pct": {k: [_r(v) for v in rp[k][d]] for k in ("mean", "min", "max")},
+                    "soil_pct": None if sp is None else {k: [_r(v) for v in sp[k][d]] for k in ("mean", "min", "max")},
+                    "events": {str(y): [_r(v) for v in p[d]] for y, p in rp["paths"].items()}}
 
         last24 = rain1.index[-24:]
         districts[d] = {
@@ -412,11 +613,11 @@ def main():
                     "rain3_pct": _r(rain3.at[latest, d]), "soil_pct": _r(sm_now), "soil_month": sm_month,
                     "ndvi_anom": _r(nd_now, 3)},
             "so_far": so_far,
-            "profile": None if rain_prof is None else {
-                "rain_pct": {k: [_r(v) for v in rain_prof[k][d]] for k in ("mean", "min", "max")},
-                "soil_pct": None if soil_prof is None else {k: [_r(v) for v in soil_prof[k][d]] for k in ("mean", "min", "max")},
-                "events": {str(y): [_r(v) for v in p[d]] for y, p in rain_prof["paths"].items()},
-            },
+            "flag_values": {"rain_pct": _r(so_far["rain_pct"] if so_far else rain1.at[latest, d]),
+                            "rain3_pct": _r(so_far["rain3_pct"] if so_far else rain3.at[latest, d]),
+                            "soil_pct": _r(sm_now), "ndvi_anom": _r(nd_now, 3)},
+            "profile": prof_json(main_rain, main_soil),
+            "profiles": {"el_nino": prof_json(rain_prof, soil_prof), "la_nina": prof_json(ln_rain_prof, ln_soil_prof)},
             "this_event": {"rain_pct": [_r(v) for v in window(rain1, y0_now)[d]],
                            "soil_pct": [_r(v) for v in window(smp, y0_now)[d]]},
             "recent": {"months": [t.strftime("%Y-%m") for t in last24],
@@ -426,6 +627,18 @@ def main():
             "significance": {s: v.get(d) for s, v in sig.items()},
             "trend": {"rain": tr_rain.get(d), "soil": tr_soil.get(d)},
         }
+
+    # risk calendar over the longest record: MERRA-2 for 1981-2000, NASA satellites from 2001
+    if m_rain is not None and m_smp is not None:
+        m_norm = normal_of(m_rain, 1981, 2010)
+        m_rain3 = rolling_pct(m_rain, m_norm, 3)
+        cut = lambda a, b: pd.concat([a[(a.index.year >= 1981) & (a.index.year < 2001)], b[b.index.year >= 2001]])
+        cal_r1, cal_r3, cal_sm = cut(m_pct, rain1), cut(m_rain3, rain3), cut(m_smp, smp)
+    else:
+        cal_r1, cal_r3, cal_sm = rain1, rain3, smp
+    full_years = [y for y in sorted(set(cal_r1.index.year)) if (cal_r1.index.year == y).sum() == 12 and y <= CLIM_END]
+    types = year_types([e for e in events if e["strength"] in ("strong", "very strong")], la_nina, full_years)
+    calendar = risk_calendar(cal_r1, cal_r3, cal_sm, types)
 
     counts = pd.Series([v["watch"] for v in districts.values()]).value_counts().to_dict()
     out = {
@@ -439,9 +652,15 @@ def main():
             "data_ranges": {k: _range(v) for k, v in
                             {"rain": rain, "soil": soil, "ndvi": ndvi, "merra2_rain": m_rain}.items()},
         },
-        "el_nino": {"events": events, "strong_used": rain_events, "current": current,
+        "el_nino": {"events": events, "la_nina_events": ln_events, "strong_used": rain_events,
+                    "la_nina_used": ln_used, "current": current, "profile_shown": main_label,
                     "oni_recent": [{"month": t.strftime("%Y-%m"), "oni": float(v)} for t, v in oni.iloc[-24:].items()]},
         "districts": districts,
+        "calendar": {"years": [full_years[0], full_years[-1]] if full_years else None,
+                     "year_types": {str(y): t for y, t in types.items()},
+                     "provinces": PROVINCES, **calendar},
+        "reservoirs": _safe(reservoirs, rain1),
+        "rivers": _safe(river_gauges),
         "validation": {"stations": station_check(rain, rain1)},
         "backtest": backtest(rain1, rain3, smp),
     }
@@ -451,6 +670,15 @@ def main():
     print(f"wrote {path} ({path.stat().st_size / 1024:.0f} KB), latest month {latest:%Y-%m}")
     print("watch counts:", counts)
     return out
+
+
+def _safe(fn, *args):
+    """Supporting data must never stop the NASA analysis from publishing."""
+    try:
+        return fn(*args)
+    except Exception as e:  # noqa: BLE001
+        print(f"warning: {fn.__name__} skipped: {e}")
+        return None
 
 
 def _range(df):

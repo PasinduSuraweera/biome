@@ -1,44 +1,41 @@
 import "./style.css";
 import { geoArea, geoMercator, geoPath } from "d3-geo";
+import * as Plot from "@observablehq/plot";
+import { LANGS, t, dName, pName, monthName, getLang, setLang } from "./i18n.js";
 
-// d3-geo expects clockwise outer rings; this boundary file uses the opposite
-// order, so each polygon would be read as "the whole globe except Sri Lanka".
+const WATCH = {
+  SlopeWatch: { hex: "#7d2e1c", brand: "SlopeWatch" },
+  FloodWatch: { hex: "#2b7c8a", brand: "FloodWatch" },
+  DryWatch: { hex: "#d9a441", brand: "DryWatch" },
+  Clear: { hex: "#d8ddd6", brand: "" },
+};
+const ORDER = ["SlopeWatch", "FloodWatch", "DryWatch", "Clear"];
+const AMBER = "#b86f12";
+const INK = "#16201f";
+const GAUGE_HOT = ["alert", "minor flood", "major flood"];
+
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const r0 = (v) => (v == null ? "?" : Math.round(v));
+const slug = (s) => s.toLowerCase().replace(/\s+/g, "-");
+const watchLabel = (w) => (w === "Clear" ? t("w_Clear") : `${WATCH[w].brand} · ${t(`w_${w}`)}`);
+
+// d3-geo expects clockwise outer rings; this boundary file uses the opposite order.
 function rewind(feature) {
   const g = feature.geometry;
-  const polys = g.type === "Polygon" ? [g.coordinates] : g.coordinates;
+  if (!g) return feature;
+  const polys = g.type === "Polygon" ? [g.coordinates] : g.type === "MultiPolygon" ? g.coordinates : [];
   for (const rings of polys) {
     for (let i = 0; i < rings.length; i++) {
-      const ring = { type: "Polygon", coordinates: [rings[i]] };
-      const big = geoArea(ring) > 2 * Math.PI;
-      // outer ring (i = 0) must be small; holes must be big
+      const big = geoArea({ type: "Polygon", coordinates: [rings[i]] }) > 2 * Math.PI;
       if ((i === 0 && big) || (i > 0 && !big)) rings[i].reverse();
     }
   }
   return feature;
 }
-import * as Plot from "@observablehq/plot";
 
-const WATCH = {
-  SlopeWatch: { color: "var(--slope)", hex: "#7d2e1c", label: "SlopeWatch", what: "landslide danger" },
-  FloodWatch: { color: "var(--flood)", hex: "#2b7c8a", label: "FloodWatch", what: "flood danger" },
-  DryWatch: { color: "var(--dry)", hex: "#d9a441", label: "DryWatch", what: "drought" },
-  Clear: { color: "var(--clear)", hex: "#d8ddd6", label: "No watch", what: "normal conditions" },
-};
-const ORDER = ["SlopeWatch", "FloodWatch", "DryWatch", "Clear"];
-const AMBER = "#b86f12";
-const INK = "#16201f";
-
-const $ = (s) => document.querySelector(s);
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-const monthName = (ym) => {
-  if (!ym) return "";
-  const [y, m] = ym.split("-").map(Number);
-  return new Date(Date.UTC(y, m - 1, 1)).toLocaleString("en-GB", { month: "long", year: "numeric", timeZone: "UTC" });
-};
-const pct = (v) => (v == null ? "n/a" : `${Math.round(v)}%`);
-const slug = (s) => s.toLowerCase().replace(/\s+/g, "-");
-
-let DATA, GEO, current;
+let DATA, GEO, FLOOD, current, profileKind = "el_nino", showFlood = false;
+let cal = { level: "district", place: null, type: "after_el_nino" };
 
 async function load() {
   const [d, g] = await Promise.all([
@@ -47,43 +44,57 @@ async function load() {
   ]);
   DATA = d;
   GEO = g;
-  GEO.features.forEach((f) => {
-    f.properties.name = f.properties.shapeName.replace(" District", "").trim();
-    rewind(f);
-  });
-  if (DATA.meta.synthetic) $("#test-banner").hidden = false;
-  renderStatus();
-  renderMap();
-  renderLegend();
-  renderPicker();
-  renderHow();
+  GEO.features.forEach((f) => { f.properties.name = f.properties.shapeName.replace(" District", "").trim(); rewind(f); });
+  profileKind = DATA.el_nino.profile_shown || "el_nino";
+  fetch("data/flood_nov2025.geojson").then((r) => (r.ok ? r.json() : null)).then((fl) => {
+    if (fl) { fl.features.forEach(rewind); FLOOD = fl; }
+  }).catch(() => {});
+  renderAll();
   const fromHash = decodeURIComponent(location.hash.slice(1));
   const names = Object.keys(DATA.districts);
-  const start = names.find((n) => slug(n) === fromHash) || pickDefault(names);
-  select(start, false);
+  select(names.find((n) => slug(n) === fromHash) || pickDefault(names), false);
 }
 
 function pickDefault(names) {
-  // open on the most serious watch so the first screen tells the story
-  for (const w of ORDER) {
+  for (const w of ORDER.slice(0, 3)) {
     const hit = names.find((n) => DATA.districts[n].watch === w);
-    if (hit && w !== "Clear") return hit;
+    if (hit) return hit;
   }
   return names.includes("Kandy") ? "Kandy" : names[0];
 }
 
+function renderAll() {
+  document.documentElement.lang = getLang();
+  if (DATA.meta.synthetic) $("#test-banner").hidden = false;
+  $("#tagline").textContent = t("tagline");
+  $("#ov-title").textContent = t("headline");
+  $("#how-title").textContent = t("how_title");
+  $("#foot-text").textContent = t("foot");
+  renderLangs();
+  renderStatus();
+  renderMap();
+  renderLegend();
+  renderPicker();
+  renderCalendar();
+  renderHow();
+  if (current) select(current, false);
+}
+
+function renderLangs() {
+  $("#langs").innerHTML = Object.entries(LANGS).map(([k, label]) =>
+    `<button type="button" class="lang ${k === getLang() ? "on" : ""}" data-l="${k}" lang="${k}" aria-pressed="${k === getLang()}">${label}</button>`).join("");
+  $("#langs").querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { setLang(b.dataset.l); renderAll(); }));
+}
+
 function renderStatus() {
-  const m = DATA.meta;
-  const cur = DATA.el_nino.current;
+  const m = DATA.meta, cur = DATA.el_nino.current;
   const so = Object.values(DATA.districts).find((d) => d.so_far)?.so_far;
-  const latest = so ? `${monthName(so.month)} (first ${so.days} days, early estimate)` : `${monthName(m.latest_month)} (${m.latest_source})`;
-  const nino = cur ? `El Niño ${cur.year0}: ${cur.strength}, peak index ${cur.peak} so far` : "No El Niño under way";
-  $("#status").innerHTML = `<b>${esc(nino)}</b> · Latest NASA rain data: ${esc(latest)}`;
+  const latest = so ? `${monthName(so.month)} (${t("early", { n: so.days })})` : monthName(m.latest_month);
+  const nino = cur ? t(cur.kind === "la_nina" ? "nina" : "nino", { y: cur.year0, s: t(cur.strength), v: cur.peak }) : t("neutral");
+  $("#status").innerHTML = `<b>${esc(nino)}</b> · ${esc(t("latest", { m: latest }))}`;
   const c = m.watch_counts || {};
-  const parts = ["SlopeWatch", "FloodWatch", "DryWatch"].filter((w) => c[w]).map((w) => `${c[w]} on ${w}`);
-  $("#lede").textContent = parts.length
-    ? `Right now ${parts.join(", ")}. Biome compares each district with what past strong El Niños did there, using 45 years of NASA Earth data. Tap a district.`
-    : "Every district is within its normal range right now. Biome compares each district with what past strong El Niños did there, using 45 years of NASA Earth data. Tap a district.";
+  const parts = ["SlopeWatch", "FloodWatch", "DryWatch"].filter((w) => c[w]).map((w) => t("count", { n: c[w], w: WATCH[w].brand }));
+  $("#lede").textContent = parts.length ? t("lede", { list: parts.join(", ") }) : t("lede_none");
 }
 
 function renderMap() {
@@ -92,100 +103,129 @@ function renderMap() {
   svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
   const proj = geoMercator().fitExtent([[8, 8], [W - 8, H - 8]], GEO);
   const path = geoPath(proj);
-  svg.innerHTML = GEO.features
-    .map((f) => {
-      const n = f.properties.name;
-      const d = DATA.districts[n];
-      const w = d ? d.watch : "Clear";
-      return `<path class="district" data-name="${esc(n)}" d="${path(f)}" fill="${WATCH[w].hex}" tabindex="0" role="button" aria-label="${esc(n)}: ${esc(WATCH[w].label)}"><title>${esc(n)}: ${esc(WATCH[w].label)}</title></path>`;
-    })
-    .join("") + `<g id="map-label"></g>`;
+  const districts = GEO.features.map((f) => {
+    const n = f.properties.name, w = DATA.districts[n]?.watch || "Clear";
+    const label = `${dName(n)}: ${watchLabel(w)}`;
+    return `<path class="district" data-name="${esc(n)}" d="${path(f)}" fill="${WATCH[w].hex}" tabindex="0" role="button" aria-label="${esc(label)}"><title>${esc(label)}</title></path>`;
+  }).join("");
+  const flood = showFlood && FLOOD ? `<path class="flood" d="${path(FLOOD)}"/>` : "";
+  const res = (DATA.reservoirs?.items || []).map((r) => {
+    const [x, y] = proj([r.lon, r.lat]);
+    return `<circle class="res ${r.spilling ? "spill" : ""}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.spilling ? 4 : 3}"><title>${esc(r.name)}: ${esc(t("full", { p: r0(r.pct_full) }))}${r.spilling ? ", " + esc(t("spilling", { c: r0(r.spill_cusec) })) : ""}</title></circle>`;
+  }).join("");
+  const gauges = (DATA.rivers?.items || []).filter((g) => g.lat && GAUGE_HOT.includes(g.status)).map((g) => {
+    const [x, y] = proj([g.lon, g.lat]);
+    return `<path class="gauge" d="M${x.toFixed(1)} ${(y - 6).toFixed(1)}l5 9h-10z"><title>${esc(g.gauge)}: ${esc(t("g_" + g.status))}</title></path>`;
+  }).join("");
+  svg.innerHTML = districts + flood + `<g>${res}${gauges}</g><g id="map-label"></g>`;
   svg.querySelectorAll("path.district").forEach((p) => {
     p.addEventListener("click", () => select(p.dataset.name));
-    p.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(p.dataset.name); }
-    });
+    p.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(p.dataset.name); } });
   });
-  svg._proj = proj;
   svg._path = path;
 }
 
 function renderLegend() {
   const c = DATA.meta.watch_counts || {};
-  $("#legend").innerHTML = ORDER.map(
-    (w) => `<li><span class="sw" style="background:${WATCH[w].hex}"></span>${esc(WATCH[w].label)} <span style="color:var(--ink-3)">(${c[w] || 0})</span></li>`
-  ).join("");
+  $("#legend").innerHTML = ORDER.map((w) => `<li><span class="sw" style="background:${WATCH[w].hex}"></span>${esc(w === "Clear" ? t("w_Clear") : WATCH[w].brand)} <span class="muted">(${c[w] || 0})</span></li>`).join("")
+    + `<li><span class="sw dot"></span>${esc(t("lg_res"))}</li>`
+    + (DATA.rivers ? `<li><span class="sw tri"></span>${esc(t("lg_gauge"))}</li>` : "")
+    + (FLOOD ? `<li><label class="chk"><input type="checkbox" id="flood-toggle" ${showFlood ? "checked" : ""}> ${esc(t("flood_layer"))}</label></li>` : "");
+  $("#flood-toggle")?.addEventListener("change", (e) => { showFlood = e.target.checked; renderMap(); if (current) select(current, false); });
+  if (!FLOOD) setTimeout(() => FLOOD && renderLegend(), 1500);
 }
 
 function renderPicker() {
+  $("#picker-label").textContent = t("choose");
   const sel = $("#district-select");
-  sel.innerHTML = Object.keys(DATA.districts).sort().map((n) => `<option>${esc(n)}</option>`).join("");
-  sel.addEventListener("change", () => select(sel.value));
+  sel.innerHTML = Object.keys(DATA.districts).sort((a, b) => dName(a).localeCompare(dName(b))).map((n) => `<option value="${esc(n)}">${esc(dName(n))}</option>`).join("");
+  sel.onchange = () => select(sel.value);
 }
 
 function select(name, push = true) {
   current = name;
   $("#district-select").value = name;
   document.querySelectorAll("#map path.district").forEach((p) => p.classList.toggle("active", p.dataset.name === name));
-  const svg = $("#map");
   const f = GEO.features.find((x) => x.properties.name === name);
   if (f) {
-    const [x, y] = svg._path.centroid(f);
-    $("#map-label").innerHTML = `<text x="${x}" y="${y}" text-anchor="middle" dy="4">${esc(name)}</text>`;
+    const [x, y] = $("#map")._path.centroid(f);
+    $("#map-label").innerHTML = `<text x="${x}" y="${y}" text-anchor="middle" dy="4">${esc(dName(name))}</text>`;
   }
   if (push) history.replaceState(null, "", `#${slug(name)}`);
+  if (cal.level === "district") { cal.place = name; renderCalendar(); }
   renderPanel(name);
+}
+
+function reasonText(d) {
+  const v = d.flag_values || {};
+  return t(`r_${d.watch}`, { s: r0(v.soil_pct), r: r0(v.rain_pct), r3: r0(v.rain3_pct), d: r0(100 - (v.soil_pct ?? 0)) });
 }
 
 function renderPanel(name) {
   const d = DATA.districts[name];
-  const m = DATA.meta;
-  const w = WATCH[d.watch];
-  const flagMonth = monthName(d.flag_month);
-  const early = d.so_far ? ` (first ${d.so_far.days} days, NASA early estimate)` : d.now.source.includes("Late") ? " (NASA early estimate)" : "";
-  const soilNote = d.now.soil_month && d.now.soil_month !== d.flag_month ? ` Soil moisture is from ${monthName(d.now.soil_month)}, the latest NASA month.` : "";
-
+  const early = d.so_far ? ` (${t("early", { n: d.so_far.days })})` : "";
+  const soilNote = d.now.soil_month && d.now.soil_month !== d.flag_month ? t("soil_from", { m: monthName(d.now.soil_month) }) + " " : "";
+  const hasLN = !!d.profiles?.la_nina;
+  const yr = DATA.el_nino.current?.year0 ?? "";
   $("#panel").innerHTML = `
-    <h2>${esc(name)}</h2>
-    <p class="sub">${d.hill ? "Hill country district" : "District"} · ${esc(flagMonth)}${esc(early)}</p>
-    <span class="badge ${d.watch}">${esc(w.label)}</span>
-    <p class="reason">${esc(d.reason)}.</p>
-    ${d.next ? `<p class="next">What usually comes next: ${esc(d.next.text)} (${esc(d.next.months.join(", "))}).</p>` : ""}
-    <p class="meta-line">${esc(soilNote)} Biome is not a forecast. For warnings, follow the Met Department, NBRO and the DMC.</p>
-
+    <h2>${esc(dName(name))}</h2>
+    <p class="sub">${esc(d.hill ? t("hill") : t("district"))} · ${esc(monthName(d.flag_month))}${esc(early)}</p>
+    <span class="badge ${d.watch}">${esc(watchLabel(d.watch))}</span>
+    <p class="reason">${esc(reasonText(d))}</p>
+    ${d.next ? `<p class="next">${esc(t("next", { n: d.next.months.length, p: r0(d.next.rain_pct) }))}</p>` : ""}
+    <p class="meta-line">${esc(soilNote)}${esc(t("not_forecast"))}</p>
+    <div id="live"></div>
     <div class="figure">
-      <h3>The swing: rain in strong El Niño years</h3>
-      <p class="cap">Rain as % of ${esc(name)}'s normal, January of an El Niño year to June of the next. Grey band: range of past strong El Niños. Dark line: their average. <span style="color:${AMBER};font-weight:600">Amber: ${esc(DATA.el_nino.current?.year0 ?? "this year")} so far.</span></p>
+      <div class="fig-head"><h3>${esc(t("swing_title"))}</h3>
+        ${hasLN ? `<div class="seg" role="group">${["el_nino", "la_nina"].map((k) => `<button type="button" data-k="${k}" class="${k === profileKind ? "on" : ""}" aria-pressed="${k === profileKind}">${esc(t("t_" + k))}</button>`).join("")}</div>` : ""}
+      </div>
+      <p class="cap">${esc(t("swing_cap", { y: yr }))}</p>
       <div class="chart" id="chart-rain"></div>
     </div>
-
     <div class="figure">
-      <h3>How wet the ground is</h3>
-      <p class="cap">Root-zone soil moisture, ranked against the same month in 2001 to 2025 (0 = driest on record, 100 = wettest).</p>
+      <h3>${esc(t("soil_title"))}</h3>
+      <p class="cap">${esc(t("soil_cap"))}</p>
       <div class="chart" id="chart-soil"></div>
     </div>
-
     <div class="facts">${factCards(d)}</div>
+    <div class="story"><h3>${esc(t("story_title", { d: dName(name) }))}</h3>${story(name, d).map((p) => `<p>${esc(p)}</p>`).join("")}</div>`;
+  $("#panel").querySelectorAll(".seg button").forEach((b) => b.addEventListener("click", () => { profileKind = b.dataset.k; renderPanel(name); }));
+  const prof = (d.profiles && d.profiles[profileKind]) || d.profile;
+  const showNow = profileKind === (DATA.el_nino.profile_shown || "el_nino");
+  drawSwing("#chart-rain", prof?.rain_pct, showNow ? d.this_event?.rain_pct : null, 100, t("y_rain"));
+  drawSwing("#chart-soil", prof?.soil_pct, showNow ? d.this_event?.soil_pct : null, 50, t("y_soil"), [0, 100]);
+  renderLive(name);
+}
 
-    <div class="story">
-      <h3>Biome Story: ${esc(name)}</h3>
-      ${story(name, d).map((p) => `<p>${esc(p)}</p>`).join("")}
-    </div>
-  `;
-  drawSwing("#chart-rain", d.profile?.rain_pct, d.this_event?.rain_pct, 100, "% of normal rain");
-  drawSwing("#chart-soil", d.profile?.soil_pct, d.this_event?.soil_pct, 50, "soil moisture rank", [0, 100]);
+function renderLive(name) {
+  const res = (DATA.reservoirs?.items || []).filter((r) => r.district === name).sort((a, b) => (b.pct_full ?? 0) - (a.pct_full ?? 0));
+  const gauges = (DATA.rivers?.items || []).filter((g) => g.district === name);
+  if (!DATA.reservoirs && !DATA.rivers) return;
+  const release = res.some((r) => r.spilling) && gauges.some((g) => GAUGE_HOT.includes(g.status));
+  const when = [DATA.reservoirs?.date, DATA.rivers?.latest].filter(Boolean).join(" · ");
+  $("#live").innerHTML = `
+    <div class="live">
+      <h3>${esc(t("live_title"))}</h3>
+      ${release ? `<p class="release">${esc(t("release"))}</p>` : ""}
+      <ul class="rows">
+        ${res.length ? res.map((r) => `<li><span class="nm">${esc(r.name)}</span><span>${esc(t("full", { p: r0(r.pct_full) }))}</span><span class="${r.spilling ? "hot" : "muted"}">${esc(r.spilling ? t("spilling", { c: r0(r.spill_cusec) }) : t("not_spilling"))}</span></li>`).join("") : `<li class="muted">${esc(t("res_none"))}</li>`}
+      </ul>
+      <ul class="rows">
+        ${gauges.length ? gauges.map((g) => `<li><span class="nm">${esc(g.gauge)}</span><span>${esc(t("level", { l: g.level_m, a: g.alert_m }))}</span><span class="${GAUGE_HOT.includes(g.status) ? "hot" : "muted"}">${esc(t("g_" + g.status))}</span></li>`).join("") : `<li class="muted">${esc(t("gauges_none"))}</li>`}
+      </ul>
+      <p class="cap">${esc(t("live_src", { t: when }))}</p>
+    </div>`;
 }
 
 function drawSwing(sel, prof, now, ref, label, domain) {
   const el = $(sel);
-  if (!prof) { el.innerHTML = "<p>Not enough data yet.</p>"; return; }
-  const L = DATA.meta.lag_labels;
+  if (!prof) { el.innerHTML = ""; return; }
+  const L = DATA.meta.lag_labels.map((_, i) => monthName(`${2001 + Math.floor(i / 12)}-${String((i % 12) + 1).padStart(2, "0")}`, true) + (i >= 12 ? "+1" : ""));
   const rows = L.map((lab, i) => ({ i, lab, mean: prof.mean[i], lo: prof.min[i], hi: prof.max[i], now: now ? now[i] : null }));
   const nowRows = rows.filter((r) => r.now != null);
-  const width = Math.min(760, el.clientWidth || 640);
   const chart = Plot.plot({
-    width, height: 260, marginLeft: 48, marginRight: 16,
-    style: { fontFamily: "Inter, system-ui, sans-serif", fontSize: "12px", color: INK, background: "transparent" },
+    width: Math.min(760, el.clientWidth || 640), height: 260, marginLeft: 48, marginRight: 16,
+    style: { fontFamily: "inherit", fontSize: "12px", color: INK, background: "transparent" },
     x: { domain: [0, L.length - 1], ticks: L.map((_, i) => i).filter((i) => i % 2 === 0), tickFormat: (i) => L[i], label: null },
     y: { label, grid: true, domain, nice: true },
     marks: [
@@ -195,83 +235,95 @@ function drawSwing(sel, prof, now, ref, label, domain) {
       Plot.line(nowRows, { x: "i", y: "now", stroke: AMBER, strokeWidth: 3, curve: "monotone-x" }),
       Plot.dot(nowRows.slice(-1), { x: "i", y: "now", fill: AMBER, r: 5 }),
       Plot.text(nowRows.slice(-1), { x: "i", y: "now", text: (r) => `${Math.round(r.now)}`, dy: -12, fill: AMBER, fontWeight: 600 }),
-      Plot.tip(rows, Plot.pointerX({ x: "i", y: "mean", title: (r) => `${r.lab}\npast average: ${pct(r.mean)}\nrange: ${pct(r.lo)} to ${pct(r.hi)}${r.now != null ? `\nthis year: ${pct(r.now)}` : ""}` })),
+      Plot.tip(rows, Plot.pointerX({ x: "i", y: "mean", title: (r) => `${r.lab}\n${t("past_avg")}: ${r0(r.mean)}\n${t("range")}: ${r0(r.lo)}–${r0(r.hi)}${r.now != null ? `\n${t("this_year")}: ${r0(r.now)}` : ""}` })),
     ],
   });
   el.replaceChildren(chart);
 }
 
 function factCards(d) {
-  const cards = [];
-  const sig = d.significance || {};
-  const ond = sig["Northeast monsoon onset (Oct-Dec)"];
-  const sw = sig["Southwest monsoon (May-Sep)"];
-  if (sw) cards.push(card("May to Sep in strong El Niños", pct(sw.pct_of_normal) + " of normal rain", sigText(sw)));
-  if (ond) cards.push(card("Oct to Dec in strong El Niños", pct(ond.pct_of_normal) + " of normal rain", sigText(ond)));
+  const sig = d.significance || {}, out = [];
+  const card = (k, v, dsc) => `<div class="fact"><p class="k">${esc(k)}</p><p class="v">${esc(v)}</p><p class="d">${esc(dsc)}</p></div>`;
+  const chance = (s) => t(s.p < 0.05 ? "f_not_chance" : "f_chance", { p: s.p });
+  const sw = sig["Southwest monsoon (May-Sep)"], ond = sig["Northeast monsoon onset (Oct-Dec)"];
+  if (sw) out.push(card(t("f_sw"), t("f_of_normal", { p: r0(sw.pct_of_normal) }), chance(sw)));
+  if (ond) out.push(card(t("f_ond"), t("f_of_normal", { p: r0(ond.pct_of_normal) }), chance(ond)));
   const tr = d.trend?.rain;
-  if (tr) cards.push(card("Rain trend, 2001 to 2025", `${tr.pct_per_decade > 0 ? "+" : ""}${tr.pct_per_decade}% per decade`,
-    tr.significant_fdr ? "Statistically significant (Mann-Kendall, p < 0.05 after correction)" : `Not statistically significant (p = ${tr.p})`));
-  const ts = d.trend?.soil;
-  if (ts) cards.push(card("Soil moisture trend, 2001 to 2025", ts.trend === "no trend" ? "No clear trend" : ts.trend,
-    ts.significant_fdr ? "Statistically significant after correction" : `Not significant (p = ${ts.p})`));
-  return cards.join("");
+  if (tr) out.push(card(t("f_trend"), t("f_per_decade", { p: (tr.pct_per_decade > 0 ? "+" : "") + tr.pct_per_decade }), tr.significant_fdr ? t("f_sig") : t("f_notsig", { p: tr.p })));
+  return out.join("");
 }
-const card = (k, v, dsc) => `<div class="fact"><p class="k">${esc(k)}</p><p class="v">${esc(v)}</p><p class="d">${esc(dsc)}</p></div>`;
-const sigText = (s) => s.p < 0.05
-  ? `Unlikely to be chance (p = ${s.p}, ${s.n_events} events vs ${s.n_years} years)`
-  : `Could be chance (p = ${s.p}, ${s.n_events} events vs ${s.n_years} years)`;
 
 function story(name, d) {
-  const out = [];
-  const used = DATA.el_nino.strong_used || [];
-  const sig = d.significance || {};
+  const out = [], used = DATA.el_nino.strong_used || [], sig = d.significance || {};
   const sw = sig["Southwest monsoon (May-Sep)"], ond = sig["Northeast monsoon onset (Oct-Dec)"];
-  if (sw && ond) {
-    out.push(`Biome looked at ${used.length} strong El Niños since ${Math.min(...used)}. In those years, ${name} received ${pct(sw.pct_of_normal)} of its normal rain from May to September, then ${pct(ond.pct_of_normal)} from October to December.`);
-  }
-  const ev = d.this_event?.rain_pct || [];
-  const lastI = ev.reduce((a, v, i) => (v != null ? i : a), -1);
-  if (lastI >= 0) {
-    out.push(`In ${DATA.el_nino.current?.year0 ?? "this year"}, the latest full month (${DATA.meta.lag_labels[lastI].replace("+1", "")}) brought ${pct(ev[lastI])} of normal rain.`);
-  }
-  if (d.so_far) out.push(`${monthName(d.so_far.month)} so far (${d.so_far.days} days) is on pace for ${pct(d.so_far.rain_pct)} of a normal month.`);
+  if (sw && ond && used.length) out.push(t("story_swing", { n: used.length, y: Math.min(...used), d: dName(name), a: r0(sw.pct_of_normal), b: r0(ond.pct_of_normal) }));
+  if (d.so_far) out.push(t("story_sofar", { m: monthName(d.so_far.month), n: d.so_far.days, p: r0(d.so_far.rain_pct) }));
   const tr = d.trend?.rain;
-  if (tr) out.push(tr.significant_fdr
-    ? `Over 2001 to 2025, rain here changed by ${tr.pct_per_decade}% per decade, a trend unlikely to be chance.`
-    : `Over 2001 to 2025, rain here shows no trend that stands out from natural ups and downs.`);
+  if (tr) out.push(tr.significant_fdr ? t("story_trend_yes", { p: tr.pct_per_decade }) : t("story_trend_no"));
   return out;
 }
 
+function renderCalendar() {
+  const C = DATA.calendar;
+  if (!C) { $("#calendar").hidden = true; return; }
+  const places = { country: ["Sri Lanka"], province: Object.keys(C.provinces), district: Object.keys(C.district).sort() };
+  if (!cal.place || !C[cal.level][cal.place]) cal.place = cal.level === "district" ? (current || places.district[0]) : places[cal.level][0];
+  const nm = (p) => (cal.level === "district" ? dName(p) : pName(p));
+  const types = ["after_el_nino", "all", "el_nino", "la_nina", "neutral"];
+  const rec = C[cal.level][cal.place][cal.type];
+  const months = Array.from({ length: 12 }, (_, i) => monthName(`2001-${String(i + 1).padStart(2, "0")}`, true));
+  const shade = (n, tot) => (tot ? Math.min(1, n / tot) : 0);
+  $("#cal-title").textContent = t("cal_title");
+  $("#cal-lede").textContent = t("cal_lede", { a: C.years?.[0], b: C.years?.[1] });
+  $("#cal-controls").innerHTML = `
+    <label>${esc(t("cal_level"))}<select id="cal-level">${["country", "province", "district"].map((l) => `<option value="${l}" ${l === cal.level ? "selected" : ""}>${esc(t("lvl_" + l))}</option>`).join("")}</select></label>
+    <label>&nbsp;<select id="cal-place">${places[cal.level].map((p) => `<option value="${esc(p)}" ${p === cal.place ? "selected" : ""}>${esc(nm(p))}</option>`).join("")}</select></label>
+    <label>${esc(t("cal_type"))}<select id="cal-type">${types.map((ty) => `<option value="${ty}" ${ty === cal.type ? "selected" : ""}>${esc(t("ty_" + ty))}</option>`).join("")}</select></label>`;
+  $("#cal-level").onchange = (e) => { cal.level = e.target.value; cal.place = null; renderCalendar(); };
+  $("#cal-place").onchange = (e) => { cal.place = e.target.value; renderCalendar(); };
+  $("#cal-type").onchange = (e) => { cal.type = e.target.value; renderCalendar(); };
+  const tot = rec.years;
+  $("#cal-table").innerHTML = `<table class="cal"><tr><th></th>${months.map((m) => `<th>${esc(m)}</th>`).join("")}</tr>
+    ${["DryWatch", "FloodWatch", "SlopeWatch"].map((w) => `<tr><th>${esc(WATCH[w].brand)}<span class="muted"> · ${esc(t("w_" + w))}</span></th>${rec[w].map((n) => `<td style="--a:${shade(n, tot)};--c:${WATCH[w].hex}" title="${esc(t("cal_cell", { n, t: tot }))}">${n}</td>`).join("")}</tr>`).join("")}
+    </table><p class="cap">${esc(t("cal_cell", { n: "n", t: tot }))}</p>`;
+}
+
 function renderHow() {
-  const m = DATA.meta, v = DATA.validation, b = DATA.backtest, e = DATA.el_nino;
-  const rng = (r) => (r ? `${monthName(r[0])} to ${monthName(r[1])}` : "not loaded");
-  const rules = Object.entries(m.rules).map(([k, t]) => `<li><b>${esc(k)}:</b> ${esc(t)}.</li>`).join("");
-  const evRows = e.events.filter((x) => x.strength === "strong" || x.strength === "very strong")
-    .map((x) => `<tr><td>${x.year0} to ${x.year0 + 1}</td><td>${esc(x.strength)}</td><td>${x.peak}</td><td>${x.ongoing ? "this year, shown in amber" : e.strong_used.includes(x.year0) ? "in the profile" : "outside data"}</td></tr>`).join("");
+  const m = DATA.meta, v = DATA.validation, b = DATA.backtest, e = DATA.el_nino, R = DATA.reservoirs;
+  const rng = (r) => (r ? `${r[0]} to ${r[1]}` : "not loaded");
+  const rules = Object.entries(m.rules).map(([k, txt]) => `<li><b>${esc(k)}:</b> ${esc(txt)}.</li>`).join("");
+  const evRows = [...e.events.filter((x) => x.strength === "strong" || x.strength === "very strong"), ...(e.la_nina_events || []).filter((x) => x.strength !== "weak")]
+    .filter((x) => x.year0 >= 1980)
+    .sort((a, c) => a.year0 - c.year0)
+    .map((x) => `<tr><td>${x.kind === "la_nina" ? "La Niña" : "El Niño"} ${x.year0} to ${x.year0 + 1}</td><td>${esc(x.strength)}</td><td>${x.peak}</td><td>${x.ongoing ? "this year" : (e.strong_used || []).includes(x.year0) || (e.la_nina_used || []).includes(x.year0) ? "in the profile" : "outside data"}</td></tr>`).join("");
   const stRows = (v.stations || []).map((s) => `<tr><td>${esc(s.station)}</td><td>${esc(s.district)}</td><td>${s.months}</td><td>${s.r_monthly}</td><td>${s.r_anomaly}</td><td>${s.bias_pct > 0 ? "+" : ""}${s.bias_pct}%</td></tr>`).join("");
   const btRows = (b || []).map((x) => `<tr><td>${esc(x.event)}</td><td>${esc(x.district)}</td><td>${esc(x.month_before?.watch ?? "n/a")} (soil rank ${x.month_before?.soil_pct ?? "n/a"})</td><td>${esc(x.month_of?.watch ?? "n/a")}</td></tr>`).join("");
   $("#how-body").innerHTML = `
-    <p>Biome is a trend detective, not a weather forecast. It learns what is normal for each district, looks at how past strong El Niños hit it, and places this year inside that pattern. Every number on this page is computed from the public data below, with code you can rerun.</p>
+    ${getLang() !== "en" ? `<p class="muted">${esc(t("how_note"))}</p>` : ""}
+    <p>Biome is a trend detective, not a weather forecast. It learns what is normal for each district, looks at how past El Niños and La Niñas hit it, and places this year inside that pattern. Every number on this page is computed from the public data below, with code you can rerun.</p>
     <h3>NASA and partner data</h3>
     <div class="table-wrap"><table>
       <tr><th>What</th><th>Dataset</th><th>Period used</th></tr>
       <tr><td>Rain</td><td>NASA GPM IMERG Final, monthly 0.1° (V07); IMERG Late daily for the latest months</td><td>${esc(rng(m.data_ranges.rain))}</td></tr>
       <tr><td>Soil moisture</td><td>NASA GLDAS Noah, monthly 0.25° (V2.1), root zone</td><td>${esc(rng(m.data_ranges.soil))}</td></tr>
       <tr><td>Plant greenness</td><td>NASA MODIS Terra NDVI, monthly 1 km (MOD13A3 v061)</td><td>${esc(rng(m.data_ranges.ndvi))}</td></tr>
-      <tr><td>Older El Niños</td><td>NASA MERRA-2 reanalysis, monthly rain and soil wetness</td><td>${esc(rng(m.data_ranges.merra2_rain))}</td></tr>
-      <tr><td>El Niño years</td><td>NOAA Oceanic Niño Index (official definition)</td><td>1950 to now</td></tr>
+      <tr><td>Older years</td><td>NASA MERRA-2 reanalysis, monthly rain and soil wetness</td><td>${esc(rng(m.data_ranges.merra2_rain))}</td></tr>
+      <tr><td>El Niño and La Niña years</td><td>NOAA Oceanic Niño Index (official definition)</td><td>1950 to now</td></tr>
       <tr><td>Ground truth</td><td>NOAA GHCN-Daily rain gauges in Sri Lanka</td><td>see check below</td></tr>
+      <tr><td>Reservoirs and rivers</td><td>Sri Lanka Irrigation Department: daily reservoir storage and spilling, live river gauges with flood levels, Nov 2025 flood extent</td><td>${R ? `${R.count} reservoirs, ${esc(R.date)}` : "not loaded"}</td></tr>
     </table></div>
     <h3>The Watch rules</h3><ul>${rules}</ul>
     <h3>Method</h3>
     <ol>
       <li>District averages for every month, weighting each satellite grid cell by how much of it lies in the district.</li>
       <li>Normal for each district and calendar month over ${esc(m.normal_period)}; rain as % of normal, soil moisture as a rank against the same month in other years.</li>
-      <li>Strong El Niños (peak index 1.5 or more) chosen by NOAA's rule, not by us.</li>
+      <li>El Niño and La Niña years chosen by NOAA's rule (strong El Niño: peak index 1.5 or more; La Niña: moderate or stronger), not by us.</li>
       <li>Significance: El Niño seasons compared with 5,000 random sets of years from the whole record (permutation test).</li>
       <li>Long-term trend: Seasonal Mann-Kendall test with Sen's slope, corrected for testing 25 districts at once (Benjamini-Hochberg).</li>
+      <li>Risk calendar: the Watch rules applied to every month from ${esc(DATA.calendar?.years?.[0] ?? "")} (MERRA-2 before 2001, NASA satellites after).</li>
+      <li>Reservoirs: each reservoir's monthly change in storage compared with NASA rain over its district${R?.median_r_rain_vs_storage != null ? ` (median correlation ${R.median_r_rain_vs_storage})` : ""}.</li>
     </ol>
-    <h3>Strong El Niños in the record</h3>
+    <h3>El Niño and La Niña in the record</h3>
     <div class="table-wrap"><table><tr><th>Event</th><th>Strength</th><th>Peak index</th><th>Use</th></tr>${evRows}</table></div>
     <h3>Check against rain gauges</h3>
     <p>Satellite rain for the district compared with NOAA station records, month by month. "Anomaly r" removes the seasons first, so it shows whether the satellite catches unusual months, not just the monsoon.</p>
@@ -285,6 +337,7 @@ function renderHow() {
       <li>Satellite rain smooths out local cloudbursts; a district average can hide a village-scale downpour.</li>
       <li>The latest months use NASA's early estimates, which are revised later.</li>
       <li>MODIS Terra has drifted in orbit since 2022; greenness is used only as supporting evidence.</li>
+      <li>Reservoir and river readings are the Irrigation Department's; Biome shows them as published.</li>
     </ul>`;
 }
 

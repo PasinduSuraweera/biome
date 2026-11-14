@@ -123,3 +123,56 @@ th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--lin
 th { font-weight: 600; color: var(--ink-2); background: var(--paper-2); }
 
 .foot { padding: 24px clamp(16px, 4vw, 40px) 40px; color: var(--ink-3); font-size: 13px; max-width: 1280px; margin: 0 auto; }
+
+/* languages */
+body { font-family: Inter, "Noto Sans Sinhala", "Noto Sans Tamil", system-ui, sans-serif; }
+:lang(si) body, html:lang(si) { --sans: "Noto Sans Sinhala", Inter, system-ui, sans-serif; }
+:lang(ta) body, html:lang(ta) { --sans: "Noto Sans Tamil", Inter, system-ui, sans-serif; }
+html:lang(si) h1, html:lang(si) h2, html:lang(si) h3, html:lang(si) .name { font-family: "Space Grotesk", "Noto Sans Sinhala", sans-serif; }
+html:lang(ta) h1, html:lang(ta) h2, html:lang(ta) h3, html:lang(ta) .name { font-family: "Space Grotesk", "Noto Sans Tamil", sans-serif; }
+.top-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+.langs { display: flex; gap: 4px; }
+.lang { font: 500 14px var(--sans); min-height: 36px; padding: 6px 12px; border: 1px solid var(--line); background: #fff; color: var(--ink); border-radius: 999px; cursor: pointer; }
+.lang:lang(si) { font-family: "Noto Sans Sinhala", sans-serif; }
+.lang:lang(ta) { font-family: "Noto Sans Tamil", sans-serif; }
+.lang.on { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+@media (max-width: 640px) { .top-right { align-items: flex-start; } }
+.muted { color: var(--ink-3); }
+
+/* map extras */
+#map path.flood { fill: #1d4f8c; fill-opacity: .45; stroke: none; pointer-events: none; }
+#map circle.res { fill: #fff; stroke: var(--ink); stroke-width: 1; }
+#map circle.res.spill { fill: #1d4f8c; stroke: #fff; }
+#map path.gauge { fill: #b3261e; stroke: #fff; stroke-width: 1; }
+.sw.dot { border-radius: 50%; background: #1d4f8c; }
+.sw.tri { background: #b3261e; clip-path: polygon(50% 0, 100% 100%, 0 100%); border-radius: 0; }
+.chk { display: flex; gap: 6px; align-items: center; cursor: pointer; }
+.chk input { width: 18px; height: 18px; }
+
+/* live panel */
+.live { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; margin: 8px 0 16px; }
+.live h3 { font-size: 18px; margin: 0 0 8px; }
+.live .rows { list-style: none; padding: 0; margin: 0 0 8px; }
+.live .rows li { display: grid; grid-template-columns: minmax(120px, 1.2fr) 1fr 1.2fr; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--paper-2); font-size: 14px; }
+.live .rows li.muted { display: block; }
+.live .nm { font-weight: 600; }
+.live .hot { color: #b3261e; font-weight: 600; }
+.release { background: #fbe9e7; color: #7a1c14; border-radius: 8px; padding: 8px 12px; font-weight: 600; margin: 0 0 8px; }
+.live .cap { font-size: 12px; color: var(--ink-3); margin: 4px 0 0; }
+
+/* profile toggle */
+.fig-head { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+.seg button { font: 500 13px var(--sans); padding: 6px 12px; min-height: 36px; border: 0; background: #fff; color: var(--ink); cursor: pointer; }
+.seg button.on { background: var(--ink); color: var(--paper); }
+
+/* risk calendar */
+.calendar { margin: 48px 0 0; padding-top: 24px; border-top: 1px solid var(--line); }
+.calendar h2 { font-size: 28px; margin: 0 0 8px; }
+.calendar .lede { font-size: 16px; }
+.cal-controls { display: flex; flex-wrap: wrap; gap: 12px; margin: 0 0 16px; }
+.cal-controls label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--ink-2); }
+.cal-controls select { font: 15px var(--sans); padding: 8px 10px; min-height: 44px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink); }
+table.cal { min-width: 640px; }
+table.cal td { text-align: center; font-weight: 600; background: color-mix(in srgb, var(--c) calc(var(--a) * 85%), #fff); color: var(--ink); }
+table.cal th:first-child { white-space: nowrap; }
