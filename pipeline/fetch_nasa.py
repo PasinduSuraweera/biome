@@ -196,7 +196,9 @@ def combine(key):
     df = pd.DataFrame(rows)
     df["time"] = pd.to_datetime(df["time"])
     long = df.melt(id_vars=["time", "var"], var_name="district", value_name="value")
-    if key == "imerg_late_daily":  # daily -> monthly totals, keep day counts
+    if key == "imerg_late_daily":  # keep the days (for daily risk levels), then daily -> monthly totals
+        days = long.sort_values(["district", "time"])
+        days.to_csv(PROCESSED / f"{key}_days.csv", index=False)
         long["month"] = long["time"].dt.to_period("M").dt.to_timestamp()
         g = long.groupby(["month", "var", "district"])["value"]
         long = g.sum(min_count=1).to_frame("value").join(g.count().to_frame("days")).reset_index()

@@ -49,7 +49,7 @@ jobs:
         if: always()
         with:
           name: nasa-${{ matrix.dataset }}
-          path: data/processed/${{ matrix.dataset }}.csv
+          path: data/processed/${{ matrix.dataset }}*.csv
           if-no-files-found: warn
 
   analyze:
