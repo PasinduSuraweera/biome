@@ -1,0 +1,345 @@
+{
+ "source": "NASA GIBS / Worldview",
+ "images": [
+  {
+   "id": "ditwah-2025-11-26",
+   "group": "ditwah",
+   "date": "2025-11-26",
+   "file": "nasa/ditwah-2025-11-26.jpg",
+   "w": 1200,
+   "h": 960,
+   "layer": "VIIRS_SNPP_CorrectedReflectance_TrueColor",
+   "title": "VIIRS_SNPP_CorrectedReflectance_TrueColor",
+   "bbox": [
+    72.0,
+    0.0,
+    92.0,
+    16.0
+   ],
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=72.0,0.0,92.0,16.0&l=Coastlines_15m,VIIRS_SNPP_CorrectedReflectance_TrueColor&t=2025-11-26"
+  },
+  {
+   "id": "ditwah-rain-2025-11-26",
+   "group": "ditwah_rain",
+   "date": "2025-11-26",
+   "file": "nasa/ditwah-rain-2025-11-26.jpg",
+   "w": 1200,
+   "h": 960,
+   "layer": "IMERG_Precipitation_Rate",
+   "title": "IMERG_Precipitation_Rate",
+   "bbox": [
+    72.0,
+    0.0,
+    92.0,
+    16.0
+   ],
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=72.0,0.0,92.0,16.0&l=Coastlines_15m,IMERG_Precipitation_Rate,BlueMarble_ShadedRelief_Bathymetry&t=2025-11-26"
+  },
+  {
+   "id": "ditwah-2025-11-27",
+   "group": "ditwah",
+   "date": "2025-11-27",
+   "file": "nasa/ditwah-2025-11-27.jpg",
+   "w": 1200,
+   "h": 960,
+   "layer": "VIIRS_SNPP_CorrectedReflectance_TrueColor",
+   "title": "VIIRS_SNPP_CorrectedReflectance_TrueColor",
+   "bbox": [
+    72.0,
+    0.0,
+    92.0,
+    16.0
+   ],
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=72.0,0.0,92.0,16.0&l=Coastlines_15m,VIIRS_SNPP_CorrectedReflectance_TrueColor&t=2025-11-27"
+  },
+  {
+   "id": "ditwah-rain-2025-11-27",
+   "group": "ditwah_rain",
+   "date": "2025-11-27",
+   "file": "nasa/ditwah-rain-2025-11-27.jpg",
+   "w": 1200,
+   "h": 960,
+   "layer": "IMERG_Precipitation_Rate",
+   "title": "IMERG_Precipitation_Rate",
+   "bbox": [
+    72.0,
+    0.0,
+    92.0,
+    16.0
+   ],
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=72.0,0.0,92.0,16.0&l=Coastlines_15m,IMERG_Precipitation_Rate,BlueMarble_ShadedRelief_Bathymetry&t=2025-11-27"
+  },
+  {
+   "id": "ditwah-2025-11-28",
+   "group": "ditwah",
+   "date": "2025-11-28",
+   "file": "nasa/ditwah-2025-11-28.jpg",
+   "w": 1200,
+   "h": 960,
+   "layer": "VIIRS_SNPP_CorrectedReflectance_TrueColor",
+   "title": "VIIRS_SNPP_CorrectedReflectance_TrueColor",
+   "bbox": [
+    72.0,
+    0.0,
+    92.0,
+    16.0
+   ],
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=72.0,0.0,92.0,16.0&l=Coastlines_15m,VIIRS_SNPP_CorrectedReflectance_TrueColor&t=2025-11-28"
+  },
+  {
+   "id": "ditwah-rain-2025-11-28",
+   "group": "ditwah_rain",
+   "date": "2025-11-28",
+   "file": "nasa/ditwah-rain-2025-11-28.jpg",
+   "w": 1200,
+   "h": 960,
+   "layer": "IMERG_Precipitation_Rate",
+   "title": "IMERG_Precipitation_Rate",
+   "bbox": [
+    72.0,
+    0.0,
+    92.0,
+    16.0
+   ],
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=72.0,0.0,92.0,16.0&l=Coastlines_15m,IMERG_Precipitation_Rate,BlueMarble_ShadedRelief_Bathymetry&t=2025-11-28"
+  },
+  {
+   "id": "ditwah-2025-11-29",
+   "group": "ditwah",
+   "date": "2025-11-29",
+   "file": "nasa/ditwah-2025-11-29.jpg",
+   "w": 1200,
+   "h": 960,
+   "layer": "VIIRS_SNPP_CorrectedReflectance_TrueColor",
+   "title": "VIIRS_SNPP_CorrectedReflectance_TrueColor",
+   "bbox": [
+    72.0,
+    0.0,
+    92.0,
+    16.0
+   ],
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=72.0,0.0,92.0,16.0&l=Coastlines_15m,VIIRS_SNPP_CorrectedReflectance_TrueColor&t=2025-11-29"
+  },
+  {
+   "id": "ditwah-rain-2025-11-29",
+   "group": "ditwah_rain",
+   "date": "2025-11-29",
+   "file": "nasa/ditwah-rain-2025-11-29.jpg",
+   "w": 1200,
+   "h": 960,
+   "layer": "IMERG_Precipitation_Rate",
+   "title": "IMERG_Precipitation_Rate",
+   "bbox": [
+    72.0,
+    0.0,
+    92.0,
+    16.0
+   ],
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=72.0,0.0,92.0,16.0&l=Coastlines_15m,IMERG_Precipitation_Rate,BlueMarble_ShadedRelief_Bathymetry&t=2025-11-29"
+  },
+  {
+   "id": "now-1",
+   "group": "now",
+   "date": "2026-11-13",
+   "file": "nasa/now-1.jpg",
+   "w": 1200,
+   "h": 960,
+   "layer": "VIIRS_SNPP_CorrectedReflectance_TrueColor",
+   "title": "VIIRS_SNPP_CorrectedReflectance_TrueColor",
+   "bbox": [
+    72.0,
+    0.0,
+    92.0,
+    16.0
+   ],
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=72.0,0.0,92.0,16.0&l=Coastlines_15m,VIIRS_SNPP_CorrectedReflectance_TrueColor&t=2026-11-13"
+  },
+  {
+   "id": "now-rain-1",
+   "group": "now_rain",
+   "date": "2026-11-13",
+   "file": "nasa/now-rain-1.jpg",
+   "w": 1200,
+   "h": 960,
+   "layer": "IMERG_Precipitation_Rate",
+   "title": "IMERG_Precipitation_Rate",
+   "bbox": [
+    72.0,
+    0.0,
+    92.0,
+    16.0
+   ],
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=72.0,0.0,92.0,16.0&l=Coastlines_15m,IMERG_Precipitation_Rate,BlueMarble_ShadedRelief_Bathymetry&t=2026-11-13"
+  },
+  {
+   "id": "now-2",
+   "group": "now",
+   "date": "2026-11-12",
+   "file": "nasa/now-2.jpg",
+   "w": 1200,
+   "h": 960,
+   "layer": "VIIRS_SNPP_CorrectedReflectance_TrueColor",
+   "title": "VIIRS_SNPP_CorrectedReflectance_TrueColor",
+   "bbox": [
+    72.0,
+    0.0,
+    92.0,
+    16.0
+   ],
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=72.0,0.0,92.0,16.0&l=Coastlines_15m,VIIRS_SNPP_CorrectedReflectance_TrueColor&t=2026-11-12"
+  },
+  {
+   "id": "now-rain-2",
+   "group": "now_rain",
+   "date": "2026-11-12",
+   "file": "nasa/now-rain-2.jpg",
+   "w": 1200,
+   "h": 960,
+   "layer": "IMERG_Precipitation_Rate",
+   "title": "IMERG_Precipitation_Rate",
+   "bbox": [
+    72.0,
+    0.0,
+    92.0,
+    16.0
+   ],
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=72.0,0.0,92.0,16.0&l=Coastlines_15m,IMERG_Precipitation_Rate,BlueMarble_ShadedRelief_Bathymetry&t=2026-11-12"
+  },
+  {
+   "id": "now-3",
+   "group": "now",
+   "date": "2026-11-11",
+   "file": "nasa/now-3.jpg",
+   "w": 1200,
+   "h": 960,
+   "layer": "VIIRS_SNPP_CorrectedReflectance_TrueColor",
+   "title": "VIIRS_SNPP_CorrectedReflectance_TrueColor",
+   "bbox": [
+    72.0,
+    0.0,
+    92.0,
+    16.0
+   ],
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=72.0,0.0,92.0,16.0&l=Coastlines_15m,VIIRS_SNPP_CorrectedReflectance_TrueColor&t=2026-11-11"
+  },
+  {
+   "id": "now-rain-3",
+   "group": "now_rain",
+   "date": "2026-11-11",
+   "file": "nasa/now-rain-3.jpg",
+   "w": 1200,
+   "h": 960,
+   "layer": "IMERG_Precipitation_Rate",
+   "title": "IMERG_Precipitation_Rate",
+   "bbox": [
+    72.0,
+    0.0,
+    92.0,
+    16.0
+   ],
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=72.0,0.0,92.0,16.0&l=Coastlines_15m,IMERG_Precipitation_Rate,BlueMarble_ShadedRelief_Bathymetry&t=2026-11-11"
+  },
+  {
+   "id": "flood-2025-12-02",
+   "group": "flood",
+   "date": "2025-12-02",
+   "file": "nasa/flood-2025-12-02.jpg",
+   "w": 900,
+   "h": 1192,
+   "layer": "MODIS_Combined_Flood_3-Day",
+   "title": "MODIS_Combined_Flood_3-Day",
+   "bbox": [
+    78.9,
+    5.4,
+    82.6,
+    10.3
+   ],
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=78.9,5.4,82.6,10.3&l=Coastlines_15m,MODIS_Combined_Flood_3-Day,BlueMarble_ShadedRelief_Bathymetry&t=2025-12-02"
+  },
+  {
+   "id": "flood-2025-12-04",
+   "group": "flood",
+   "date": "2025-12-04",
+   "file": "nasa/flood-2025-12-04.jpg",
+   "w": 900,
+   "h": 1192,
+   "layer": "MODIS_Combined_Flood_3-Day",
+   "title": "MODIS_Combined_Flood_3-Day",
+   "bbox": [
+    78.9,
+    5.4,
+    82.6,
+    10.3
+   ],
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=78.9,5.4,82.6,10.3&l=Coastlines_15m,MODIS_Combined_Flood_3-Day,BlueMarble_ShadedRelief_Bathymetry&t=2025-12-04"
+  },
+  {
+   "id": "ndvi-2025-08-15",
+   "group": "ndvi",
+   "date": "2025-08-15",
+   "file": "nasa/ndvi-2025-08-15.jpg",
+   "w": 900,
+   "h": 1192,
+   "layer": "MODIS_Terra_NDVI_8Day",
+   "title": "MODIS_Terra_NDVI_8Day",
+   "bbox": [
+    78.9,
+    5.4,
+    82.6,
+    10.3
+   ],
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=78.9,5.4,82.6,10.3&l=Coastlines_15m,MODIS_Terra_NDVI_8Day&t=2025-08-15"
+  },
+  {
+   "id": "ndvi-2026-08-15",
+   "group": "ndvi",
+   "date": "2026-08-15",
+   "file": "nasa/ndvi-2026-08-15.jpg",
+   "w": 900,
+   "h": 1192,
+   "layer": "MODIS_Terra_NDVI_8Day",
+   "title": "MODIS_Terra_NDVI_8Day",
+   "bbox": [
+    78.9,
+    5.4,
+    82.6,
+    10.3
+   ],
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=78.9,5.4,82.6,10.3&l=Coastlines_15m,MODIS_Terra_NDVI_8Day&t=2026-08-15"
+  },
+  {
+   "id": "soil-2025-11-29",
+   "group": "soil",
+   "date": "2025-11-29",
+   "file": "nasa/soil-2025-11-29.jpg",
+   "w": 900,
+   "h": 1192,
+   "layer": "SMAP_L4_Analyzed_Root_Zone_Soil_Moisture",
+   "title": "SMAP_L4_Analyzed_Root_Zone_Soil_Moisture",
+   "bbox": [
+    78.9,
+    5.4,
+    82.6,
+    10.3
+   ],
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=78.9,5.4,82.6,10.3&l=Coastlines_15m,SMAP_L4_Analyzed_Root_Zone_Soil_Moisture&t=2025-11-29"
+  },
+  {
+   "id": "soil-2026-08-15",
+   "group": "soil",
+   "date": "2026-08-15",
+   "file": "nasa/soil-2026-08-15.jpg",
+   "w": 900,
+   "h": 1192,
+   "layer": "SMAP_L4_Analyzed_Root_Zone_Soil_Moisture",
+   "title": "SMAP_L4_Analyzed_Root_Zone_Soil_Moisture",
+   "bbox": [
+    78.9,
+    5.4,
+    82.6,
+    10.3
+   ],
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=78.9,5.4,82.6,10.3&l=Coastlines_15m,SMAP_L4_Analyzed_Root_Zone_Soil_Moisture&t=2026-08-15"
+  }
+ ]
+}
