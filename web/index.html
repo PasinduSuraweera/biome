@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Biome · Sri Lanka's Earth, read from space</title>
+<meta name="description" content="Biome reads 45 years of NASA Earth data to show each Sri Lankan district its swing between drought, flood and landslide danger, and where this year stands.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<div id="test-banner" hidden>Test data only. These numbers are not real.</div>
+<header class="top">
+  <div class="brand">
+    <svg class="mark" viewBox="0 0 200 200" aria-hidden="true"><defs><clipPath id="mk"><circle cx="100" cy="100" r="84"/></clipPath></defs><circle cx="100" cy="100" r="84" fill="#121419"/><g clip-path="url(#mk)" stroke="#2e333d" stroke-width="2"><circle cx="38" cy="168" r="160" fill="#1a1d23"/><circle cx="38" cy="168" r="134" fill="#121419"/><circle cx="38" cy="168" r="108" fill="#1a1d23"/><circle cx="38" cy="168" r="82" fill="#121419"/><circle cx="38" cy="168" r="56" fill="#1a1d23"/></g><path d="M92.68 16.32 A84 84 0 0 1 183.68 92.68" fill="none" stroke="#f0a43a" stroke-width="7" stroke-linecap="round"/><circle cx="168" cy="32" r="6" fill="#f0a43a"/></svg>
+    <div>
+      <p class="name">Biome</p>
+      <p class="tag">Sri Lanka's Earth, read from space</p>
+    </div>
+  </div>
+  <p class="status" id="status">Loading NASA data…</p>
+</header>
+
+<main>
+  <section class="overview" aria-labelledby="ov-title">
+    <h1 id="ov-title">See the swing before it hits.</h1>
+    <p class="lede" id="lede"></p>
+    <div class="layout">
+      <div class="map-col">
+        <div class="map-wrap"><svg id="map" role="img" aria-label="Map of Sri Lanka's 25 districts coloured by their current Watch"></svg></div>
+        <ul class="legend" id="legend"></ul>
+        <label class="picker">Or choose a district
+          <select id="district-select"></select>
+        </label>
+      </div>
+      <article class="panel" id="panel" aria-live="polite"></article>
+    </div>
+  </section>
+
+  <section class="how" id="how" aria-labelledby="how-title">
+    <h2 id="how-title">How we know</h2>
+    <div id="how-body"></div>
+  </section>
+</main>
+
+<footer class="foot">
+  <p>Biome is a NASA Space Apps Challenge 2026 project (Kandy) for the challenge "Be An Earth System Trend Detective!". It shows patterns in past records and is not a weather forecast: for warnings, follow the Department of Meteorology, NBRO and the Disaster Management Centre.</p>
+  <p>Data: NASA GPM IMERG, GLDAS, MERRA-2 and MODIS; NOAA Oceanic Niño Index and GHCN-Daily stations; district boundaries from geoBoundaries (CC BY 4.0). No NASA endorsement is implied.</p>
+</footer>
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
