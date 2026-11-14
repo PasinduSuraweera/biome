@@ -18,7 +18,9 @@ import io
 import pandas as pd
 import requests
 
-from config import PROCESSED, WEB_DATA
+from config import PROCESSED, RAW, WEB_DATA
+
+RAW_FLOOD = RAW / "flood_nov2025_full.geojson"
 
 SHEET = ("https://docs.google.com/spreadsheets/d/e/2PACX-1vTcSGhi9RESl7CMCl1TQnrKe07Gx5Q696YiSB9jneIHqIP9lifpqSErgI3D5k9KtQXSdW5JpycIIr5e"
          "/pub?gid={gid}&single=true&output=csv")
@@ -56,14 +58,15 @@ def arcgis_all(url, where="1=1"):
     rows, offset = [], 0
     while True:
         r = requests.get(url, params={"f": "json", "where": where, "outFields": "*",
-                                      "resultOffset": offset, "resultRecordCount": 2000,
-                                      "orderByFields": "objectid"}, timeout=120)
+                                      "resultOffset": offset, "orderByFields": "objectid"}, timeout=120)
         r.raise_for_status()
-        feats = r.json().get("features", [])
+        js = r.json()
+        feats = js.get("features", [])
         rows += [f["attributes"] for f in feats]
-        if len(feats) < 2000:
+        # the server caps each page (1,000 here) and says when more remain
+        if not feats or not js.get("exceededTransferLimit"):
             break
-        offset += 2000
+        offset += len(feats)
     return pd.DataFrame(rows)
 
 
@@ -83,10 +86,30 @@ def gauges():
 
 
 def flood_extent():
-    r = requests.get(FLOOD_2025, timeout=300)
-    r.raise_for_status()
-    (WEB_DATA / "flood_nov2025.geojson").write_bytes(r.content)
-    print(f"flood extent Nov 2025: {len(r.content) / 1e6:.1f} MB")
+    """Ditwah flood extent, simplified from ~75 MB to a size a phone can load."""
+    import json
+    import shapely
+    from shapely.geometry import mapping, shape
+    from shapely.ops import unary_union
+
+    raw = RAW_FLOOD
+    if not raw.exists():
+        r = requests.get(FLOOD_2025, timeout=600)
+        r.raise_for_status()
+        raw.write_bytes(r.content)
+    gj = json.loads(raw.read_text())
+    geoms = [shapely.make_valid(shape(f["geometry"])) for f in gj["features"] if f.get("geometry")]
+    merged = unary_union(geoms).buffer(0.0005).buffer(-0.0005)  # close hairline gaps
+    simple = merged.simplify(0.002, preserve_topology=True)      # about 200 m
+    simple = shapely.set_precision(simple, 0.0001)
+    out = {"type": "FeatureCollection", "features": [{
+        "type": "Feature", "properties": {"name": "Flooded area, Cyclone Ditwah, Nov 2025",
+                                          "source": "Sri Lanka Irrigation Department"},
+        "geometry": mapping(simple)}]}
+    path = WEB_DATA / "flood_nov2025.geojson"
+    path.write_text(json.dumps(out, separators=(",", ":")))
+    print(f"flood extent Nov 2025: {len(gj['features'])} shapes, "
+          f"{raw.stat().st_size / 1e6:.0f} MB -> {path.stat().st_size / 1e6:.2f} MB")
 
 
 if __name__ == "__main__":
