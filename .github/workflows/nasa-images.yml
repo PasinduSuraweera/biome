@@ -1,0 +1,50 @@
+name: NASA images
+
+# Downloads real NASA satellite images of Sri Lanka from NASA GIBS (public, no login)
+# and commits them for the site. Also checks access to NASA's SRTM elevation data.
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/nasa-images.txt
+  schedule:
+    - cron: "10 2 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  images:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11", cache: pip, cache-dependency-path: pipeline/requirements.txt }
+      - run: pip install -r pipeline/requirements.txt
+      - name: NASA GIBS images
+        working-directory: pipeline
+        run: python fetch_nasa_images.py
+      - name: Check NASA elevation data access
+        continue-on-error: true
+        env:
+          EARTHDATA_USERNAME: ${{ secrets.EARTHDATA_USERNAME }}
+          EARTHDATA_PASSWORD: ${{ secrets.EARTHDATA_PASSWORD }}
+        run: |
+          python - <<'PY'
+          import earthaccess
+          earthaccess.login(strategy="environment")
+          for sn in ["NASADEM_HGT", "SRTMGL1"]:
+              r = earthaccess.search_data(short_name=sn, bounding_box=(79.4, 5.8, 82.0, 10.0), count=40)
+              print(sn, len(r))
+              for g in r[:40]:
+                  print("  ", g.data_links()[:1], round(g.size(), 1), "MB")
+          PY
+      - name: Commit
+        run: |
+          git config user.name "PasinduSuraweera"
+          git config user.email "pasisuraweera2003@gmail.com"
+          git add web/public/nasa
+          git diff --cached --quiet || git commit -m "NASA images $(date -u +%Y-%m-%d)"
+          for i in 1 2 3; do git pull --rebase origin main && git push && break; sleep 10; done
