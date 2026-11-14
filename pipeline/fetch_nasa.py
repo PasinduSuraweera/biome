@@ -30,6 +30,7 @@ import pandas as pd
 import xarray as xr
 
 from config import BBOX, COLLECTIONS, PROCESSED, RAW
+import districts
 from districts import district_means
 
 LON0, LAT0, LON1, LAT1 = BBOX
@@ -97,6 +98,7 @@ def read_merra2_lnd(f):
 READERS = {
     "imerg_final": read_imerg_monthly,
     "imerg_late_daily": read_imerg_daily,
+    "imerg_late_towns": read_imerg_daily,   # the same files, averaged over 331 divisions
     "gldas": read_gldas,
     "merra2_flx": read_merra2_flx,
     "merra2_lnd": read_merra2_lnd,
@@ -106,6 +108,8 @@ DEFAULT_RANGES = {
     "imerg_final": ("2000-06-01", None),
     # from mid-2025: IMERG Final V07 monthly currently ends in Sep 2025, so Late fills the months after it
     "imerg_late_daily": ("2025-06-01", None),
+    # town level: the Cyclone Ditwah week (for the replay) and everything since
+    "imerg_late_towns": ("2025-11-20", None),
     "gldas": ("2000-01-01", None),
     # to 2010 so MERRA-2 has its own 1981-2010 normal for the older El Ninos
     "merra2_flx": ("1980-01-01", "2010-12-31"),
@@ -196,6 +200,14 @@ def combine(key):
     df = pd.DataFrame(rows)
     df["time"] = pd.to_datetime(df["time"])
     long = df.melt(id_vars=["time", "var"], var_name="district", value_name="value")
+    if key == "imerg_late_towns":  # keep the Ditwah week and the last three weeks, by day
+        cut = long["time"].max() - pd.Timedelta(days=21)
+        keep = long[(long["time"] >= cut) | ((long["time"] >= "2025-11-22") & (long["time"] <= "2025-11-30"))]
+        keep = keep.dropna(subset=["value"]).sort_values(["district", "time"])
+        keep["value"] = keep["value"].round(1)
+        keep.to_csv(PROCESSED / f"{key}.csv", index=False)
+        print(f"[{key}] wrote {len(keep)} rows for {keep['district'].nunique()} divisions")
+        return
     if key == "imerg_late_daily":  # keep the days (for daily risk levels), then daily -> monthly totals
         days = long.sort_values(["district", "time"])
         days.to_csv(PROCESSED / f"{key}_days.csv", index=False)
@@ -219,6 +231,7 @@ if __name__ == "__main__":
     a = ap.parse_args()
     # environment variables (GitHub Actions secrets) first, then ~/.netrc
     earthaccess.login(strategy="environment" if "EARTHDATA_USERNAME" in __import__("os").environ else "netrc")
-    keys = list(READERS) if a.dataset == "all" else [a.dataset]
+    keys = [k for k in READERS if k != "imerg_late_towns"] if a.dataset == "all" else [a.dataset]
     for k in keys:
+        districts.UNITS = "towns" if k.endswith("_towns") else "districts"
         run(k, a.start, a.end, a.download, a.workers)

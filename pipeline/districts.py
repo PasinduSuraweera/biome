@@ -11,7 +11,10 @@ import numpy as np
 import shapely
 from shapely.geometry import shape
 
-from config import DISTRICTS_GEOJSON
+from config import DISTRICTS_GEOJSON, TOWNS_GEOJSON
+
+UNITS = "districts"   # set to "towns" to average over Divisional Secretariat divisions instead
+_WEIGHTS = {}
 
 
 @lru_cache(maxsize=1)
@@ -25,6 +28,17 @@ def load_districts():
     return dict(sorted(out.items()))
 
 
+@lru_cache(maxsize=1)
+def load_towns():
+    """Return {"District|Division": shapely geometry} for the town level."""
+    gj = json.loads(TOWNS_GEOJSON.read_text())
+    return {f["properties"]["key"]: shapely.make_valid(shape(f["geometry"])) for f in gj["features"]}
+
+
+def load_units():
+    return load_towns() if UNITS == "towns" else load_districts()
+
+
 def district_weights(lats, lons, sub=6):
     """Weights {district: 2-D array (lat, lon)} that each sum to 1.
 
@@ -32,6 +46,9 @@ def district_weights(lats, lons, sub=6):
     """
     lats = np.asarray(lats, dtype=float)
     lons = np.asarray(lons, dtype=float)
+    sig = (UNITS, lats.size, lons.size, float(lats[0]), float(lats[-1]), float(lons[0]), float(lons[-1]), sub)
+    if sig in _WEIGHTS:  # every file of a dataset shares one grid
+        return _WEIGHTS[sig]
     dlat = abs(lats[1] - lats[0]) if lats.size > 1 else 0.1
     dlon = abs(lons[1] - lons[0]) if lons.size > 1 else 0.1
     offs = (np.arange(sub) + 0.5) / sub - 0.5
@@ -42,12 +59,23 @@ def district_weights(lats, lons, sub=6):
     # weight by cos(lat) so cells keep their true area
     area = np.cos(np.deg2rad(lats))[:, None]
     weights = {}
-    for name, geom in load_districts().items():
-        inside = shapely.contains_xy(geom, lo.ravel(), la.ravel()).reshape(la.shape)
-        frac = inside.mean(axis=(2, 3)) * area
+    for name, geom in load_units().items():
+        minx, miny, maxx, maxy = geom.bounds
+        frac = np.zeros((lats.size, lons.size))
+        ii = np.where((lats >= miny - dlat) & (lats <= maxy + dlat))[0]
+        jj = np.where((lons >= minx - dlon) & (lons <= maxx + dlon))[0]
+        if ii.size and jj.size:
+            sl = np.ix_(ii, jj)
+            inside = shapely.contains_xy(geom, lo[sl].ravel(), la[sl].ravel()).reshape(la[sl].shape)
+            frac[sl] = inside.mean(axis=(2, 3)) * area[ii]
         total = frac.sum()
         if total > 0:
             weights[name] = frac / total
+        elif UNITS == "towns":  # smaller than the sampling: use the cell that holds it
+            p = geom.representative_point()
+            frac[np.abs(lats - p.y).argmin(), np.abs(lons - p.x).argmin()] = 1.0
+            weights[name] = frac
+    _WEIGHTS[sig] = weights
     return weights
 
 

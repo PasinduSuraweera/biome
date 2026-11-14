@@ -19,8 +19,8 @@ from pathlib import Path
 import numpy as np
 import shapely
 
-from config import BBOX, PROCESSED, RAW, WEB_DATA
-from districts import load_districts
+from config import BBOX, PROCESSED, RAW, TOWNS_GEOJSON, WEB_DATA
+from districts import load_districts, load_towns
 
 N = 3601
 CELL = 30.87          # metres per arc-second of latitude
@@ -73,11 +73,13 @@ def main():
         lat0, lon0, elev = read_tile(zp)
         tiles[(lat0, lon0)] = (elev, slope_of(elev, lat0))
     print(len(tiles), "NASADEM tiles")
-    geoms = load_districts()
+    districts_only = load_districts()
+    towns = load_towns() if TOWNS_GEOJSON.exists() else {}
+    geoms = {**districts_only, **towns}          # town keys look like "District|Division"
     for g in geoms.values():
         shapely.prepare(g)
 
-    # 1. district terrain, sampling every 8th cell (about 250 m)
+    # 1. terrain of every district and division, sampling every 8th cell (about 250 m)
     acc = {d: {"n": 0, "steep": 0, "sum": 0.0, "max": 0.0} for d in geoms}
     step = 8
     for (lat0, lon0), (elev, slope) in tiles.items():
@@ -98,11 +100,14 @@ def main():
     terrain = {d: {"steep_share": round(a["steep"] / a["n"], 3) if a["n"] else None,
                    "mean_elev_m": round(a["sum"] / a["n"]) if a["n"] else None, "max_elev_m": round(a["max"])}
                for d, a in acc.items()}
+    town_terrain = {d: v for d, v in terrain.items() if d in towns}
+    terrain = {d: v for d, v in terrain.items() if d in districts_only}
     for d, v in sorted(terrain.items(), key=lambda kv: -(kv[1]["steep_share"] or 0)):
         print(f"  {d:14} steep {v['steep_share']}  mean {v['mean_elev_m']} m  max {v['max_elev_m']} m")
+    print(len(town_terrain), "divisions with terrain;", sum(1 for v in town_terrain.values() if (v["steep_share"] or 0) >= 0.10), "are hill country")
     PROCESSED.mkdir(parents=True, exist_ok=True)
     (PROCESSED / "terrain.json").write_text(json.dumps(
-        {"source": SOURCE, "steep_degrees": STEEP, "districts": terrain}, indent=1))
+        {"source": SOURCE, "steep_degrees": STEEP, "districts": terrain, "towns": town_terrain}, indent=1))
 
     # 2. evacuation centre candidates on safer ground
     cp = WEB_DATA / "centres.json"
@@ -124,6 +129,25 @@ def main():
             p = per.setdefault(d, {"count": 0, "safer": 0, "flooded": 0, "steep": 0, "top": []})
             p["count"] += 1
             p[["safer", "flooded", "steep"][grade]] += 1
+        per_town = {}
+        if towns:
+            keys = list(towns)
+            tree = shapely.STRtree([towns[k] for k in keys])
+            pi, gi = tree.query(shapely.points([x[0] for x in out], [x[1] for x in out]), predicate="within")
+            where = {int(a): keys[int(b)] for a, b in zip(pi, gi)}
+            rank = lambda x: ({"school": 0, "hall": 0}.get(x[2], 1), -x[8])
+            for i, x in enumerate(out):
+                k = where.get(i)
+                if k is None:
+                    continue
+                t = per_town.setdefault(k, {"count": 0, "safer": 0, "ok": []})
+                t["count"] += 1
+                if x[5] == 0:
+                    t["safer"] += 1
+                    if x[3]:
+                        t["ok"].append(x)
+            for k, t in per_town.items():
+                t["top"] = [[x[0], x[1], x[2], x[3], x[6], x[8]] for x in sorted(t.pop("ok"), key=rank)[:5]]
         for d, p in per.items():
             ok = [x for x in out if x[4] == d and x[5] == 0 and x[3]]
             # bigger public buildings first, then the ground standing highest above its surroundings
@@ -136,6 +160,7 @@ def main():
             "fields": ["lon", "lat", "kind", "name", "district", "grade (0 safer, 1 flooded in Ditwah, 2 steep)",
                        "elevation_m", "steepest_slope_deg_within_90m", "height_above_lowest_ground_500m"],
             "districts": per,
+            "towns": per_town,
             "items": [[x[0], x[1], x[5]] for x in out],
         }, ensure_ascii=False, separators=(",", ":")))
         tot = {k: sum(p[k] for p in per.values()) for k in ("count", "safer", "flooded", "steep")}

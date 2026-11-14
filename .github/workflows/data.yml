@@ -27,7 +27,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        dataset: [imerg_final, imerg_late_daily, gldas, merra2_flx, merra2_lnd]
+        dataset: [imerg_final, imerg_late_daily, imerg_late_towns, gldas, merra2_flx, merra2_lnd]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
