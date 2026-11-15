@@ -32,7 +32,7 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 
 const NAV = [
-  { v: "home", icon: Home }, { v: "overview", icon: LayoutDashboard }, { v: "family", icon: Users }, { v: "farmer", icon: Sprout },
+  { v: "overview", icon: LayoutDashboard }, { v: "family", icon: Users }, { v: "farmer", icon: Sprout },
   { v: "coast", icon: Waves }, { v: "full", icon: Database }, { v: "nasa", icon: Image }, { v: "calendar", icon: CalendarDays }, { v: "how", icon: BookOpen },
 ];
 const VIEWS = NAV.map((n) => n.v);
@@ -111,7 +111,7 @@ export default function App() {
     {m && view !== "full" && <YearPlan m={m} name={name} view={view} DATA={DATA} SAFE={SAFE} town={town} />}
     <div className="flex min-h-screen print:hidden">
       <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col border-r bg-card lg:flex">
-        <div className="flex h-16 items-center px-5"><Logo className="h-8 w-auto" /></div>
+        <a href={`${import.meta.env.BASE_URL}#`} className="flex h-16 items-center px-5" aria-label="Biome home"><Logo className="h-8 w-auto" /></a>
         <p className="px-5 pb-4 text-xs text-muted-foreground">{t("tagline")}</p>
         <nav className="grid gap-1 px-3">
           {NAV.map(({ v, icon: I }) => (

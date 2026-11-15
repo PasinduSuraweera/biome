@@ -68,6 +68,34 @@ const S = {
   p4: L("NASA's satellite rain matches NOAA's ground stations with r of {r} or more at {n} of {t} stations.", "NASA චන්ද්‍රිකා වැසි, NOAA භූමි මධ්‍යස්ථාන {t} න් {n} ක r {r} හෝ ඊට වැඩියෙන් ගැළපේ.", "NASA செயற்கைக்கோள் மழை, NOAA தரை நிலையங்கள் {t} இல் {n} இல் r {r} அல்லது அதற்கு மேல் பொருந்துகிறது."),
   final_t: L("Check your district.", "ඔබේ දිස්ත්‍රික්කය බලන්න.", "உங்கள் மாவட்டத்தைப் பாருங்கள்."),
   final_b: L("Pick your district and who you are. The report is free, in your language, and you can save it as a picture to share.", "ඔබේ දිස්ත්‍රික්කය සහ ඔබ කවුරුන්දැයි තෝරන්න. වාර්තාව නොමිලේ, ඔබේ භාෂාවෙන්, බෙදා ගැනීමට පින්තූරයක් ලෙස සුරැකිය හැක.", "உங்கள் மாவட்டத்தையும் நீங்கள் யார் என்பதையும் தேர்ந்தெடுங்கள். அறிக்கை இலவசம், உங்கள் மொழியில், பகிர படமாகச் சேமிக்கலாம்."),
+  goal_k: L("Why we built Biome", "අපි Biome හැදුවේ ඇයි", "நாங்கள் ஏன் Biome ஐ உருவாக்கினோம்"),
+  goal_t: L("No family in Sri Lanka should be caught by surprise.", "ශ්‍රී ලංකාවේ කිසිම පවුලක් හදිසියේ අසු නොවිය යුතුයි.", "இலங்கையில் எந்தக் குடும்பமும் எதிர்பாராமல் சிக்கக் கூடாது."),
+  goal_b1: L("Last November, Cyclone Ditwah sat over our island. In one day, 431 mm of rain fell on Nillambe, here in Kandy, on hillsides that were already soaked. 638 people died, 234 of them in this district.",
+    "පසුගිය නොවැම්බරයේ ඩිට්වා සුළි කුණාටුව අපේ දිවයින මත රැඳී තිබුණා. එක දිනකින්, දැනටමත් තෙත් වූ කඳු බෑවුම් මත, මහනුවර නිල්ලඹේට මි.මී. 431 ක වැසි ඇද හැලුණා. 638 දෙනෙක් මිය ගියා; ඉන් 234 ක් මෙම දිස්ත්‍රික්කයේ.",
+    "கடந்த நவம்பரில் டித்வா சூறாவளி நம் தீவின் மேல் நின்றது. ஒரே நாளில், ஏற்கனவே நனைந்த மலைச்சரிவுகளில், கண்டி நில்லம்பேயில் 431 மி.மீ. மழை பெய்தது. 638 பேர் உயிரிழந்தனர்; அவர்களில் 234 பேர் இந்த மாவட்டத்தைச் சேர்ந்தவர்கள்."),
+  goal_b2: L("This year the rain stopped instead: 23,000 families lived on trucked water. The same families face drought and then flood, sometimes in the same year. NASA's satellites saw all of it. Biome is our way of passing that on to the people who need it, in words they can act on.",
+    "මේ වසරේ වැසි නැවතුණා: පවුල් 23,000 ක් බවුසර් ජලයෙන් ජීවත් වුණා. එකම පවුල් නියඟයටත් පසුව ගංවතුරටත් මුහුණ දෙනවා, සමහර විට එකම වසරේ. NASA චන්ද්‍රිකා ඒ සියල්ල දුටුවා. Biome යනු එය අවශ්‍ය අයට, ඔවුන්ට ක්‍රියා කළ හැකි වචනවලින් ලබා දීමේ අපේ මාර්ගයයි.",
+    "இந்த ஆண்டு மழை நின்றது: 23,000 குடும்பங்கள் லொறி நீரில் வாழ்ந்தன. அதே குடும்பங்கள் வறட்சியையும் பின்னர் வெள்ளத்தையும் சந்திக்கின்றன, சில நேரம் ஒரே ஆண்டில். NASA செயற்கைக்கோள்கள் அனைத்தையும் பார்த்தன. அதைத் தேவைப்படுபவர்களுக்கு, அவர்கள் செயல்படக்கூடிய சொற்களில் கொண்டு சேர்ப்பதே Biome."),
+  g1: L("died in Cyclone Ditwah", "ඩිට්වා සුළි කුණාටුවෙන් මිය ගියා", "டித்வா சூறாவளியில் உயிரிழந்தனர்"),
+  g2: L("families on trucked water this year", "මේ වසරේ බවුසර් ජලය මත පවුල්", "இந்த ஆண்டு லொறி நீரில் குடும்பங்கள்"),
+  g3: L("languages, so no one waits for a translation", "භාෂා, කිසිවෙකු පරිවර්තනයක් බලා නොසිටින ලෙස", "மொழிகள், யாரும் மொழிபெயர்ப்புக்குக் காத்திருக்காமல்"),
+  ditwah_cap: L("Cyclone Ditwah over Sri Lanka, 27 November 2025, photographed by NASA's Suomi NPP satellite.", "2025 නොවැම්බර් 27, ශ්‍රී ලංකාව මත ඩිට්වා සුළි කුණාටුව, NASA Suomi NPP චන්ද්‍රිකාව ගත් ඡායාරූපය.", "2025 நவம்பர் 27, இலங்கை மீது டித்வா சூறாவளி, NASA Suomi NPP செயற்கைக்கோள் எடுத்த படம்."),
+  data_k: L("The data behind Biome", "Biome පිටුපස දත්ත", "Biome இன் பின்னால் உள்ள தரவு"),
+  data_t: L("What NASA's satellites tell us about home.", "NASA චන්ද්‍රිකා අපේ නිවෙස් ගැන කියන දේ.", "NASA செயற்கைக்கோள்கள் நம் வீடு பற்றிச் சொல்வது."),
+  data_b: L("Every picture below is real NASA data over Sri Lanka. Biome reads the numbers behind them for every district and town.", "පහත සෑම පින්තූරයක්ම ශ්‍රී ලංකාව මත සැබෑ NASA දත්ත ය. Biome සෑම දිස්ත්‍රික්කයකටම සහ නගරයකටම ඒවා පිටුපස අංක කියවයි.", "கீழே உள்ள ஒவ்வொரு படமும் இலங்கை மீதான உண்மையான NASA தரவு. ஒவ்வொரு மாவட்டத்துக்கும் நகரத்துக்கும் அவற்றின் பின்னால் உள்ள எண்களை Biome படிக்கிறது."),
+  d_rain_t: L("How much rain is falling", "කොපමණ වැසි වැටෙනවා ද", "எவ்வளவு மழை பெய்கிறது"),
+  d_rain: L("Measured every half hour from space. Biome turns it into Yellow, Amber or Red for each district and town.", "අභ්‍යවකාශයේ සිට සෑම පැය භාගයකටම මනිනවා. Biome එය සෑම දිස්ත්‍රික්කයකටම සහ නගරයකටම කහ, තැඹිලි හෝ රතු බවට පත් කරයි.", "விண்வெளியிலிருந்து ஒவ்வொரு அரை மணிக்கும் அளவிடப்படுகிறது. Biome அதை ஒவ்வொரு மாவட்டத்துக்கும் நகரத்துக்கும் மஞ்சள், செம்மஞ்சள் அல்லது சிவப்பாக மாற்றுகிறது."),
+  d_cloud_t: L("What the storm looks like", "කුණාටුව පෙනෙන්නේ කෙසේ ද", "புயல் எப்படித் தெரிகிறது"),
+  d_cloud: L("True-colour pictures every day, so anyone can see the danger with their own eyes.", "සෑම දිනකම සැබෑ වර්ණ පින්තූර, ඕනෑම කෙනෙකුට තමන්ගේම ඇසින් අනතුර දැකිය හැකි ලෙස.", "ஒவ்வொரு நாளும் உண்மை வண்ணப் படங்கள், யாரும் தங்கள் கண்களால் ஆபத்தைப் பார்க்க."),
+  d_flood_t: L("Where the water went", "ජලය ගියේ කොහේ ද", "நீர் எங்கே சென்றது"),
+  d_flood: L("NASA's flood map after Ditwah. Biome uses it to rule out places that flooded.", "ඩිට්වාවෙන් පසු NASA ගංවතුර සිතියම. ජලයෙන් යට වූ ස්ථාන ඉවත් කිරීමට Biome එය භාවිත කරයි.", "டித்வாவுக்குப் பின் NASA வெள்ள வரைபடம். வெள்ளம் புகுந்த இடங்களை நீக்க Biome அதைப் பயன்படுத்துகிறது."),
+  d_terrain_t: L("Where the ground is steep", "බිම බෑවුම් වන්නේ කොහේ ද", "நிலம் எங்கே சரிவாக உள்ளது"),
+  d_terrain: L("A 30 m height map from the Space Shuttle. It decides SlopeWatch and which shelters stand on safer ground.", "අභ්‍යවකාශ ෂටලයෙන් මීටර 30 උස සිතියමක්. SlopeWatch සහ ආරක්ෂිත බිමක ඇති නවාතැන් තීරණය කරන්නේ එයයි.", "விண்வெளி ஓடத்திலிருந்து 30 மீ உயர வரைபடம். SlopeWatch மற்றும் பாதுகாப்பான நிலத்தில் உள்ள தங்குமிடங்களை அது தீர்மானிக்கிறது."),
+  d_green_t: L("How green the fields are", "කෙත්වතු කොතරම් කොළ පැහැ ද", "வயல்கள் எவ்வளவு பசுமையாக உள்ளன"),
+  d_green: L("Plant greenness from NASA's Terra satellite, so farmers can see a drought coming in their own fields.", "NASA Terra චන්ද්‍රිකාවෙන් ශාක හරිතභාවය, ගොවීන්ට තම කෙත්වතුවලම නියඟය එන හැටි දැකිය හැකි ලෙස.", "NASA Terra செயற்கைக்கோளின் தாவரப் பசுமை, விவசாயிகள் தங்கள் வயல்களிலேயே வறட்சி வருவதைப் பார்க்க."),
+  d_soil_t: L("How wet the ground already is", "බිම දැනටමත් කොතරම් තෙත් ද", "நிலம் ஏற்கனவே எவ்வளவு ஈரமாக உள்ளது"),
+  d_soil: L("Soaked soil is what turns heavy rain into a landslide. NASA's GLDAS model tracks it month by month.", "තද වැසි නායයෑමක් බවට පත් කරන්නේ තෙත් වූ පසයි. NASA GLDAS ආකෘතිය එය මාසයෙන් මාසයට නිරීක්ෂණය කරයි.", "கனமழையை மண்சரிவாக மாற்றுவது நனைந்த மண். NASA GLDAS மாதிரி அதை மாதம் தோறும் கண்காணிக்கிறது."),
+  d_more: L("See every NASA picture", "සියලු NASA පින්තූර බලන්න", "அனைத்து NASA படங்களையும் பாருங்கள்"),
   team: L("Team Biome · NASA Space Apps Challenge 2026 · Kandy", "Biome කණ්ඩායම · NASA Space Apps Challenge 2026 · මහනුවර", "Biome அணி · NASA Space Apps Challenge 2026 · கண்டி"),
 };
 const s = (k, v = {}) => Object.entries(v).reduce((a, [x, y]) => a.replaceAll(`{${x}}`, y), S[k][getLang()] || S[k].en);
@@ -202,6 +230,28 @@ export function Landing({ DATA, SAFE, GEO, INDEX, lang, changeLang, go, theme, t
           </Reveal>
         </section>
 
+        <section className="mx-auto max-w-6xl px-5 pt-20 lg:pt-28">
+          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
+            <Reveal>
+              <figure className="m-0 overflow-hidden rounded-2xl border bg-card shadow-[0_24px_50px_-28px_rgba(16,35,42,0.45)]">
+                <img src="nasa/ditwah-2025-11-27.jpg" alt={s("ditwah_cap")} className="aspect-[5/4] w-full object-cover" loading="lazy" />
+                <figcaption className="p-4 text-sm text-muted-foreground">{s("ditwah_cap")}</figcaption>
+              </figure>
+            </Reveal>
+            <Reveal>
+              <p className="text-sm font-semibold uppercase tracking-wide text-brand-deep dark:text-brand">{s("goal_k")}</p>
+              <h2 className="mt-3 font-display text-[32px] font-semibold leading-[1.1] tracking-[-0.03em] sm:text-[42px]">{s("goal_t")}</h2>
+              <p className="mt-5 text-[17px] leading-relaxed text-muted-foreground">{s("goal_b1")}</p>
+              <p className="mt-4 text-[17px] leading-relaxed text-muted-foreground">{s("goal_b2")}</p>
+              <div className="mt-8 grid grid-cols-3 gap-4 border-t pt-6">
+                {[["638", s("g1")], ["23,000", s("g2")], ["3", s("g3")]].map(([v, l]) => (
+                  <div key={l}><p className="font-display text-3xl font-bold tracking-tight sm:text-4xl">{v}</p><p className="mt-1 text-sm leading-snug text-muted-foreground">{l}</p></div>
+                ))}
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
         <section id="how-it-works" className="mx-auto max-w-6xl scroll-mt-24 px-5 py-20 lg:py-28">
           <Reveal><h2 className="max-w-[20ch] font-display text-[34px] font-semibold leading-[1.1] tracking-[-0.03em] sm:text-[44px]">{s("how_t")}</h2></Reveal>
           <div className="mt-10 grid gap-6 md:grid-cols-3">
@@ -216,6 +266,31 @@ export function Landing({ DATA, SAFE, GEO, INDEX, lang, changeLang, go, theme, t
               </Reveal>
             ))}
           </div>
+        </section>
+
+        <section className="mx-auto max-w-6xl px-5 py-20 lg:py-24">
+          <Reveal>
+            <p className="text-sm font-semibold uppercase tracking-wide text-brand-deep dark:text-brand">{s("data_k")}</p>
+            <h2 className="mt-3 max-w-[22ch] font-display text-[32px] font-semibold leading-[1.1] tracking-[-0.03em] sm:text-[42px]">{s("data_t")}</h2>
+            <p className="mt-4 max-w-[60ch] text-[17px] leading-relaxed text-muted-foreground">{s("data_b")}</p>
+          </Reveal>
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {[["nasa/ditwah-rain-2025-11-27.jpg", "GPM IMERG", "d_rain", "object-cover"], ["nasa/ditwah-2025-11-26.jpg", "Suomi NPP VIIRS", "d_cloud", "object-cover"],
+              ["nasa/flood-2025-12-01.jpg", "VIIRS flood map", "d_flood", "object-cover object-top"], ["nasa/terrain.jpg", "NASADEM (SRTM)", "d_terrain", "object-contain bg-[#10232a]"],
+              ["nasa/ndvi-2026-09-01.jpg", "Terra MODIS", "d_green", "object-contain bg-black"], ["nasa/soil-2026-06-01.jpg", "GLDAS", "d_soil", "object-contain bg-black"]].map(([src, prod, k, fit]) => (
+              <Reveal key={k}>
+                <a href={`${HERE}#nasa`} className="group grid h-full overflow-hidden rounded-2xl border bg-card transition-shadow hover:shadow-[0_24px_50px_-28px_rgba(16,35,42,0.45)]">
+                  <div className="aspect-[4/3] overflow-hidden"><img src={src} alt={s(k + "_t")} loading="lazy" className={cn("h-full w-full transition-transform duration-500 group-hover:scale-[1.03]", fit)} /></div>
+                  <div className="grid content-start gap-2 p-5">
+                    <span className="w-fit rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide ring-1 ring-border">NASA {prod}</span>
+                    <h3 className="font-display text-xl font-semibold leading-snug">{s(k + "_t")}</h3>
+                    <p className="leading-relaxed text-muted-foreground">{s(k)}</p>
+                  </div>
+                </a>
+              </Reveal>
+            ))}
+          </div>
+          <Button asChild variant="outline" className="mt-8 h-11 rounded-full px-5"><a href={`${HERE}#nasa`}>{s("d_more")}<ArrowRight /></a></Button>
         </section>
 
         <section className="mx-auto grid max-w-6xl gap-10 border-t px-5 py-20 lg:grid-cols-12 lg:py-24">
