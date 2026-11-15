@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { WATCH } from "@/lib/biome";
 import { cn } from "@/lib/utils";
 
-const shadeStyle = (a, hex) => ({ background: `color-mix(in srgb, ${hex} ${Math.round(Math.min(1, a) * 85)}%, #fff)` });
+const shadeStyle = (a, hex) => ({ background: `color-mix(in srgb, ${hex} ${Math.round(Math.min(1, a) * 85)}%, hsl(var(--card)))` });
 
 function Pick({ label, value, onChange, items }) {
   return (
@@ -57,9 +57,9 @@ export function Calendar({ DATA, current }) {
           <table className="w-full min-w-[760px] border-collapse text-sm">
             <thead><tr className="border-b bg-muted/50"><th />{F.months.map((ym) => <th key={ym} className="px-2 py-2 text-center font-semibold">{monthName(ym, true)}<br /><span className="text-xs font-normal text-muted-foreground">{ym.slice(2, 4)}</span></th>)}</tr></thead>
             <tbody>
-              {level === "district" && <tr className="border-b"><th className="px-3 py-2 text-left text-sm font-semibold">{t("cal_row_rain")}</th>{node.median.map((v, i) => <td key={i} title={`${node.lo[i]} to ${node.hi[i]}%`} className={cn("px-2 py-2 text-center font-semibold", sig[i] && v < 85 && "bg-[#f1dba6]", sig[i] && v > 115 && "bg-[#b9d6dc]")}>{v}</td>)}</tr>}
+              {level === "district" && <tr className="border-b"><th className="px-3 py-2 text-left text-sm font-semibold">{t("cal_row_rain")}</th>{node.median.map((v, i) => <td key={i} title={`${node.lo[i]} to ${node.hi[i]}%`} className={cn("px-2 py-2 text-center font-semibold", sig[i] && v < 85 && "bg-[#f1dba6] dark:bg-[#4a3f1c]", sig[i] && v > 115 && "bg-[#b9d6dc] dark:bg-[#1d4049]")}>{v}</td>)}</tr>}
               {["DryWatch", "FloodWatch", "SlopeWatch"].map((w) => <tr key={w} className="border-b">{watchHead(w)}{node.watch[w].map((p, i) => <td key={i} title={t("cal_cell_fc", { p: Math.round(p * 100) })} className="px-2 py-2 text-center font-semibold" style={shadeStyle(p, WATCH[w].hex)}>{Math.round(p * 100)}%</td>)}</tr>)}
-              <tr><th className="px-3 py-2 text-left text-sm font-semibold">{t("cal_row_conf")}</th>{sig.map((ok, i) => <td key={i} className={cn("px-2 py-2 text-center text-xs", ok ? "font-bold text-[#1f6b3f]" : "text-muted-foreground")}>{t(ok ? "cal_conf_yes" : "cal_conf_no")}</td>)}</tr>
+              <tr><th className="px-3 py-2 text-left text-sm font-semibold">{t("cal_row_conf")}</th>{sig.map((ok, i) => <td key={i} className={cn("px-2 py-2 text-center text-xs", ok ? "font-bold text-[#1f6b3f] dark:text-[#6fcf97]" : "text-muted-foreground")}>{t(ok ? "cal_conf_yes" : "cal_conf_no")}</td>)}</tr>
             </tbody>
           </table>
         </div>

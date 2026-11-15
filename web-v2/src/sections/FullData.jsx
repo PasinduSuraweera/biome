@@ -36,7 +36,7 @@ function Swing({ DATA, prof, now, ref0, label, domain }) {
         <YAxis tickLine={false} axisLine={false} width={44} domain={domain || ["auto", "auto"]} label={{ value: label, angle: -90, position: "insideLeft", offset: 12, style: { fontSize: 11, fill: "hsl(var(--muted-foreground))" } }} />
         <ReferenceLine y={ref0} strokeDasharray="4 4" />
         <Area dataKey="band" type="monotone" stroke="none" fill="#9aa39e" fillOpacity={0.25} isAnimationActive={false} />
-        <Line dataKey="mean" type="monotone" stroke="#16201f" strokeWidth={2} dot={false} isAnimationActive={false} />
+        <Line dataKey="mean" type="monotone" stroke="hsl(var(--foreground))" strokeWidth={2} dot={false} isAnimationActive={false} />
         <Line dataKey="now" type="monotone" stroke={AMBER} strokeWidth={3} dot={{ r: 2, fill: AMBER }} connectNulls={false} isAnimationActive={false} />
         <ChartTooltip content={<ChartTooltipContent />} />
       </ComposedChart>
@@ -96,7 +96,7 @@ export function FullData({ DATA, GEO, SAFE, TOWNS, name }) {
         <Card>
           <CardHeader><CardTitle className="flex items-center gap-2"><Droplets className="size-5 text-brand" />{t("live_title")}</CardTitle><CardDescription>{t("live_src", { t: when })}</CardDescription></CardHeader>
           <CardContent className="grid gap-4 md:grid-cols-2">
-            {release && <p className="rounded-md bg-[#f6d3cf] p-3 font-medium md:col-span-2">{t("release")}</p>}
+            {release && <p className="rounded-md bg-[#f6d3cf] p-3 dark:bg-[#4a1f1c] font-medium md:col-span-2">{t("release")}</p>}
             <Table><TableBody>
               {res.length ? res.map((r) => <TableRow key={r.name}><TableCell className="font-medium">{r.name}</TableCell><TableCell>{t("full", { p: r0(r.pct_full) })}</TableCell><TableCell className={r.spilling ? "font-semibold text-[#b3261e]" : "text-muted-foreground"}>{r.spilling ? t("spilling", { c: r0(r.spill_cusec) }) : t("not_spilling")}</TableCell></TableRow>)
                 : <TableRow><TableCell className="text-muted-foreground">{t("res_none")}</TableCell></TableRow>}

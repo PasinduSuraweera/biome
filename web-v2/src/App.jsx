@@ -14,6 +14,7 @@ import { FullData } from "@/sections/FullData";
 import { Calendar } from "@/sections/Calendar";
 import { How } from "@/sections/How";
 import { Landing } from "@/sections/Landing";
+import { Logo, ThemeToggle, useTheme } from "@/lib/theme";
 import { t, dName, getLang, setLang, LANGS, monthName } from "@classic/i18n.js";
 import { buildReport, alertMessage, downloadPNG, COASTAL } from "@classic/simple.js";
 import { loadNasa, centreMap, greenMap } from "@classic/nasa.js";
@@ -80,7 +81,7 @@ const UI = {
 const ui = (k, v = {}) => Object.entries(v).reduce((s, [a, b]) => s.replaceAll(`{${a}}`, b), UI[k][getLang()] || UI[k].en);
 const slug = (n) => n.toLowerCase().replace(/\s+/g, "-");
 const in10 = (p) => Math.max(1, Math.min(9, Math.round(p * 10)));
-const LEVEL_TONE = ["", "bg-[#fbf3d0]", "bg-[#fbe2cc]", "bg-[#f6d3cf]"];
+const LEVEL_TONE = ["", "bg-[#fbf3d0] dark:bg-[#3a3214]", "bg-[#fbe2cc] dark:bg-[#43281a]", "bg-[#f6d3cf] dark:bg-[#4a1f1c]"];
 const LEVEL_DOT = ["bg-[#9aa39e]", "bg-[#e0b422]", "bg-[#d2691e]", "bg-[#b3261e]"];
 const LEVEL_FILL = ["#c9cec9", "#e0b422", "#d2691e", "#b3261e"];
 const SIGN_FILL = { dry: "#e3b85c", wet: "#23687a", mixed: "#9fbfc4", normal: "#cfd3cc" };
@@ -122,6 +123,7 @@ function monthSigns(DATA, name) {
 
 export default function App() {
   const [lang, setL] = useState(getLang());
+  const [theme, toggleTheme] = useTheme();
   const [{ view, d: hashD }, setRoute] = useState(readHash);
   const [DATA, setData] = useState(null);
   const [GEO, setGeo] = useState(null);
@@ -162,14 +164,14 @@ export default function App() {
   const changeLang = (l) => { setLang(l); setL(l); document.documentElement.lang = l; };
 
   if (!DATA) return <div className="grid min-h-screen place-items-center text-muted-foreground">{ui("loading")}</div>;
-  if (view === "home") return <Landing DATA={DATA} SAFE={SAFE} GEO={GEO} INDEX={INDEX} lang={lang} changeLang={changeLang} go={go} />;
+  if (view === "home") return <Landing DATA={DATA} SAFE={SAFE} GEO={GEO} INDEX={INDEX} lang={lang} changeLang={changeLang} go={go} theme={theme} toggleTheme={toggleTheme} />;
   const title = navLabel(view);
   const isDistrict = DISTRICT_VIEWS.includes(view);
 
   return (
     <div className="flex min-h-screen">
       <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col border-r bg-card lg:flex">
-        <div className="flex h-16 items-center px-5"><img src="logo.png" alt="Biome" className="h-8 w-auto" /></div>
+        <div className="flex h-16 items-center px-5"><Logo className="h-8 w-auto" /></div>
         <p className="px-5 pb-4 text-xs text-muted-foreground">{t("tagline")}</p>
         <nav className="grid gap-1 px-3">
           {NAV.map(({ v, icon: I }) => (
@@ -186,10 +188,11 @@ export default function App() {
           {["GPM IMERG", "GLDAS", "MERRA-2", "MODIS", "NASADEM (SRTM)", "VIIRS · Worldview"].map((x) => <p key={x} className="flex items-center gap-2"><Satellite className="size-3.5" />{x}</p>)}
         </div>
         <div className="mt-auto grid gap-3 p-4">
-          <div className="flex gap-1">
+          <div className="flex items-center gap-1">
             {Object.entries(LANGS).map(([k, label]) => (
               <Button key={k} size="sm" variant={k === lang ? "secondary" : "ghost"} className="flex-1 px-2" onClick={() => changeLang(k)} aria-pressed={k === lang}>{label}</Button>
             ))}
+            <ThemeToggle theme={theme} toggle={toggleTheme} />
           </div>
         </div>
       </aside>
@@ -197,8 +200,9 @@ export default function App() {
       <div className="min-w-0 flex-1">
         <header className="sticky top-0 z-30 border-b bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/75">
           <div className="flex min-h-16 flex-wrap items-center gap-3 px-4 py-3 md:px-6">
-            <img src="logo.png" alt="Biome" className="h-7 w-auto lg:hidden" />
-            <div className="order-first flex w-full justify-end gap-1 sm:hidden">
+            <span className="lg:hidden"><Logo className="h-7 w-auto" /></span>
+            <div className="order-first flex w-full items-center justify-end gap-1 sm:hidden">
+              <ThemeToggle theme={theme} toggle={toggleTheme} className="mr-auto lg:hidden" />
               {Object.entries(LANGS).map(([k, label]) => (
                 <Button key={k} size="sm" variant={k === lang ? "secondary" : "ghost"} className="h-8 px-2" onClick={() => changeLang(k)}>{label}</Button>
               ))}
@@ -229,7 +233,8 @@ export default function App() {
             <Tabs value={view} onValueChange={pickView}>
               <TabsList>{NAV.map(({ v, icon: I }) => <TabsTrigger key={v} value={v}><I />{navLabel(v)}</TabsTrigger>)}</TabsList>
             </Tabs>
-            <div className="ml-auto hidden gap-1 sm:flex">
+            <div className="ml-auto hidden items-center gap-1 sm:flex lg:hidden">
+              <ThemeToggle theme={theme} toggle={toggleTheme} />
               {Object.entries(LANGS).map(([k, label]) => (
                 <Button key={k} size="sm" variant={k === lang ? "secondary" : "ghost"} className="px-2" onClick={() => changeLang(k)}>{label}</Button>
               ))}
@@ -262,7 +267,7 @@ export default function App() {
 function Footer() {
   return (
     <div className="grid gap-3">
-      <Card className="border-0 bg-primary text-primary-foreground">
+      <Card className="border-0 bg-[#10232a] text-[#f3efe6] dark:bg-[#1c2f35]">
         <CardContent className="flex items-start gap-3 p-4"><AlertTriangle className="mt-0.5 size-5 shrink-0 text-brand" /><p className="font-medium">{t("emer")}</p></CardContent>
       </Card>
       <p className="text-sm text-muted-foreground">{t("disc")}</p>
@@ -564,7 +569,7 @@ function PlantCard({ m }) {
       </CardHeader>
       <CardContent className="grid gap-4 md:grid-cols-2">
         {m.plant.map((p, i) => (
-          <div key={i} className={cn("grid content-start gap-2 rounded-md border p-4", p.sign === "dry" ? "bg-[#f6ecd2]" : p.sign === "wet" ? "bg-[#e2eff2]" : "bg-background/60")}>
+          <div key={i} className={cn("grid content-start gap-2 rounded-md border p-4", p.sign === "dry" ? "bg-[#f6ecd2] dark:bg-[#332d1a]" : p.sign === "wet" ? "bg-[#e2eff2] dark:bg-[#15303a]" : "bg-background/60")}>
             <div className="flex items-baseline justify-between gap-2"><p className="font-display text-lg font-semibold">{p.title}</p><p className="text-sm text-muted-foreground">{p.range}</p></div>
             {p.lines.map((l, j) => <p key={j} className="text-[15px]">{l}</p>)}
             <Separator className="my-1" />
@@ -606,7 +611,7 @@ function YearsCard({ m, DATA, name, className }) {
                     <YAxis tickLine={false} axisLine={false} unit="%" width={48} />
                     <ReferenceLine y={0} />
                     <ChartTooltip cursor={{ fill: "hsl(var(--muted))" }} content={<ChartTooltipContent />} />
-                    <Bar dataKey="v" radius={2}>{data.map((c, i) => <Cell key={i} fill={c.fill} stroke={c.nino ? "#16201f" : "none"} strokeWidth={c.nino ? 2 : 0} />)}</Bar>
+                    <Bar dataKey="v" radius={2}>{data.map((c, i) => <Cell key={i} fill={c.fill} stroke={c.nino ? "hsl(var(--foreground))" : "none"} strokeWidth={c.nino ? 2 : 0} />)}</Bar>
                   </BarChart>
                 </ChartContainer>
               </TabsContent>

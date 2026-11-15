@@ -24,6 +24,27 @@
     --input: 42 20% 83%;
     --ring: 18 67% 57%;
     --radius: 0.75rem;
+    --watch-clear: #d8ddd6;
+  }
+  .dark {
+    --background: 196 30% 7%;
+    --foreground: 40 25% 92%;
+    --card: 196 26% 10%;
+    --card-foreground: 40 25% 92%;
+    --popover: 196 26% 10%;
+    --popover-foreground: 40 25% 92%;
+    --primary: 40 30% 92%;
+    --primary-foreground: 196 45% 11%;
+    --secondary: 196 18% 16%;
+    --secondary-foreground: 40 25% 92%;
+    --muted: 196 18% 16%;
+    --muted-foreground: 185 8% 66%;
+    --accent: 196 18% 18%;
+    --accent-foreground: 40 25% 92%;
+    --border: 196 16% 20%;
+    --input: 196 16% 24%;
+    --ring: 18 67% 57%;
+    --watch-clear: #3a4b51;
   }
   * { @apply border-border; }
   body { @apply bg-background text-foreground font-sans antialiased; }
@@ -54,3 +75,11 @@
 .gshot figcaption { font-size: 13px; padding-top: 4px; font-weight: 600; }
 .green + .cap, .green ~ .cap { font-size: 13px; color: hsl(var(--muted-foreground)); margin-top: 8px; }
 .green ~ .cap a { text-decoration: underline; }
+/* dark mode for the maps drawn by the shared report code */
+.dark .cmap .outline { fill: hsl(var(--card)); stroke: #8a9692; }
+.dark .cmap path.town[fill="#ffffff"] { fill: hsl(var(--card)); }
+.dark .cmap path.town { stroke: #8a9692; }
+.dark .cmap path.town.on, .dark .cmap path.town:hover { stroke: hsl(var(--foreground)); }
+.dark .cmap .pick circle { fill: hsl(var(--foreground)); stroke: hsl(var(--card)); }
+.dark .cmap .pick text { fill: hsl(var(--background)); }
+.dark .cmap .ok { fill: #4caf7a; }

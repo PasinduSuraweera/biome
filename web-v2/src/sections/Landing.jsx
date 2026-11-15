@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { IslandMap } from "@/sections/IslandMap";
 import { LEVEL_DOT, slug } from "@/lib/biome";
+import { Logo, ThemeToggle } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 
 const L = (en, si, ta) => ({ en, si, ta });
@@ -84,7 +85,7 @@ function Paper({ children, className }) {
   return <div className={cn("rounded-xl border bg-card p-5 shadow-[0_24px_50px_-28px_rgba(16,35,42,0.45)]", className)}>{children}</div>;
 }
 
-export function Landing({ DATA, SAFE, GEO, INDEX, lang, changeLang, go }) {
+export function Landing({ DATA, SAFE, GEO, INDEX, lang, changeLang, go, theme, toggleTheme }) {
   const [scrolled, setScrolled] = useState(false);
   const [pickD, setPickD] = useState("Kandy");
   useEffect(() => {
@@ -124,8 +125,8 @@ export function Landing({ DATA, SAFE, GEO, INDEX, lang, changeLang, go }) {
     <div className="min-h-screen overflow-x-hidden">
       <div className="sticky top-3 z-40 px-3 pt-3">
         <nav className={cn("mx-auto flex max-w-6xl items-center justify-between rounded-full px-3 py-2 transition-all duration-300 sm:px-4",
-          scrolled ? "bg-card/80 shadow-[0_8px_30px_-12px_rgba(16,35,42,0.3)] ring-1 ring-foreground/5 backdrop-blur-md" : "bg-transparent")} aria-label="Main">
-          <a href="#" className="pl-1" aria-label="Biome"><img src="logo.png" alt="Biome" className="h-8 w-auto" /></a>
+          scrolled ? "bg-card/80 dark:bg-card/85 shadow-[0_8px_30px_-12px_rgba(16,35,42,0.3)] ring-1 ring-foreground/5 backdrop-blur-md" : "bg-transparent")} aria-label="Main">
+          <a href="#" className="pl-1" aria-label="Biome"><Logo className="h-8 w-auto" /></a>
           <div className="hidden items-center gap-1 rounded-full bg-foreground/[0.05] p-1 lg:flex">
             <button type="button" onClick={() => scrollTo("how-it-works")} className="rounded-full px-3 py-1.5 text-[13px] hover:bg-card">{s("nav_how")}</button>
             <a href="#nasa" className="rounded-full px-3 py-1.5 text-[13px] hover:bg-card">{s("nav_nasa")}</a>
@@ -136,6 +137,7 @@ export function Landing({ DATA, SAFE, GEO, INDEX, lang, changeLang, go }) {
             <div className="hidden sm:flex">
               {Object.entries(LANGS).map(([k, label]) => <Button key={k} size="sm" variant={k === lang ? "secondary" : "ghost"} className="h-8 rounded-full px-2.5" onClick={() => changeLang(k)}>{label}</Button>)}
             </div>
+            <ThemeToggle theme={theme} toggle={toggleTheme} />
             <Button asChild className="h-10 rounded-full px-5"><a href="#overview">{s("open")}</a></Button>
           </div>
         </nav>
@@ -276,19 +278,19 @@ export function Landing({ DATA, SAFE, GEO, INDEX, lang, changeLang, go }) {
           </section>
         ))}
 
-        <section className="mt-8 bg-primary text-primary-foreground">
+        <section className="mt-8 bg-[#10232a] text-[#f3efe6] dark:bg-[#16272d]">
           <div className="mx-auto grid max-w-6xl gap-12 px-5 py-20 lg:grid-cols-2 lg:py-24">
             <Reveal>
               <h2 className="font-display text-[38px] font-semibold leading-[1.05] tracking-[-0.035em] sm:text-[52px]">{s("nasa_t")}</h2>
-              <p className="mt-5 max-w-[44ch] text-[17px] leading-relaxed text-primary-foreground/80">{s("nasa_b")}</p>
+              <p className="mt-5 max-w-[44ch] text-[17px] leading-relaxed text-[#f3efe6]/80">{s("nasa_b")}</p>
               <div className="mt-6 flex flex-wrap gap-2">
-                {["GPM IMERG", "GLDAS", "MERRA-2", "MODIS", "NASADEM (SRTM)", "VIIRS", "Worldview"].map((x) => <span key={x} className="rounded-full px-3 py-1 text-sm ring-1 ring-primary-foreground/25">{x}</span>)}
+                {["GPM IMERG", "GLDAS", "MERRA-2", "MODIS", "NASADEM (SRTM)", "VIIRS", "Worldview"].map((x) => <span key={x} className="rounded-full px-3 py-1 text-sm ring-1 ring-[#f3efe6]/25">{x}</span>)}
               </div>
               <Button asChild variant="secondary" className="mt-8 h-11 rounded-full px-5"><a href="#nasa">{s("nav_nasa")}<ArrowUpRight /></a></Button>
             </Reveal>
             <div className="grid grid-cols-2 gap-6">
               {[["46", s("st_years")], ["330", s("st_div")], [places.toLocaleString(), s("st_places")], ["3", s("st_lang")]].map(([v, l]) => (
-                <Reveal key={l}><p className="font-display text-5xl font-bold tracking-tight sm:text-6xl">{v}</p><p className="mt-2 text-primary-foreground/75">{l}</p></Reveal>
+                <Reveal key={l}><p className="font-display text-5xl font-bold tracking-tight sm:text-6xl">{v}</p><p className="mt-2 text-[#f3efe6]/75">{l}</p></Reveal>
               ))}
             </div>
           </div>
@@ -335,7 +337,7 @@ export function Landing({ DATA, SAFE, GEO, INDEX, lang, changeLang, go }) {
 
       <footer className="border-t">
         <div className="mx-auto grid max-w-6xl gap-3 px-5 py-10 text-sm text-muted-foreground">
-          <img src="logo.png" alt="Biome" className="h-7 w-fit" />
+          <Logo className="h-7 w-fit" />
           <p className="font-medium text-foreground">{t("emer")}</p>
           <p>{t("disc")}</p>
           <p>{s("team")}</p>
