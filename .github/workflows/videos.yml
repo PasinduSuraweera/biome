@@ -1,0 +1,34 @@
+name: NASA videos
+
+# Short silent loops of real NASA imagery of Cyclone Ditwah for the homepage,
+# built from NASA GIBS frames with ffmpeg. Run by hand or when the script changes.
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - pipeline/make_videos.py
+
+permissions:
+  contents: write
+
+jobs:
+  videos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg fonts-dejavu-core >/dev/null
+          pip install -q requests pillow
+      - working-directory: pipeline
+        run: python make_videos.py
+      - name: Commit
+        run: |
+          git config user.name "PasinduSuraweera"
+          git config user.email "pasisuraweera2003@gmail.com"
+          git add web/public/nasa/video
+          git diff --cached --quiet || git commit -m "NASA videos of Cyclone Ditwah"
+          for i in 1 2 3; do git pull --rebase origin main && git push && break; sleep 10; done
