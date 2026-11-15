@@ -264,7 +264,7 @@ function renderPanel(name) {
     ${tws.map((x) => `<tr><td>${esc(x.name)}</td><td class="l${x.level}"><i class="lv-dot"></i> ${esc(t("lvs_" + x.level))}</td><td>${r0(x.rain_1d)} mm</td><td>${x.steep_share == null ? "" : Math.round(x.steep_share * 100) + "%"}</td><td class="l${x.ditwah?.level || 0}">${x.ditwah ? `<i class="lv-dot"></i> ${esc(t("lvs_" + x.ditwah.level))}, ${r0(x.ditwah.rain_mm)} mm` : ""}</td></tr>`).join("")}</table></div>
     <p class="cap">${esc(t("town_note"))}</p></div>` : "";
   if (sp) $("#safe-full").innerHTML = `${townTable}<div class="live"><h3>${esc(t("s_safe"))} <span class="nasa-tag">NASA SRTM</span></h3>${centreMap(name, GEO, SAFE, TOWNS, tws)}
-    <ol class="picks">${sp.top.slice(0, 5).map((c) => `<li>${esc(c[3])} <span class="muted">(${esc(t("kind_" + c[2]))}, ${c[4]} m)</span></li>`).join("")}</ol>
+    <ol class="picks">${sp.top.slice(0, 5).map((c) => `<li><a href="https://www.google.com/maps/dir/?api=1&destination=${c[1]},${c[0]}" target="_blank" rel="noopener">${esc(c[3])}</a> <span class="muted">(${esc(t("kind_" + c[2]))}, ${c[4]} m)</span></li>`).join("")}</ol>
     <p class="cap">${esc(t("safe_count", { a: sp.safer, n: sp.count }))} ${esc(t("safe_note"))}</p></div>`;
 }
 

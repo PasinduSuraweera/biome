@@ -13,6 +13,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { WATCH, GAUGE_HOT, AMBER, LEVEL_DOT, r0, watchLabel } from "@/lib/biome";
+import { SafePlaces } from "@/sections/cards";
 import { cn } from "@/lib/utils";
 
 function reasonText(d) {
@@ -159,9 +160,7 @@ export function FullData({ DATA, GEO, SAFE, TOWNS, name }) {
           <CardHeader><CardTitle className="flex flex-wrap items-center gap-2"><MapPin className="size-5 text-brand" />{t("s_safe")}<Badge variant="outline" className="normal-case tracking-normal">NASA SRTM</Badge></CardTitle><CardDescription>{t("safe_count", { a: sp.safer, n: sp.count })} {t("safe_note")}</CardDescription></CardHeader>
           <CardContent className="grid gap-4 md:grid-cols-[1.2fr_1fr]">
             {GEO && <div className="rounded-md bg-secondary/60 p-2" dangerouslySetInnerHTML={{ __html: centreMap(name, GEO, SAFE, TOWNS, tws) }} />}
-            <Table><TableBody>
-              {sp.top.slice(0, 5).map((c, i) => <TableRow key={i}><TableCell className="w-8 font-semibold">{i + 1}</TableCell><TableCell>{c[3]}<p className="text-xs text-muted-foreground">{t("kind_" + c[2])}, {c[4]} m</p></TableCell></TableRow>)}
-            </TableBody></Table>
+            <SafePlaces top={sp.top} />
           </CardContent>
         </Card>
       )}

@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { IslandMap } from "@/sections/IslandMap";
 import { LEVEL_DOT, slug } from "@/lib/biome";
 import { Logo, ThemeToggle } from "@/lib/theme";
+import { mapsLink } from "@/sections/cards";
 import { cn } from "@/lib/utils";
 
 // the page has <base href> pointing at the classic site's data, so in-page links
@@ -252,7 +253,7 @@ export function Landing({ DATA, SAFE, GEO, INDEX, lang, changeLang, go, theme, t
                     {m.level && <p className="mt-2 text-sm text-muted-foreground">{m.level.rain}</p>}
                     <div className="mt-4 border-t pt-3">
                       <p className="text-sm font-medium">{t("s_safe")}</p>
-                      <ol className="mt-2 grid gap-1.5 text-sm">{(SAFE?.districts?.[d]?.top || []).slice(0, 3).map((c, i) => <li key={i} className="flex gap-2"><span className="font-semibold">{i + 1}.</span>{c[3]}</li>)}</ol>
+                      <ol className="mt-2 grid gap-1.5 text-sm">{(SAFE?.districts?.[d]?.top || []).slice(0, 3).map((c, i) => <li key={i}><a href={mapsLink(c)} target="_blank" rel="noopener" className="flex gap-2 underline-offset-2 hover:underline"><span className="font-semibold">{i + 1}.</span>{c[3]}<MapPin className="ml-auto size-4 shrink-0 text-brand" /></a></li>)}</ol>
                     </div>
                   </Paper>
                 </>}

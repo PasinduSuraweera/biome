@@ -17,7 +17,7 @@ function Pick({ label, value, onChange, items }) {
   return (
     <label className="grid gap-1.5 text-sm text-muted-foreground">{label}
       <Select value={value} onValueChange={onChange}>
-        <SelectTrigger className="h-10 min-w-44"><SelectValue /></SelectTrigger>
+        <SelectTrigger className="h-10 w-full sm:min-w-44"><SelectValue /></SelectTrigger>
         <SelectContent>{items.map(([v, l]) => <SelectItem key={v} value={v}>{l}</SelectItem>)}</SelectContent>
       </Select>
     </label>
@@ -86,10 +86,10 @@ export function Calendar({ DATA, current }) {
     <Card>
       <CardHeader><CardTitle className="text-2xl">{t("cal_title")}</CardTitle><CardDescription className="text-base">{fc ? t("cal_fc_lede", { n: nYears }) : t("cal_lede", { a: C.years?.[0], b: C.years?.[1] })}</CardDescription></CardHeader>
       <CardContent className="grid gap-4">
-        <div className="flex flex-wrap gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:flex sm:flex-wrap sm:items-end">
           {F && <Pick label={t("cal_mode")} value={mode} onChange={setMode} items={[["fc", t("cal_mode_fc")], ["hist", t("cal_mode_hist")]]} />}
           <Pick label={t("cal_level")} value={level} onChange={(v) => { setLevel(v); setPlace(null); }} items={["country", "province", "district"].map((l) => [l, t("lvl_" + l)])} />
-          <Pick label=" " value={place} onChange={setPlace} items={places[level].map((p) => [p, nm(p)])} />
+          <Pick label={t("lvl_" + level)} value={place} onChange={setPlace} items={places[level].map((p) => [p, nm(p)])} />
           {!fc && <Pick label={t("cal_type")} value={type} onChange={setType} items={["after_el_nino", "all", "el_nino", "la_nina", "neutral"].map((ty) => [ty, t("ty_" + ty)])} />}
         </div>
         {table}

@@ -248,7 +248,8 @@ export function buildReport(name, view, DATA, SAFE, townName) {
     extras.unshift({ title: tw.name, tag: "NASA GPM IMERG + SRTM", lines });
   }
   if (sp?.top?.length) {
-    extras.unshift({ title: t("s_safe"), tag: "NASA SRTM", map: true, lines: [
+    extras.unshift({ title: t("s_safe"), tag: "NASA SRTM", map: true,
+      links: sp.top.slice(0, 5).map((c) => `https://www.google.com/maps/dir/?api=1&destination=${c[1]},${c[0]}`), lines: [
       ...sp.top.slice(0, 5).map((c, i) => `${i + 1}. ${c[3]} (${t(`kind_${c[2]}`)})`),
       t("safe_count", { a: sp.safer, n: sp.count }), t("safe_note")] });
   }
@@ -349,7 +350,7 @@ export function reportHTML(m) {
       <div class="period pl-${p.sign}"><p class="p-k">${esc(p.title)}</p><p class="p-r">${esc(p.range)}</p>
       ${p.lines.map((l) => `<p class="p-l">${esc(l)}</p>`).join("")}<p class="p-a">${esc(p.adv)}</p></div>`).join("")}</div>
       <p class="cap">${esc(t("pl_note"))}</p>` : ""}
-    ${m.extras.map((e) => `<h3>${esc(e.title)}${tag(e.tag)}</h3>${e.map ? '<div id="cmap-slot"></div>' : ""}${e.green ? '<div id="green-slot"></div>' : ""}<ul class="plain${e.map ? " nomark" : ""}">${e.lines.map((l) => `<li>${esc(l)}</li>`).join("")}</ul>`).join("")}
+    ${m.extras.map((e) => `<h3>${esc(e.title)}${tag(e.tag)}</h3>${e.map ? '<div id="cmap-slot"></div>' : ""}${e.green ? '<div id="green-slot"></div>' : ""}<ul class="plain${e.map ? " nomark" : ""}">${e.lines.map((l, i) => `<li>${e.links?.[i] ? `<a href="${esc(e.links[i])}" target="_blank" rel="noopener">${esc(l)}</a>` : esc(l)}</li>`).join("")}</ul>`).join("")}
     ${m.years ? `<h3>${esc(t("s_years"))}${tag("NASA MERRA-2 + GPM IMERG")}</h3><div class="years">
       ${m.years.rows.map((r) => `<div class="yr-row"><span class="yr-l">${esc(r.label)}</span><div class="yr-cells" style="grid-template-columns:repeat(${r.cells.length},1fr)">${r.cells.map((c) => `<i class="yc ${c.sign}${c.nino ? " nino" : ""}" title="${c.y}: ${c.pct ?? "?"}%"></i>`).join("")}</div></div>`).join("")}
       <div class="yr-row yr-axis"><span class="yr-l"></span><div><span>${m.years.first}</span><span>${m.years.last}</span></div></div></div>
