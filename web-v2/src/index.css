@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 43 26% 95%;
+    --foreground: 174 19% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 174 19% 11%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 174 19% 11%;
+    --primary: 196 45% 11%;
+    --primary-foreground: 43 26% 95%;
+    --secondary: 42 25% 90%;
+    --secondary-foreground: 174 19% 11%;
+    --muted: 42 25% 90%;
+    --muted-foreground: 162 5% 39%;
+    --accent: 42 29% 91%;
+    --accent-foreground: 174 19% 11%;
+    --destructive: 3 71% 41%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 42 20% 83%;
+    --input: 42 20% 83%;
+    --ring: 18 67% 57%;
+    --radius: 0.75rem;
+  }
+  * { @apply border-border; }
+  body { @apply bg-background text-foreground font-sans antialiased; }
+  h1, h2, h3 { @apply font-display; }
+}
+
+/* maps drawn by the shared report code (same as the classic app) */
+.cmap { margin: 0; border-radius: var(--radius); }
+.cmap svg { width: 100%; height: auto; display: block; }
+.cmap .outline { fill: #fff; stroke: #6b7470; stroke-width: 1; }
+.cmap .ok { fill: #2e7d4f; fill-opacity: .75; }
+.cmap .bad { fill: #b3261e; fill-opacity: .55; }
+.cmap .pick circle { fill: #10232a; stroke: #fff; stroke-width: 1.5; }
+.cmap .pick text { fill: #fff; font: 700 11px Inter, sans-serif; }
+.cmap figcaption { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; padding: 8px 2px 0; color: hsl(var(--muted-foreground)); }
+.cmap .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+.cmap .dot.ok { background: #2e7d4f; } .cmap .dot.bad { background: #b3261e; }
+.cmap path.town { stroke: #6b7470; stroke-width: .6; cursor: pointer; }
+.cmap path.town:hover { stroke: #10232a; stroke-width: 1.4; }
+.cmap path.town.on { stroke: #10232a; stroke-width: 2; }
+.cmap .sq { width: 12px; height: 12px; border: 1px solid #6b7470; display: inline-block; margin-right: 6px; border-radius: 2px; }
+.cmap .sq.l1 { background: #f6e7a6; } .cmap .sq.l2 { background: #f0b98a; } .cmap .sq.l3 { background: #e39a94; }
+.green { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.gshot { margin: 0; }
+.gshot svg { width: 100%; height: auto; display: block; border-radius: 8px; background: #000; }
+.gshot .dim { fill: #000; fill-opacity: .55; }
+.gshot .edge { fill: none; stroke: #fff; stroke-width: 2; }
+.gshot figcaption { font-size: 13px; padding-top: 4px; font-weight: 600; }
+.green + .cap, .green ~ .cap { font-size: 13px; color: hsl(var(--muted-foreground)); margin-top: 8px; }
+.green ~ .cap a { text-decoration: underline; }
