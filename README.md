@@ -2,7 +2,7 @@
 
 NASA Space Apps Challenge 2026 · Kandy · Challenge: **Be An Earth System Trend Detective!**
 
-Live site: https://pasindusuraweera.github.io/biome/
+Live site: https://biome-rosy.vercel.app/ (classic version: https://biome-rosy.vercel.app/classic/; also on GitHub Pages at https://pasindusuraweera.github.io/biome/)
 
 In Sri Lanka, hazards arrive in sequence. A dry spell drains reservoirs and stresses crops, then the rain falls on parched fields, swollen rivers and soaked slopes. The same family can queue for trucked water in August and flee a flood in December. Biome turns free NASA Earth data into warnings each district, town and family can act on, in English, Sinhala and Tamil.
 
@@ -86,7 +86,8 @@ Everything is refreshed by GitHub Actions; no server is needed.
 | `live.yml` | every 3 hours | reservoirs, river gauges, ocean index; NASA IMERG Early rain and the daily levels; alerts and new sign-ups |
 | `nasa-images.yml` | daily | NASA pictures, division boundaries, terrain and safer places |
 | `modis.yml` | weekly | MODIS greenness through AppEEARS |
-| `pages.yml` | on change | builds and publishes the site |
+| `pages.yml` | on change and after each data run | builds and publishes the GitHub Pages copy |
+| Vercel | every push to main | builds `scripts/vercel-build.sh`: the dashboard at `/`, the classic app at `/classic/` |
 
 Repository secrets: `EARTHDATA_USERNAME`, `EARTHDATA_PASSWORD` (free NASA Earthdata Login) and, for alerts, `TELEGRAM_BOT_TOKEN`. People who register are kept in a private Actions cache, never in the repository; only the chat id, district, language and level are stored.
 

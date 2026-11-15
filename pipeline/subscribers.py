@@ -25,7 +25,7 @@ import requests
 ROOT = Path(__file__).resolve().parent.parent
 STORE = ROOT / "data" / "private" / "subscribers.json"
 TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
-SITE = os.environ.get("BIOME_SITE_URL") or "https://pasindusuraweera.github.io/biome/"
+SITE = os.environ.get("BIOME_SITE_URL") or "https://biome-rosy.vercel.app/"
 LANGS = ("en", "si", "ta")
 
 T = {
