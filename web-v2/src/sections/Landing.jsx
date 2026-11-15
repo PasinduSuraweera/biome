@@ -11,6 +11,9 @@ import { LEVEL_DOT, slug } from "@/lib/biome";
 import { Logo, ThemeToggle } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 
+// the page has <base href> pointing at the classic site's data, so in-page links
+// must name this app's own address or they would open the classic site
+const HERE = import.meta.env.BASE_URL;
 const L = (en, si, ta) => ({ en, si, ta });
 const S = {
   nav_how: L("How it works", "එය ක්‍රියා කරන ආකාරය", "இது எப்படி செயல்படுகிறது"),
@@ -126,19 +129,19 @@ export function Landing({ DATA, SAFE, GEO, INDEX, lang, changeLang, go, theme, t
       <div className="sticky top-3 z-40 px-3 pt-3">
         <nav className={cn("mx-auto flex max-w-6xl items-center justify-between rounded-full px-3 py-2 transition-all duration-300 sm:px-4",
           scrolled ? "bg-card/80 dark:bg-card/85 shadow-[0_8px_30px_-12px_rgba(16,35,42,0.3)] ring-1 ring-foreground/5 backdrop-blur-md" : "bg-transparent")} aria-label="Main">
-          <a href="#" className="pl-1" aria-label="Biome"><Logo className="h-8 w-auto" /></a>
+          <a href={`${HERE}#`} className="pl-1" aria-label="Biome"><Logo className="h-8 w-auto" /></a>
           <div className="hidden items-center gap-1 rounded-full bg-foreground/[0.05] p-1 lg:flex">
             <button type="button" onClick={() => scrollTo("how-it-works")} className="rounded-full px-3 py-1.5 text-[13px] hover:bg-card">{s("nav_how")}</button>
-            <a href="#nasa" className="rounded-full px-3 py-1.5 text-[13px] hover:bg-card">{s("nav_nasa")}</a>
-            <a href="#calendar" className="rounded-full px-3 py-1.5 text-[13px] hover:bg-card">{s("nav_cal")}</a>
-            <a href="#how" className="rounded-full px-3 py-1.5 text-[13px] hover:bg-card">{t("how_title")}</a>
+            <a href={`${HERE}#nasa`} className="rounded-full px-3 py-1.5 text-[13px] hover:bg-card">{s("nav_nasa")}</a>
+            <a href={`${HERE}#calendar`} className="rounded-full px-3 py-1.5 text-[13px] hover:bg-card">{s("nav_cal")}</a>
+            <a href={`${HERE}#how`} className="rounded-full px-3 py-1.5 text-[13px] hover:bg-card">{t("how_title")}</a>
           </div>
           <div className="flex items-center gap-1">
             <div className="hidden sm:flex">
               {Object.entries(LANGS).map(([k, label]) => <Button key={k} size="sm" variant={k === lang ? "secondary" : "ghost"} className="h-8 rounded-full px-2.5" onClick={() => changeLang(k)}>{label}</Button>)}
             </div>
             <ThemeToggle theme={theme} toggle={toggleTheme} />
-            <Button asChild className="h-10 rounded-full px-5"><a href="#overview">{s("open")}</a></Button>
+            <Button asChild className="h-10 rounded-full px-5"><a href={`${HERE}#overview`}>{s("open")}</a></Button>
           </div>
         </nav>
         <div className="mt-2 flex justify-end gap-1 sm:hidden">
@@ -157,7 +160,7 @@ export function Landing({ DATA, SAFE, GEO, INDEX, lang, changeLang, go, theme, t
             </h1>
             <p className="mt-8 max-w-[46ch] text-lg leading-relaxed text-muted-foreground">{s("lede")}</p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
-              <Button asChild size="lg" className="h-12 rounded-full px-6 text-[15px]"><a href={`#family/${slug(pickD)}`}>{s("cta")}<ArrowRight /></a></Button>
+              <Button asChild size="lg" className="h-12 rounded-full px-6 text-[15px]"><a href={`${HERE}#family/${slug(pickD)}`}>{s("cta")}<ArrowRight /></a></Button>
               <button type="button" onClick={() => scrollTo("how-it-works")} className="text-[15px] font-medium underline-offset-4 hover:underline">{s("nav_how")}</button>
             </div>
             <p className="mt-4 text-sm text-muted-foreground">{s("note")}</p>
@@ -221,7 +224,7 @@ export function Landing({ DATA, SAFE, GEO, INDEX, lang, changeLang, go, theme, t
           <ul className="grid gap-2 lg:col-span-8">
             {ASKS.map(([q, v, d, I]) => (
               <li key={q}>
-                <a href={`#${v}/${slug(d)}`} className="group flex items-center gap-4 rounded-xl border bg-card px-5 py-4 transition-colors hover:bg-secondary/60">
+                <a href={`${HERE}#${v}/${slug(d)}`} className="group flex items-center gap-4 rounded-xl border bg-card px-5 py-4 transition-colors hover:bg-secondary/60">
                   <I className="size-5 shrink-0 text-brand" />
                   <span className="flex-1 text-[17px] font-medium">{q}</span>
                   <span className="hidden text-sm text-muted-foreground sm:inline">{dName(d)}</span>
@@ -239,7 +242,7 @@ export function Landing({ DATA, SAFE, GEO, INDEX, lang, changeLang, go, theme, t
                 <span className="grid size-10 place-items-center rounded-full bg-secondary"><I className="size-5 text-brand-deep" /></span>
                 <h2 className="mt-4 font-display text-[32px] font-semibold leading-[1.1] tracking-[-0.03em] sm:text-[40px]">{title}</h2>
                 <p className="mt-4 max-w-[50ch] text-[17px] leading-relaxed text-muted-foreground">{body}</p>
-                <Button asChild variant="outline" className="mt-6 h-11 rounded-full px-5"><a href={`#${k}/${slug(d)}`}>{s("see")}: {dName(d)}<ArrowRight /></a></Button>
+                <Button asChild variant="outline" className="mt-6 h-11 rounded-full px-5"><a href={`${HERE}#${k}/${slug(d)}`}>{s("see")}: {dName(d)}<ArrowRight /></a></Button>
               </Reveal>
               <Reveal className="relative mx-auto w-full max-w-[460px]">
                 {k === "family" && <>
@@ -286,7 +289,7 @@ export function Landing({ DATA, SAFE, GEO, INDEX, lang, changeLang, go, theme, t
               <div className="mt-6 flex flex-wrap gap-2">
                 {["GPM IMERG", "GLDAS", "MERRA-2", "MODIS", "NASADEM (SRTM)", "VIIRS", "Worldview"].map((x) => <span key={x} className="rounded-full px-3 py-1 text-sm ring-1 ring-[#f3efe6]/25">{x}</span>)}
               </div>
-              <Button asChild variant="secondary" className="mt-8 h-11 rounded-full px-5"><a href="#nasa">{s("nav_nasa")}<ArrowUpRight /></a></Button>
+              <Button asChild variant="secondary" className="mt-8 h-11 rounded-full px-5"><a href={`${HERE}#nasa`}>{s("nav_nasa")}<ArrowUpRight /></a></Button>
             </Reveal>
             <div className="grid grid-cols-2 gap-6">
               {[["46", s("st_years")], ["330", s("st_div")], [places.toLocaleString(), s("st_places")], ["3", s("st_lang")]].map(([v, l]) => (
@@ -300,7 +303,7 @@ export function Landing({ DATA, SAFE, GEO, INDEX, lang, changeLang, go, theme, t
           <div className="lg:col-span-4">
             <h2 className="font-display text-[34px] font-semibold leading-[1.1] tracking-[-0.03em]">{s("proof_t")}</h2>
             <p className="mt-4 max-w-[36ch] text-muted-foreground">{s("proof_b")}</p>
-            <a href="#how" className="mt-5 inline-flex items-center gap-1 font-medium underline-offset-4 hover:underline">{t("how_title")}<ArrowRight className="size-4" /></a>
+            <a href={`${HERE}#how`} className="mt-5 inline-flex items-center gap-1 font-medium underline-offset-4 hover:underline">{t("how_title")}<ArrowRight className="size-4" /></a>
           </div>
           <div className="grid overflow-hidden rounded-2xl border bg-card sm:grid-cols-2 lg:col-span-8">
             {[[s("p1t"), s("p1", { r: d26?.counts?.["3"] ?? 2, a: d26?.counts?.["2"] ?? 6 })], [s("p2t"), s("p2")],
@@ -325,10 +328,10 @@ export function Landing({ DATA, SAFE, GEO, INDEX, lang, changeLang, go, theme, t
                 <SelectContent>{names.map((n) => <SelectItem key={n} value={n}>{dName(n)}</SelectItem>)}</SelectContent>
               </Select>
               <div className="flex flex-wrap gap-2">
-                <Button asChild className="h-11 rounded-full px-5"><a href={`#family/${slug(pickD)}`}><Users />{t("tab_family")}</a></Button>
-                <Button asChild variant="outline" className="h-11 rounded-full px-5"><a href={`#farmer/${slug(pickD)}`}><Sprout />{t("tab_farmer")}</a></Button>
-                <Button asChild variant="outline" className="h-11 rounded-full px-5"><a href={`#coast/${slug(pickD)}`}><Waves />{t("tab_coast")}</a></Button>
-                <Button asChild variant="ghost" className="h-11 rounded-full px-5"><a href={`#full/${slug(pickD)}`}>{t("tab_full")}</a></Button>
+                <Button asChild className="h-11 rounded-full px-5"><a href={`${HERE}#family/${slug(pickD)}`}><Users />{t("tab_family")}</a></Button>
+                <Button asChild variant="outline" className="h-11 rounded-full px-5"><a href={`${HERE}#farmer/${slug(pickD)}`}><Sprout />{t("tab_farmer")}</a></Button>
+                <Button asChild variant="outline" className="h-11 rounded-full px-5"><a href={`${HERE}#coast/${slug(pickD)}`}><Waves />{t("tab_coast")}</a></Button>
+                <Button asChild variant="ghost" className="h-11 rounded-full px-5"><a href={`${HERE}#full/${slug(pickD)}`}>{t("tab_full")}</a></Button>
               </div>
             </div>
           </div>
