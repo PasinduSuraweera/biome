@@ -12,7 +12,7 @@ on:
       - web/**
       - web-v2/**
   workflow_run:
-    workflows: ["Refresh data", "Refresh live reservoirs and rivers", "NASA images and terrain", "Refresh MODIS greenness"]
+    workflows: ["Refresh data", "Refresh live reservoirs and rivers", "NASA images and terrain", "Refresh MODIS greenness", "NASA videos"]
     types: [completed]
 
 permissions:
