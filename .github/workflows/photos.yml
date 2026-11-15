@@ -1,0 +1,20 @@
+name: Photo candidates
+
+# Finds freely licensed photos of Sri Lanka on Wikimedia Commons and uploads them
+# as a run artifact, so the best can be chosen and credited by hand.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  photos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: pip install requests
+      - run: python pipeline/photo_candidates.py photos
+      - uses: actions/upload-artifact@v4
+        with: { name: photos, path: photos }
