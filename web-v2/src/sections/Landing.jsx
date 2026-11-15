@@ -227,7 +227,7 @@ export function Landing({ DATA, SAFE, GEO, INDEX, lang, changeLang, go, theme, t
 
       <main>
         <section className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-[#0b1a1f] text-white">
-          <BgVideo src="nasa/video/ditwah-clouds" poster="nasa/ditwah-2025-11-27.jpg" className="absolute inset-0 -z-10 h-full w-full object-cover opacity-90" />
+          <BgVideo src="nasa/video/ditwah-clouds" poster="nasa/video/ditwah-clouds.jpg" className="absolute inset-0 -z-10 h-full w-full object-cover opacity-90" />
           <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(6,16,20,0.92)_0%,rgba(6,16,20,0.7)_45%,rgba(6,16,20,0.2)_100%)]" />
           <div className="absolute inset-x-0 bottom-0 -z-10 h-1/2 bg-gradient-to-t from-[#06100f] to-transparent" />
           <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-5 pb-10 pt-32 sm:pt-36">
@@ -256,7 +256,7 @@ export function Landing({ DATA, SAFE, GEO, INDEX, lang, changeLang, go, theme, t
           <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
             <Reveal>
               <figure className="m-0 overflow-hidden rounded-2xl bg-[#0b1a1f] shadow-[0_24px_50px_-28px_rgba(16,35,42,0.6)]">
-                <BgVideo src="nasa/video/ditwah-rain" poster="nasa/ditwah-rain-2025-11-27.jpg" className="aspect-[5/4] w-full object-cover" />
+                <BgVideo src="nasa/video/ditwah-rain" poster="nasa/video/ditwah-rain.jpg" className="aspect-[5/4] w-full object-cover" />
                 <figcaption className="p-4 text-sm text-white/70">{s("rain_cap")}</figcaption>
               </figure>
             </Reveal>

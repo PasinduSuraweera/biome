@@ -61,12 +61,12 @@ def label(img, top, bottom):
     return img
 
 
-def encode(frames, name, fps):
+def encode(frames, name, fps, crf=26):
     with tempfile.TemporaryDirectory() as tmp:
         for i, im in enumerate(frames):
             im.save(f"{tmp}/{i:04d}.jpg", quality=90)
         subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-framerate", str(fps), "-i", f"{tmp}/%04d.jpg",
-                        "-vf", "scale=trunc(iw/2)*2:trunc(ih/2)*2", "-c:v", "libx264", "-preset", "veryfast", "-crf", "26",
+                        "-vf", "scale=trunc(iw/2)*2:trunc(ih/2)*2", "-c:v", "libx264", "-preset", "veryfast", "-crf", str(crf),
                         "-pix_fmt", "yuv420p", "-movflags", "+faststart", str(OUT / f"{name}.mp4")], check=True)
     frames[len(frames) // 2].save(OUT / f"{name}.jpg", quality=85)
     print(f"{name}: {len(frames)} frames, {(OUT / f'{name}.mp4').stat().st_size // 1024} KB")
@@ -97,7 +97,7 @@ def main():
         d += timedelta(days=1)
     clouds = fetch_all(jobs)
     if len(clouds) > 8:
-        encode(clouds, "ditwah-clouds", 3)
+        encode(clouds, "ditwah-clouds", 3, crf=33)
 
 
 if __name__ == "__main__":
