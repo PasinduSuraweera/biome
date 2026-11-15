@@ -8,6 +8,7 @@ on:
   push:
     paths:
       - .github/nasa-images.txt
+      - pipeline/make_videos.py
   schedule:
     - cron: "10 2 * * *"
 
@@ -17,7 +18,7 @@ permissions:
 jobs:
   images:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -26,6 +27,15 @@ jobs:
       - name: NASA GIBS images
         working-directory: pipeline
         run: python fetch_nasa_images.py
+      - name: NASA videos of Cyclone Ditwah (only when missing)
+        continue-on-error: true
+        working-directory: pipeline
+        run: |
+          if [ ! -f ../web/public/nasa/video/ditwah-rain.mp4 ] || [ -f ../.github/remake-videos ]; then
+            sudo apt-get install -y -qq ffmpeg fonts-dejavu-core >/dev/null
+            pip install -q pillow
+            python make_videos.py
+          fi
       - name: Town boundaries (Divisional Secretariat divisions)
         continue-on-error: true
         working-directory: pipeline
