@@ -15,8 +15,8 @@ import { Calendar } from "@/sections/Calendar";
 import { How } from "@/sections/How";
 import { Landing } from "@/sections/Landing";
 import { Logo, ThemeToggle, useTheme } from "@/lib/theme";
-import { Report } from "@/sections/Report";
-import { NasaTag, OutlookCard, YearsCard } from "@/sections/cards";
+import { YearPlan } from "@/sections/YearPlan";
+import { NasaTag, OutlookCard, YearsCard, AskCard, PlantCard, AlertsCard, mapsLink } from "@/sections/cards";
 import { t, dName, getLang, setLang, LANGS, monthName } from "@classic/i18n.js";
 import { buildReport, alertMessage, downloadPNG, COASTAL } from "@classic/simple.js";
 import { loadNasa, centreMap, greenMap } from "@classic/nasa.js";
@@ -107,7 +107,9 @@ export default function App() {
   const isDistrict = DISTRICT_VIEWS.includes(view);
 
   return (
-    <div className="flex min-h-screen">
+    <>
+    {m && view !== "full" && <YearPlan m={m} name={name} view={view} DATA={DATA} SAFE={SAFE} town={town} />}
+    <div className="flex min-h-screen print:hidden">
       <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col border-r bg-card lg:flex">
         <div className="flex h-16 items-center px-5"><Logo className="h-8 w-auto" /></div>
         <p className="px-5 pb-4 text-xs text-muted-foreground">{t("tagline")}</p>
@@ -171,7 +173,7 @@ export default function App() {
 
         <main className="grid gap-4 p-4 pb-28 md:gap-6 md:p-6 md:pb-28 lg:pb-6">
           {view === "overview" && <Overview DATA={DATA} SAFE={SAFE} GEO={GEO} go={go} />}
-          {m && view !== "full" && <Report m={m} name={name} view={view} DATA={DATA} GEO={GEO} SAFE={SAFE} TOWNS={TOWNS} town={town} setTown={setTown} nasaReady={nasaReady} alertLv={alertLv} setAlertLv={setAlertLv} />}
+          {m && view !== "full" && <DistrictView m={m} name={name} view={view} DATA={DATA} GEO={GEO} SAFE={SAFE} TOWNS={TOWNS} town={town} setTown={setTown} nasaReady={nasaReady} alertLv={alertLv} setAlertLv={setAlertLv} go={go} />}
           {view === "full" && (
             <div className="grid gap-4 md:gap-6 xl:grid-cols-[minmax(0,380px)_1fr]">
               <Card className="h-fit xl:sticky xl:top-24">
@@ -220,6 +222,7 @@ export default function App() {
         </div>
       </nav>
     </div>
+    </>
   );
 }
 
@@ -336,6 +339,107 @@ function Overview({ DATA, SAFE, GEO, go }) {
           </div>
         </div>
       </div>
+    </>
+  );
+}
+
+// ---------------- one district ----------------
+function DistrictView({ m, name, view, DATA, GEO, SAFE, TOWNS, town, setTown, nasaReady, alertLv, setAlertLv, go }) {
+  const mapExtra = m.extras.find((e) => e.map);
+  const otherExtras = m.extras.filter((e) => !e.map);
+  const cmapHTML = GEO ? centreMap(name, GEO, SAFE, TOWNS, DATA.towns?.districts?.[name], town) : "";
+  const greenHTML = GEO && nasaReady ? greenMap(name, GEO) : "";
+  const sp = SAFE?.districts?.[name];
+  const tsp = town ? SAFE?.towns?.[`${name}|${town}`] : null;
+  const res = (DATA.reservoirs?.items || []).filter((r) => r.district === name && r.pct_full != null);
+  const tanks = res.length ? Math.round(res.reduce((a, r) => a + r.pct_full, 0) / res.length) : null;
+  const WI = WATCH_ICON[m.now.watch] || CheckCircle2;
+  return (
+    <>
+      <div className="flex flex-wrap items-center gap-2">
+        <Badge variant="secondary">{m.aud}</Badge>
+        <Button size="sm" variant="ghost" onClick={() => downloadPNG(m)}><Download />{ui("png")}</Button>
+        <Button size="sm" onClick={() => print()}><Printer />{ui("yearplan")}</Button>
+      </div>
+
+      <div className="grid gap-4 xl:grid-cols-[minmax(0,340px)_1fr]">
+      <Card className="xl:row-span-1">
+        <CardContent className="p-4">{GEO && <IslandMap GEO={GEO} DATA={DATA} name={name} onPick={(n) => go(view, n)} view={view} compact />}</CardContent>
+      </Card>
+      <div className="grid content-start gap-4 sm:grid-cols-2">
+        <Card className={cn(m.level && LEVEL_TONE[m.level.n])}>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2"><CardDescription className="font-medium">{t("s_level")}</CardDescription><Bell className="size-4 text-muted-foreground" /></CardHeader>
+          <CardContent>
+            <p className="flex items-center gap-2 font-display text-lg font-bold leading-snug"><span className={cn("size-3 shrink-0 rounded-full", LEVEL_DOT[m.level?.n || 0])} />{m.level ? m.level.title : t("lvl_0")}</p>
+            {m.level && <p className="mt-1 text-xs text-muted-foreground">{m.level.rain}</p>}
+          </CardContent>
+        </Card>
+        <Card className="border-0" style={{ background: m.now.bg, color: m.now.fg }}>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2"><p className="text-sm font-medium opacity-85">{t("s_now")} · {m.when}</p><WI className="size-4 opacity-80" /></CardHeader>
+          <CardContent><p className="font-display text-lg font-bold leading-snug">{m.now.title}</p><p className="mt-1 text-xs opacity-90">{m.now.desc}</p></CardContent>
+        </Card>
+        <Kpi label={ui("k_next3")} icon={CloudRain} value={<span className="text-base font-semibold leading-snug">{m.periods[1]?.lines[0] || m.basis}</span>} sub={m.periods[1]?.range} />
+        {view === "farmer" && tanks != null
+          ? <Kpi label={ui("k_tanks")} icon={Droplets} value={`${tanks}%`} sub={`${ui("k_full")} · ${res.length} · Irrigation Department`} />
+          : <Kpi label={t("s_safe")} icon={MapPin} value={sp ? `${(tsp || sp).safer} / ${(tsp || sp).count}` : "…"} sub="NASA SRTM · OpenStreetMap" />}
+      </div>
+      </div>
+
+      <div className="grid gap-4 xl:grid-cols-3">
+        <OutlookCard m={m} DATA={DATA} name={name} className="xl:col-span-2" />
+        <AskCard m={m} />
+      </div>
+
+      {m.plant?.length > 0 && <PlantCard m={m} />}
+
+      <div className="grid gap-4 xl:grid-cols-3">
+        <Card>
+          <CardHeader><CardTitle className="flex items-center gap-2"><CheckCircle2 className="size-5 text-brand" />{t("s_todo")}</CardTitle></CardHeader>
+          <CardContent>
+            <ul className="grid gap-3">
+              {m.todo.map((x, i) => <li key={i} className="flex gap-3 text-[15px]"><span className="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-secondary text-xs font-semibold">{i + 1}</span><span>{x}</span></li>)}
+            </ul>
+          </CardContent>
+        </Card>
+        {mapExtra && (
+          <Card className="xl:col-span-2">
+            <CardHeader><CardTitle className="flex flex-wrap items-center gap-2"><MapPin className="size-5 text-brand" />{mapExtra.title}<NasaTag>{mapExtra.tag}</NasaTag></CardTitle><CardDescription>{mapExtra.lines[mapExtra.lines.length - 1]}</CardDescription></CardHeader>
+            <CardContent className="grid gap-4 md:grid-cols-[1.2fr_1fr]">
+              {cmapHTML ? <div className="rounded-md bg-secondary/60 p-2" dangerouslySetInnerHTML={{ __html: cmapHTML }}
+                onClick={(e) => { const p = e.target.closest("path.town"); if (p) setTown(p.dataset.town === town ? "" : p.dataset.town); }} /> : <div />}
+              <div>
+                <Table>
+                  <TableBody>
+                    {((tsp || sp)?.top || []).slice(0, 5).map((c, i) => (
+                      <TableRow key={i}><TableCell className="w-8 font-semibold">{i + 1}</TableCell><TableCell><a href={mapsLink(c)} target="_blank" rel="noopener" className="group flex items-start justify-between gap-2"><span>{c[3]}<span className="block text-xs text-muted-foreground">{t(`kind_${c[2]}`)}</span></span><MapPin className="mt-0.5 size-4 shrink-0 text-brand opacity-70 group-hover:opacity-100" /></a></TableCell></TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+                <p className="mt-3 text-sm text-muted-foreground">{mapExtra.lines[mapExtra.lines.length - 2]}</p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+
+      <div className="grid gap-4 xl:grid-cols-3">
+        {m.years && <YearsCard m={m} DATA={DATA} name={name} className="xl:col-span-2" />}
+        {m.level && <AlertsCard m={m} lv={alertLv} setLv={setAlertLv} />}
+      </div>
+
+      {otherExtras.length > 0 && (
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {otherExtras.map((e, i) => (
+            <Card key={i} className={cn(e.green && "md:col-span-2")}>
+              <CardHeader><CardTitle className="flex flex-wrap items-center gap-2">{e.green ? <Leaf className="size-5 text-brand" /> : <CloudRain className="size-5 text-brand" />}{e.title}<NasaTag>{e.tag}</NasaTag></CardTitle></CardHeader>
+              <CardContent className="grid gap-3">
+                {e.green && greenHTML && <div className="[&_.green]:max-w-xl" dangerouslySetInnerHTML={{ __html: greenHTML }} />}
+                <ul className="grid gap-1.5 text-[15px]">{e.lines.map((l, j) => <li key={j}>{l}</li>)}</ul>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
     </>
   );
 }

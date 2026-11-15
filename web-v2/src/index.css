@@ -83,3 +83,11 @@
 .dark .cmap .pick circle { fill: hsl(var(--foreground)); stroke: hsl(var(--card)); }
 .dark .cmap .pick text { fill: hsl(var(--background)); }
 .dark .cmap .ok { fill: #4caf7a; }
+
+/* the year plan: A4, two pages, colours kept */
+@page { size: A4; margin: 12mm; }
+@media print {
+  html, body { background: #fff !important; }
+  .year-plan { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .yp-break { break-before: page; }
+}

@@ -6,6 +6,7 @@ export const L = (en, si, ta) => ({ en, si, ta });
 export const UI = {
   overview: L("Overview", "දළ විශ්ලේෂණය", "மேலோட்டம்"),
   more: L("More", "තවත්", "மேலும்"),
+  yearplan: L("Year plan (print or PDF)", "වාර්ෂික සැලැස්ම (මුද්‍රණය හෝ PDF)", "ஆண்டுத் திட்டம் (அச்சு அல்லது PDF)"),
   home: L("Home", "මුල් පිටුව", "முகப்பு"),
   nasa: L("Seen by NASA", "NASA දුටු දේ", "NASA பார்த்தவை"),
   map_t: L("Watches this month", "මෙම මාසයේ අවදානම් නිවේදන", "இந்த மாத எச்சரிக்கைகள்"),
