@@ -61,7 +61,8 @@ const S = {
 const s = (k, v = {}) => Object.entries(v).reduce((a, [x, y]) => a.replaceAll(`{${x}}`, y), S[k][getLang()] || S[k].en);
 const ICON = { dry: Sun, wet: CloudRain, mixed: CloudSun, normal: Cloud };
 const TILE = { dry: "#f6ecd2", wet: "#dcebef", mixed: "linear-gradient(135deg,#f6ecd2 50%,#dcebef 50%)", normal: "#eef0eb" };
-const SITE = "https://pasindusuraweera.github.io/biome/v2/";
+// the address this copy of Biome is served from (GitHub Pages or Vercel)
+const SITE = typeof location !== "undefined" ? `${location.origin}${import.meta.env.BASE_URL}` : "https://pasindusuraweera.github.io/biome/v2/";
 
 function useQR(text, size = 180) {
   const [src, setSrc] = useState("");

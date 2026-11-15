@@ -8,3 +8,6 @@ __pycache__/
 _netrc
 .DS_Store
 data/private/
+
+vercel-dist/
+.vercel/
