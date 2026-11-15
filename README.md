@@ -13,12 +13,12 @@ So the next storm finds us ready.
 | Feature | What a person gets | NASA data behind it |
 | --- | --- | --- |
 | **Watches** | DryWatch, FloodWatch or SlopeWatch for each of the 25 districts, from this month's rain and how wet the ground already is | GPM IMERG, GLDAS |
-| **Daily risk levels** | Yellow, Amber or Red for each district and each of 330 Divisional Secretariat divisions, from yesterday's rain against NBRO's 75, 100 and 150 mm steps | GPM IMERG Late (daily), NASADEM |
+| **Daily risk levels** | Yellow, Amber or Red for each district and each of 330 Divisional Secretariat divisions, from the last day's rain against NBRO's 75, 100 and 150 mm steps, refreshed every 3 hours | GPM IMERG Early and Late (daily), NASADEM |
 | **12-month outlook** | The chance of a drier or wetter month, and of each Watch, for every month of the coming year | 46 years of MERRA-2 and GPM IMERG, NOAA ONI |
 | **Risk calendar** | The same chances for a district, province or the country, with a CSV download for planners | as above |
 | **Safer places to go** | About 15,000 schools, places of worship and halls checked for steep ground and past flooding, with a map and a top five per district and division | NASADEM (SRTM) 30 m |
 | **Plain-language views** | Families, Farmers and Coast pages with what to do now and a report to download as a picture or PDF | all of the above, MODIS NDVI for farmers |
-| **Alerts** | A Telegram message in the person's language when their district reaches the level they chose | GPM IMERG Late (daily) |
+| **Alerts** | A Telegram message in the person's language when their district reaches the level they chose | GPM IMERG Early and Late (daily) |
 | **Seen by NASA** | Real satellite pictures of Cyclone Ditwah, its rain, the flood water after it and this week's weather, plus each district's greenness in September 2025 and September 2026, each linked to NASA Worldview | VIIRS, MODIS and IMERG through NASA GIBS |
 | **Live ground data** | 74 reservoirs and 40 river gauges, refreshed every 3 hours | Irrigation Department (not NASA) |
 
@@ -29,7 +29,7 @@ Biome is not a weather forecast and not an official warning. For warnings, follo
 | What | Dataset | Notes |
 | --- | --- | --- |
 | Rain, monthly | NASA GPM IMERG Final V07 (GPM_3IMERGM) | 0.1°, June 2000 to September 2025 |
-| Rain, daily | NASA GPM IMERG Late V07 (GPM_3IMERGDL) | 0.1°; fills the months after Final ends and drives the daily levels |
+| Rain, daily | NASA GPM IMERG Early V07 (GPM_3IMERGDE) and Late V07 (GPM_3IMERGDL) | 0.1°; Early gives the newest days about 4 hours after each day ends, Late replaces it about 14 hours after and fills the months after Final ends |
 | Soil moisture | NASA GLDAS Noah V2.1 (GLDAS_NOAH025_M), root zone | 0.25°, 2000 onward, about 3 months behind |
 | Older years | NASA MERRA-2 M2TMNXFLX (rain) and M2TMNXLND (soil wetness) | 1980 to 2010 |
 | Vegetation | NASA MODIS Terra MOD13A3 v061 NDVI, through AppEEARS | 1 km, 2000 onward |
@@ -47,8 +47,7 @@ Biome is not a weather forecast and not an official warning. For warnings, follo
 2. **Normals.** Rain as % of the 2001 to 2025 normal for that calendar month (1981 to 2010 for MERRA-2); ground wetness as a rank against the same month in other years.
 3. **Watches.** DryWatch: 3-month rain at or below 75% of normal and ground in the driest 25%. FloodWatch: rain at or above 150% on ground in the wettest 25%. SlopeWatch: rain at or above 130% on ground in the wettest 25%, in hill country. GLDAS runs about 3 months behind, so for recent months ground wetness is the rank of the last 3 months of rain.
 4. **Hill country, measured.** A district or division is hill country when 10% or more of its land is steeper than 15° in NASADEM (`fetch_dem.py`).
-5. **Daily risk levels.** Yellow at 75 mm in the last day or when a Watch is on; Amber at 100 mm, or 75 mm on soaked ground; Red at 150 mm, or 100 mm on soaked ground. NASA's Late rain arrives about 14 hours after the day ends, so a level describes yesterday.
-6. **Outlook model** (`forecast.py`). A weighted analog ensemble: every year since 1980 is one possible future (the rain that really fell over the following 12 months), weighted by how close its ocean state (NOAA ONI) was to today's with a Gaussian kernel whose width is chosen by cross-validation. The Watch rules run on every member; the weighted share on a Watch is the chance in the calendar.
+5. **Daily risk levels.** Yellow at 75 mm in the last day or when a Watch is on; Amber at 100 mm, or 75 mm on soaked ground; Red at 150 mm, or 100 mm on soaked ground. NASA's Early rain arrives about 4 hours after the day ends and is replaced by Late about 14 hours after, so a level describes the last full day. **Outlook model** (`forecast.py`). A weighted analog ensemble: every year since 1980 is one possible future (the rain that really fell over the following 12 months), weighted by how close its ocean state (NOAA ONI) was to today's with a Gaussian kernel whose width is chosen by cross-validation. The Watch rules run on every member; the weighted share on a Watch is the chance in the calendar.
 7. **Honest skill.** Each past year is left out and forecast from the others, and scored with the ranked probability skill score against equal odds. Months without skill are shown as "no clear signal" instead of a number.
 8. **Safer places.** A building is marked safer when it did not flood in Cyclone Ditwah and has no slope of 20° or more within 90 m. Ranking: schools and halls first, then height above the lowest ground within 500 m. They are candidates for officers to confirm, not an official list.
 9. **Trend and significance.** Seasonal Mann-Kendall with Sen's slope and Benjamini-Hochberg correction; El Niño seasons against 5,000 random sets of years.
@@ -63,7 +62,7 @@ Biome is not a weather forecast and not an official warning. For warnings, follo
 
 ## Limits
 
-- Daily levels lag the rain by about 14 hours. They are a nowcast, not a forecast.
+- Daily levels lag the rain by about 4 hours (NASA IMERG Early), and Early is a little rougher than the Late estimate that replaces it. They are a nowcast, not a forecast.
 - The outlook only has skill in strong El Niño or La Niña years, and only for some months. Five strong El Niño years is a small sample.
 - Town level uses rain on squares of about 10 km. The seasonal Watch and the outlook stay at district level because the long records are coarser than a town.
 - Safer places come from OpenStreetMap and a 30 m height map. Nobody has checked them on the ground yet.
@@ -76,7 +75,7 @@ Everything is refreshed by GitHub Actions; no server is needed.
 | Workflow | When | What |
 | --- | --- | --- |
 | `data.yml` | daily | NASA rain, soil and history; analysis; outlook model; alerts |
-| `live.yml` | every 3 hours | reservoirs, river gauges, ocean index; new alert sign-ups |
+| `live.yml` | every 3 hours | reservoirs, river gauges, ocean index; NASA IMERG Early rain and the daily levels; alerts and new sign-ups |
 | `nasa-images.yml` | daily | NASA pictures, division boundaries, terrain and safer places |
 | `modis.yml` | weekly | MODIS greenness through AppEEARS |
 | `pages.yml` | on change | builds and publishes the site |

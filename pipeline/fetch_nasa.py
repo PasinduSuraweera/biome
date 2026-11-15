@@ -22,6 +22,7 @@ import sys
 import tempfile
 import traceback
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import date, timedelta
 from pathlib import Path
 
 import earthaccess
@@ -65,7 +66,7 @@ def read_imerg_monthly(f):
 
 
 def read_imerg_daily(f):
-    """GPM IMERG Late daily: mm/day for one day (summed to months later)."""
+    """GPM IMERG Late or Early daily: mm/day for one day (Late is summed to months later)."""
     ds = xr.open_dataset(f, engine="h5netcdf", decode_times=True)
     da = _box(ds["precipitation"]).load()
     return da.rename("rain_mm")
@@ -99,10 +100,14 @@ READERS = {
     "imerg_final": read_imerg_monthly,
     "imerg_late_daily": read_imerg_daily,
     "imerg_late_towns": read_imerg_daily,   # the same files, averaged over 331 divisions
+    "imerg_early_daily": read_imerg_daily,  # IMERG Early: the newest days, about 4 hours after each day ends
+    "imerg_early_towns": read_imerg_daily,
     "gldas": read_gldas,
     "merra2_flx": read_merra2_flx,
     "merra2_lnd": read_merra2_lnd,
 }
+
+EARLY_FROM = (date.today() - timedelta(days=10)).isoformat()
 
 DEFAULT_RANGES = {
     "imerg_final": ("2000-06-01", None),
@@ -110,6 +115,9 @@ DEFAULT_RANGES = {
     "imerg_late_daily": ("2025-06-01", None),
     # town level: the Cyclone Ditwah week (for the replay) and everything since
     "imerg_late_towns": ("2025-11-20", None),
+    # Early only covers the days Late has not reached yet, so ten days is plenty
+    "imerg_early_daily": (EARLY_FROM, None),
+    "imerg_early_towns": (EARLY_FROM, None),
     "gldas": ("2000-01-01", None),
     # to 2010 so MERRA-2 has its own 1981-2010 normal for the older El Ninos
     "merra2_flx": ("1980-01-01", "2010-12-31"),
@@ -200,6 +208,13 @@ def combine(key):
     df = pd.DataFrame(rows)
     df["time"] = pd.to_datetime(df["time"])
     long = df.melt(id_vars=["time", "var"], var_name="district", value_name="value")
+    if key.startswith("imerg_early"):  # newest days only, by day
+        keep = long[long["time"] >= long["time"].max() - pd.Timedelta(days=10)]
+        keep = keep.dropna(subset=["value"]).sort_values(["district", "time"])
+        keep["value"] = keep["value"].round(1)
+        keep.to_csv(PROCESSED / f"{key}.csv", index=False)
+        print(f"[{key}] wrote {len(keep)} rows, {keep['time'].min():%Y-%m-%d} to {keep['time'].max():%Y-%m-%d}")
+        return
     if key == "imerg_late_towns":  # keep the Ditwah week and the last three weeks, by day
         cut = long["time"].max() - pd.Timedelta(days=21)
         keep = long[(long["time"] >= cut) | ((long["time"] >= "2025-11-22") & (long["time"] <= "2025-11-30"))]
@@ -231,7 +246,7 @@ if __name__ == "__main__":
     a = ap.parse_args()
     # environment variables (GitHub Actions secrets) first, then ~/.netrc
     earthaccess.login(strategy="environment" if "EARTHDATA_USERNAME" in __import__("os").environ else "netrc")
-    keys = [k for k in READERS if k != "imerg_late_towns"] if a.dataset == "all" else [a.dataset]
+    keys = [k for k in READERS if not (k.endswith("_towns") or k.startswith("imerg_early"))] if a.dataset == "all" else [a.dataset]
     for k in keys:
         districts.UNITS = "towns" if k.endswith("_towns") else "districts"
         run(k, a.start, a.end, a.download, a.workers)

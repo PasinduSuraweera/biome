@@ -36,6 +36,9 @@ COLLECTIONS = {
     "imerg_final": ("GPM_3IMERGM", "07"),     # monthly rain, Jun 2000 onward, ~3.5 month lag
     "imerg_late_daily": ("GPM_3IMERGDL", "07"),  # daily early-estimate rain, fills the recent months
     "imerg_late_towns": ("GPM_3IMERGDL", "07"),
+    # IMERG Early daily: about 4 hours after the day ends; used for the newest days until Late arrives
+    "imerg_early_daily": ("GPM_3IMERGDE", "07"),
+    "imerg_early_towns": ("GPM_3IMERGDE", "07"),
     "gldas": ("GLDAS_NOAH025_M", "2.1"),      # monthly soil moisture, 2000 onward
     "merra2_flx": ("M2TMNXFLX", "5.12.4"),    # monthly rain, 1980 onward (older El Ninos)
     "merra2_lnd": ("M2TMNXLND", "5.12.4"),    # monthly soil wetness, 1980 onward

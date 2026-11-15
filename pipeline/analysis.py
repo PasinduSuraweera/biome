@@ -380,7 +380,7 @@ def outlook(d, rain_all, rnorm, analog_years, y0_now, start, cal_d, kind):
 
 
 LEVEL_RULE = {
-    "source": "NASA GPM IMERG Late daily rain, averaged over each district, with NBRO's 24-hour rainfall steps (75, 100, 150 mm)",
+    "source": "NASA GPM IMERG daily rain (Early for the newest days, about 4 hours after each day ends; Late once it arrives), averaged over each district, with NBRO's 24-hour rainfall steps (75, 100, 150 mm)",
     "1": "Yellow, be aware: 75 mm or more in the last day, or the district is on SlopeWatch or FloodWatch",
     "2": "Amber, be ready: 100 mm or more in the last day, or 75 mm on ground that is already soaked (a Watch is on)",
     "3": "Red, act now: 150 mm or more in the last day, or 100 mm on ground that is already soaked",
@@ -398,20 +398,42 @@ def risk_level(r1, watch, hill):
     return lvl, (("landslide" if hill else "flood") if lvl else None)
 
 
+def daily_table(late_file, early_file):
+    """Daily rain by unit: IMERG Late where it exists, IMERG Early for the newer days.
+
+    Late arrives about 14 hours after a day ends, Early about 4 hours. Early is
+    a little rougher, so it only fills the days Late has not reached yet and is
+    replaced by Late on the next run. Returns the table and the source of each day.
+    """
+    def wide(path):
+        if not path.exists():
+            return None
+        return pd.read_csv(path, parse_dates=["time"]).pivot_table(index="time", columns="district", values="value").dropna(how="all")
+    late, early = wide(PROCESSED / late_file), wide(PROCESSED / early_file)
+    if late is None and early is None:
+        return None, {}
+    if early is None or early.empty:
+        return late, {t: "late" for t in late.index}
+    if late is None or late.empty:
+        return early, {t: "early" for t in early.index}
+    newer = early[early.index > late.index.max()]
+    days = pd.concat([late, newer]).sort_index()
+    return days, {t: ("early" if t in newer.index else "late") for t in days.index}
+
+
 def daily_levels(districts, rain1, rain3, wet3):
     """Today's level for every district, and a day-by-day replay of the Cyclone Ditwah week."""
-    path = PROCESSED / "imerg_late_daily_days.csv"
-    if not path.exists():
+    days, src = daily_table("imerg_late_daily_days.csv", "imerg_early_daily.csv")
+    if days is None:
         return None
-    days = pd.read_csv(path, parse_dates=["time"]).pivot_table(index="time", columns="district", values="value")
-    days = days.dropna(how="all")
     last = days.index.max()
     for d, v in districts.items():
         if d not in days:
             continue
         r1, r3 = float(days[d].iloc[-1]), float(days[d].iloc[-3:].sum())
         lvl, hazard = risk_level(r1, v["watch"], v["hill"])
-        v["level"] = {"level": lvl, "hazard": hazard, "rain_1d": _r(r1), "rain_3d": _r(r3), "day": last.strftime("%Y-%m-%d")}
+        v["level"] = {"level": lvl, "hazard": hazard, "rain_1d": _r(r1), "rain_3d": _r(r3), "day": last.strftime("%Y-%m-%d"),
+                      "source": src.get(last, "late")}
     # replay: what the same rule showed each day of Ditwah, using the Watch of the month before (known at the time)
     replay = []
     prev = pd.Timestamp("2025-10-01")
@@ -429,7 +451,7 @@ def daily_levels(districts, rain1, rain3, wet3):
         row["counts"] = {str(k): sum(1 for x in row["districts"].values() if x["level"] == k) for k in (1, 2, 3)}
         replay.append(row)
     counts = pd.Series([v.get("level", {}).get("level", 0) for v in districts.values()]).value_counts().to_dict()
-    return {"rule": LEVEL_RULE, "day": last.strftime("%Y-%m-%d"), "counts": {str(k): int(n) for k, n in counts.items()},
+    return {"rule": LEVEL_RULE, "day": last.strftime("%Y-%m-%d"), "source": src.get(last, "late"), "counts": {str(k): int(n) for k, n in counts.items()},
             "ditwah_replay": replay, "bot": os.environ.get("BIOME_BOT") or "biomealertsbot"}
 
 
@@ -440,10 +462,9 @@ def town_levels(districts, rain1, rain3, wet3):
     (about 10 km) grid and 30 m terrain. The season's ground wetness comes from
     the division's district, because the long records are coarser than a town.
     """
-    path = PROCESSED / "imerg_late_towns.csv"
-    if not path.exists():
+    days, src = daily_table("imerg_late_towns.csv", "imerg_early_towns.csv")
+    if days is None:
         return None
-    days = pd.read_csv(path, parse_dates=["time"]).pivot_table(index="time", columns="district", values="value")
     recent = days[days.index >= days.index.max() - pd.Timedelta(days=21)]
     ditwah = days[(days.index >= "2025-11-24") & (days.index <= "2025-11-29")]
     terrain = TERRAIN.get("towns", {})
@@ -464,7 +485,7 @@ def town_levels(districts, rain1, rain3, wet3):
         r1, r3 = float(col.iloc[-1]), float(col.iloc[-3:].sum())
         lvl, hazard = risk_level(r1, watch, hill)
         row = {"name": name, "level": lvl, "hazard": hazard, "rain_1d": _r(r1), "rain_3d": _r(r3),
-               "day": col.index[-1].strftime("%Y-%m-%d"), "steep_share": share, "hill": bool(hill), "watch": watch}
+               "day": col.index[-1].strftime("%Y-%m-%d"), "source": src.get(col.index[-1], "late"), "steep_share": share, "hill": bool(hill), "watch": watch}
         # the worst day of the Cyclone Ditwah week here, by the same rule and the Watch known at the time
         if not ditwah.empty and prev in rain1.index and d in rain1:
             w0, _ = flag_for(d, rain1.at[prev, d], rain3.at[prev, d], wet3.at[prev, d], None, "rain3", hill=hill)
@@ -480,7 +501,7 @@ def town_levels(districts, rain1, rain3, wet3):
     for d in out:
         out[d].sort(key=lambda x: x["name"])
     dit = [t["ditwah"]["level"] for ts in out.values() for t in ts if "ditwah" in t]
-    return {"source": "NASA GPM IMERG Late daily (0.1 degree) and NASADEM 30 m terrain, per Divisional Secretariat division",
+    return {"source": "NASA GPM IMERG daily, Early then Late (0.1 degree), and NASADEM 30 m terrain, per Divisional Secretariat division",
             "day": recent.index.max().strftime("%Y-%m-%d"), "count": sum(len(v) for v in out.values()),
             "counts": {str(k): n for k, n in counts.items()},
             "ditwah_counts": {str(k): dit.count(k) for k in (1, 2, 3)},

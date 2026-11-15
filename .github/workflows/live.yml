@@ -1,8 +1,9 @@
 name: Refresh live reservoirs and rivers
 
 # NOAA El Nino index and rain gauges, Irrigation Department reservoirs,
-# river gauges and the Nov 2025 flood map. No login needed. Runs every
-# 3 hours so the river gauge archive keeps growing past the 7-day feed.
+# river gauges and the Nov 2025 flood map, plus NASA IMERG Early daily rain
+# (about 4 hours after each day ends) so the daily levels and alerts are as
+# fresh as NASA allows. Runs every 3 hours.
 
 on:
   workflow_dispatch:
@@ -12,6 +13,7 @@ on:
       - pipeline/fetch_irrigation.py
       - pipeline/fetch_ground.py
       - pipeline/subscribers.py
+      - pipeline/analysis.py
   schedule:
     - cron: "15 */3 * * *"
 
@@ -36,6 +38,29 @@ jobs:
         run: |
           python fetch_ground.py
           python fetch_irrigation.py
+      - name: Cache NASA IMERG Early days
+        uses: actions/cache@v4
+        with:
+          path: |
+            data/raw/imerg_early_daily
+            data/raw/imerg_early_towns
+          key: raw-imerg-early-${{ github.run_id }}
+          restore-keys: raw-imerg-early-
+      - name: NASA IMERG Early daily rain (newest days)
+        continue-on-error: true
+        working-directory: pipeline
+        env:
+          EARTHDATA_USERNAME: ${{ secrets.EARTHDATA_USERNAME }}
+          EARTHDATA_PASSWORD: ${{ secrets.EARTHDATA_PASSWORD }}
+        run: |
+          python fetch_nasa.py imerg_early_daily --workers 4
+          python fetch_nasa.py imerg_early_towns --workers 4
+      - name: Daily levels from the newest rain
+        continue-on-error: true
+        working-directory: pipeline
+        env:
+          BIOME_BOT: ${{ vars.BIOME_BOT }}
+        run: python analysis.py
       - name: Registered people (kept in the private cache, never committed)
         uses: actions/cache@v4
         with:
