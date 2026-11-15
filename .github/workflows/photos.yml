@@ -6,6 +6,9 @@ name: Photo candidates
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   photos:
     runs-on: ubuntu-latest
@@ -16,5 +19,11 @@ jobs:
         with: { python-version: "3.11" }
       - run: pip install requests
       - run: python pipeline/photo_candidates.py photos
-      - uses: actions/upload-artifact@v4
-        with: { name: photos, path: photos }
+      - name: Push the candidates to the photo-candidates branch (not main)
+        run: |
+          cd photos
+          git init -q -b photo-candidates
+          git config user.name "PasinduSuraweera"
+          git config user.email "pasisuraweera2003@gmail.com"
+          git add . && git commit -qm "Photo candidates"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" photo-candidates
