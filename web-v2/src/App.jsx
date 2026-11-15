@@ -5,9 +5,15 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { geoArea } from "d3-geo";
 import { Bar, BarChart, CartesianGrid, Cell, ReferenceLine, XAxis, YAxis } from "recharts";
 import {
-  AlertTriangle, ArrowUpRight, Bell, CheckCircle2, CloudRain, Download, Droplets, LayoutDashboard, Leaf, MapPin,
+  AlertTriangle, Bell, BookOpen, CalendarDays, CheckCircle2, CloudRain, Database, Download, Droplets, Home, Image, LayoutDashboard, Leaf, MapPin,
   MessageCircleQuestion, Mountain, Printer, Satellite, Sprout, Users, Waves,
 } from "lucide-react";
+import { IslandMap } from "@/sections/IslandMap";
+import { Gallery } from "@/sections/Gallery";
+import { FullData } from "@/sections/FullData";
+import { Calendar } from "@/sections/Calendar";
+import { How } from "@/sections/How";
+import { Landing } from "@/sections/Landing";
 import { t, dName, getLang, setLang, LANGS, monthName } from "@classic/i18n.js";
 import { buildReport, alertMessage, downloadPNG, COASTAL } from "@classic/simple.js";
 import { loadNasa, centreMap, greenMap } from "@classic/nasa.js";
@@ -23,12 +29,18 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 
 const NAV = [
-  { v: "overview", icon: LayoutDashboard }, { v: "family", icon: Users }, { v: "farmer", icon: Sprout }, { v: "coast", icon: Waves },
+  { v: "home", icon: Home }, { v: "overview", icon: LayoutDashboard }, { v: "family", icon: Users }, { v: "farmer", icon: Sprout },
+  { v: "coast", icon: Waves }, { v: "full", icon: Database }, { v: "nasa", icon: Image }, { v: "calendar", icon: CalendarDays }, { v: "how", icon: BookOpen },
 ];
 const VIEWS = NAV.map((n) => n.v);
+const DISTRICT_VIEWS = ["family", "farmer", "coast", "full"];
 const L = (en, si, ta) => ({ en, si, ta });
 const UI = {
   overview: L("Overview", "දළ විශ්ලේෂණය", "மேலோட்டம்"),
+  home: L("Home", "මුල් පිටුව", "முகப்பு"),
+  nasa: L("Seen by NASA", "NASA දුටු දේ", "NASA பார்த்தவை"),
+  map_t: L("Watches this month", "මෙම මාසයේ අවදානම් නිවේදන", "இந்த மாத எச்சரிக்கைகள்"),
+  map_d: L("Tap a district for its report.", "වාර්තාව සඳහා දිස්ත්‍රික්කයක් ඔබන්න.", "அறிக்கைக்கு ஒரு மாவட்டத்தைத் தட்டவும்."),
   district: L("District", "දිස්ත්‍රික්කය", "மாவட்டம்"),
   preview: L("New design · preview", "නව සැලසුම · පෙරදසුන", "புதிய வடிவமைப்பு · முன்னோட்டம்"),
   classic: L("Classic version", "පැරණි අනුවාදය", "பழைய பதிப்பு"),
@@ -91,10 +103,11 @@ function rewind(feature) {
   }
   return feature;
 }
+const navLabel = (v) => (["home", "overview", "nasa"].includes(v) ? ui(v) : v === "calendar" ? t("cal_title") : v === "how" ? t("how_title") : t(`tab_${v}`));
 const getJSON = (u) => fetch(u).then((r) => (r.ok ? r.json() : null)).catch(() => null);
 function readHash() {
   const [v, d] = decodeURIComponent(location.hash.slice(1)).split("/");
-  return { view: VIEWS.includes(v) ? v : "overview", d: d || "" };
+  return { view: VIEWS.includes(v) ? v : "home", d: d || "" };
 }
 // the outlook model's call for each month, the same rule the classic report uses
 function monthSigns(DATA, name) {
@@ -115,6 +128,9 @@ export default function App() {
   const [SAFE, setSafe] = useState(null);
   const [TOWNS, setTowns] = useState(null);
   const [nasaReady, setNasaReady] = useState(false);
+  const [INDEX, setIndex] = useState(null);
+  const [FLOOD, setFlood] = useState(null);
+  const [showFlood, setShowFlood] = useState(false);
   const [town, setTown] = useState("");
   const [alertLv, setAlertLv] = useState("2");
 
@@ -127,7 +143,8 @@ export default function App() {
     });
     getJSON("data/safe_centres.json").then(setSafe);
     getJSON("data/towns.geojson").then((j) => { if (j) { j.features.forEach(rewind); setTowns(j); } });
-    loadNasa().then(() => setNasaReady(true));
+    loadNasa().then((ix) => { setIndex(ix); setNasaReady(true); });
+    getJSON("data/flood_nov2025.geojson").then((fl) => { if (fl) { fl.features.forEach(rewind); setFlood(fl); } });
     const onHash = () => setRoute(readHash());
     addEventListener("hashchange", onHash);
     return () => removeEventListener("hashchange", onHash);
@@ -136,15 +153,18 @@ export default function App() {
   const names = useMemo(() => (DATA ? Object.keys(DATA.districts).sort() : []), [DATA]);
   const allowed = view === "coast" ? names.filter((n) => COASTAL.has(n)) : names;
   const name = allowed.find((n) => slug(n) === hashD) || (allowed.includes("Kandy") ? "Kandy" : allowed[0]);
-  const go = useCallback((v, n) => { location.hash = n ? `${v}/${slug(n)}` : v; setTown(""); window.scrollTo(0, 0); }, []);
-  const pickView = (v) => go(v, v === "overview" ? "" : v === "coast" && !COASTAL.has(name) ? "Colombo" : name);
+  const go = useCallback((v, n) => { location.hash = n ? `${v}/${slug(n)}` : v === "home" ? "" : v; setTown(""); window.scrollTo(0, 0); }, []);
+  const pickView = (v) => go(v, !DISTRICT_VIEWS.includes(v) ? "" : v === "coast" && !COASTAL.has(name) ? "Colombo" : name);
+  useEffect(() => { window.scrollTo(0, 0); }, [view]);
 
-  const m = useMemo(() => (DATA && name && view !== "overview" ? buildReport(name, view, DATA, SAFE, town) : null),
+  const m = useMemo(() => (DATA && name && ["family", "farmer", "coast"].includes(view) ? buildReport(name, view, DATA, SAFE, town) : null),
     [DATA, SAFE, name, view, town, lang]); // eslint-disable-line react-hooks/exhaustive-deps
   const changeLang = (l) => { setLang(l); setL(l); document.documentElement.lang = l; };
 
   if (!DATA) return <div className="grid min-h-screen place-items-center text-muted-foreground">{ui("loading")}</div>;
-  const title = view === "overview" ? ui("overview") : t(`tab_${view}`);
+  if (view === "home") return <Landing DATA={DATA} SAFE={SAFE} GEO={GEO} INDEX={INDEX} lang={lang} changeLang={changeLang} go={go} />;
+  const title = navLabel(view);
+  const isDistrict = DISTRICT_VIEWS.includes(view);
 
   return (
     <div className="flex min-h-screen">
@@ -156,7 +176,7 @@ export default function App() {
             <button key={v} type="button" onClick={() => pickView(v)}
               className={cn("flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                 v === view ? "bg-secondary text-foreground" : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground")}>
-              <I className="size-4" />{v === "overview" ? ui("overview") : t(`tab_${v}`)}
+              <I className="size-4" />{navLabel(v)}
             </button>
           ))}
         </nav>
@@ -171,8 +191,6 @@ export default function App() {
               <Button key={k} size="sm" variant={k === lang ? "secondary" : "ghost"} className="flex-1 px-2" onClick={() => changeLang(k)} aria-pressed={k === lang}>{label}</Button>
             ))}
           </div>
-          <Button variant="outline" size="sm" asChild><a href={`./#${view === "overview" ? "family" : view}/${slug(name)}`}>{ui("classic")}<ArrowUpRight /></a></Button>
-          <Badge variant="outline" className="justify-center">{ui("preview")}</Badge>
         </div>
       </aside>
 
@@ -187,9 +205,9 @@ export default function App() {
             </div>
             <div className="mr-auto min-w-0">
               <p className="text-xs text-muted-foreground">Biome / {title}</p>
-              <h1 className="truncate font-display text-xl font-semibold">{view === "overview" ? ui("allSL") : m?.district}</h1>
+              <h1 className="truncate font-display text-xl font-semibold">{isDistrict ? (m?.district || dName(name)) : view === "overview" ? ui("allSL") : title}</h1>
             </div>
-            {view !== "overview" && (
+            {isDistrict && (
               <div className="flex w-full gap-2 sm:w-auto">
                 <Select value={name} onValueChange={(n) => go(view, n)}>
                   <SelectTrigger className="h-10 sm:w-48" aria-label={ui("district")}><SelectValue /></SelectTrigger>
@@ -209,7 +227,7 @@ export default function App() {
           </div>
           <div className="flex items-center gap-2 overflow-x-auto px-4 pb-3 lg:hidden">
             <Tabs value={view} onValueChange={pickView}>
-              <TabsList>{NAV.map(({ v, icon: I }) => <TabsTrigger key={v} value={v}><I />{v === "overview" ? ui("overview") : t(`tab_${v}`)}</TabsTrigger>)}</TabsList>
+              <TabsList>{NAV.map(({ v, icon: I }) => <TabsTrigger key={v} value={v}><I />{navLabel(v)}</TabsTrigger>)}</TabsList>
             </Tabs>
             <div className="ml-auto hidden gap-1 sm:flex">
               {Object.entries(LANGS).map(([k, label]) => (
@@ -220,8 +238,20 @@ export default function App() {
         </header>
 
         <main className="grid gap-4 p-4 md:gap-6 md:p-6">
-          {view === "overview" ? <Overview DATA={DATA} SAFE={SAFE} go={go} />
-            : m && <DistrictView m={m} name={name} view={view} DATA={DATA} GEO={GEO} SAFE={SAFE} TOWNS={TOWNS} town={town} setTown={setTown} nasaReady={nasaReady} alertLv={alertLv} setAlertLv={setAlertLv} />}
+          {view === "overview" && <Overview DATA={DATA} SAFE={SAFE} GEO={GEO} go={go} />}
+          {m && <DistrictView m={m} name={name} view={view} DATA={DATA} GEO={GEO} SAFE={SAFE} TOWNS={TOWNS} town={town} setTown={setTown} nasaReady={nasaReady} alertLv={alertLv} setAlertLv={setAlertLv} go={go} />}
+          {view === "full" && (
+            <div className="grid gap-4 md:gap-6 xl:grid-cols-[minmax(0,380px)_1fr]">
+              <Card className="h-fit xl:sticky xl:top-24">
+                <CardHeader><CardTitle>{ui("map_t")}</CardTitle><CardDescription>{ui("map_d")}</CardDescription></CardHeader>
+                <CardContent>{GEO && <IslandMap GEO={GEO} DATA={DATA} FLOOD={FLOOD} name={name} onPick={(n) => go("full", n)} view="full" full showFlood={showFlood} onFlood={setShowFlood} />}</CardContent>
+              </Card>
+              <FullData DATA={DATA} GEO={GEO} SAFE={SAFE} TOWNS={TOWNS} name={name} />
+            </div>
+          )}
+          {view === "nasa" && <Gallery INDEX={INDEX} />}
+          {view === "calendar" && <Calendar DATA={DATA} current={name} />}
+          {view === "how" && <How DATA={DATA} SAFE={SAFE} />}
           <Footer />
         </main>
       </div>
@@ -261,7 +291,7 @@ function NasaTag({ children }) {
 }
 
 // ---------------- overview: the whole island ----------------
-function Overview({ DATA, SAFE, go }) {
+function Overview({ DATA, SAFE, GEO, go }) {
   const names = Object.keys(DATA.districts);
   const rows = names.map((n) => {
     const d = DATA.districts[n], lv = d.level || { level: 0 };
@@ -323,6 +353,10 @@ function Overview({ DATA, SAFE, go }) {
         </Card>
         <div className="grid content-start gap-4">
           <Card>
+            <CardHeader><CardTitle>{ui("map_t")}</CardTitle><CardDescription>{ui("map_d")}</CardDescription></CardHeader>
+            <CardContent>{GEO && <IslandMap GEO={GEO} DATA={DATA} name="" onPick={(n) => go("family", n)} view="family" className="mx-auto max-w-[420px]" />}</CardContent>
+          </Card>
+          <Card>
             <CardHeader><CardTitle className="flex flex-wrap items-center gap-2">{ui("c_rain")}<NasaTag>NASA GPM IMERG</NasaTag></CardTitle><CardDescription>{ui("c_rain_d")}</CardDescription></CardHeader>
             <CardContent>
               <ChartContainer className="aspect-auto h-[600px]">
@@ -347,7 +381,7 @@ function Overview({ DATA, SAFE, go }) {
 }
 
 // ---------------- one district ----------------
-function DistrictView({ m, name, view, DATA, GEO, SAFE, TOWNS, town, setTown, nasaReady, alertLv, setAlertLv }) {
+function DistrictView({ m, name, view, DATA, GEO, SAFE, TOWNS, town, setTown, nasaReady, alertLv, setAlertLv, go }) {
   const mapExtra = m.extras.find((e) => e.map);
   const otherExtras = m.extras.filter((e) => !e.map);
   const cmapHTML = GEO ? centreMap(name, GEO, SAFE, TOWNS, DATA.towns?.districts?.[name], town) : "";
@@ -365,7 +399,11 @@ function DistrictView({ m, name, view, DATA, GEO, SAFE, TOWNS, town, setTown, na
         <Button size="sm" variant="ghost" onClick={() => print()}><Printer />{t("dl_pdf")}</Button>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 xl:grid-cols-[minmax(0,340px)_1fr]">
+      <Card className="xl:row-span-1">
+        <CardContent className="p-4">{GEO && <IslandMap GEO={GEO} DATA={DATA} name={name} onPick={(n) => go(view, n)} view={view} compact />}</CardContent>
+      </Card>
+      <div className="grid content-start gap-4 sm:grid-cols-2">
         <Card className={cn(m.level && LEVEL_TONE[m.level.n])}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2"><CardDescription className="font-medium">{t("s_level")}</CardDescription><Bell className="size-4 text-muted-foreground" /></CardHeader>
           <CardContent>
@@ -381,6 +419,7 @@ function DistrictView({ m, name, view, DATA, GEO, SAFE, TOWNS, town, setTown, na
         {view === "farmer" && tanks != null
           ? <Kpi label={ui("k_tanks")} icon={Droplets} value={`${tanks}%`} sub={`${ui("k_full")} · ${res.length} · Irrigation Department`} />
           : <Kpi label={t("s_safe")} icon={MapPin} value={sp ? `${(tsp || sp).safer} / ${(tsp || sp).count}` : "…"} sub="NASA SRTM · OpenStreetMap" />}
+      </div>
       </div>
 
       <div className="grid gap-4 xl:grid-cols-3">
