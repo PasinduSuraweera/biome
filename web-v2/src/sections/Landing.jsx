@@ -33,7 +33,7 @@ const S = {
   k_alert: L("districts on alert", "අවදානම් මට්ටමේ දිස්ත්‍රික්ක", "எச்சரிக்கையில் உள்ள மாவட்டங்கள்"),
   k_slope: L("on SlopeWatch", "SlopeWatch යටතේ", "SlopeWatch இல்"),
   k_dry: L("on DryWatch", "DryWatch යටතේ", "DryWatch இல்"),
-  k_rain: L("latest NASA rain", "නවතම NASA වැසි", "சமீபத்திய NASA மழை"),
+  k_rain: L("rain measured up to (NASA)", "මනින ලද වැසි, මෙම දිනය දක්වා (NASA)", "அளவிடப்பட்ட மழை, இந்த நாள் வரை (NASA)"),
   k_oni: L("ocean index, El Niño", "සාගර දර්ශකය, එල් නිනෝ", "கடல் குறியீடு, எல் நினோ"),
   how_t: L("Three steps, from orbit to your door.", "කක්ෂයේ සිට ඔබේ දොරකඩට, පියවර තුනකින්.", "சுற்றுப்பாதையிலிருந்து உங்கள் வாசல் வரை, மூன்று படிகள்."),
   how1t: L("NASA measures", "NASA මනියි", "NASA அளவிடுகிறது"),
