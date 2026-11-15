@@ -318,3 +318,12 @@ a.btn { display: inline-flex; align-items: center; text-decoration: none; }
 table.towns td { white-space: nowrap; }
 table.towns .lv-dot { width: 11px; height: 11px; vertical-align: middle; }
 @media print { .town-pick { display: none !important; } }
+
+/* greenness from NASA MODIS, the same month a year apart */
+.green { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 0 0 8px; }
+.gshot { margin: 0; background: var(--paper-2); border-radius: var(--radius); padding: 6px; }
+.gshot svg { width: 100%; height: auto; display: block; border-radius: 4px; background: #000; }
+.gshot .dim { fill: #000; fill-opacity: .55; }
+.gshot .edge { fill: none; stroke: #fff; stroke-width: 2; }
+.gshot figcaption { font-size: .85rem; padding: 4px 2px 0; }
+@media print { .gshot svg { max-height: 60mm; } }

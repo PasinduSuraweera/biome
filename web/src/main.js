@@ -3,7 +3,7 @@ import { geoArea, geoMercator, geoPath } from "d3-geo";
 import * as Plot from "@observablehq/plot";
 import { LANGS, t, dName, pName, monthName, getLang, setLang } from "./i18n.js";
 import { VIEWS, COASTAL, buildReport, reportHTML, downloadPNG, wireAlerts } from "./simple.js";
-import { loadNasa, renderGallery, renderMissions, centreMap } from "./nasa.js";
+import { loadNasa, renderGallery, renderMissions, centreMap, greenMap } from "./nasa.js";
 
 const WATCH = {
   SlopeWatch: { hex: "#7d2e1c", brand: "SlopeWatch" },
@@ -63,7 +63,7 @@ async function load() {
   const fromHash = parts[0] || "";
   renderAll();
   // NASA pictures and the evacuation places load after the first paint
-  loadNasa().then(() => renderGallery($("#nasa")));
+  loadNasa().then(() => { renderGallery($("#nasa")); if ($("#green-slot") && current) $("#green-slot").innerHTML = greenMap(current, GEO); });
   fetch("data/safe_centres.json").then((r) => (r.ok ? r.json() : null)).then((j) => { SAFE = j; if (current) renderPanel(current); }).catch(() => {});
   fetch("data/towns.geojson").then((r) => (r.ok ? r.json() : null)).then((j) => { if (j) { j.features.forEach(rewind); TOWNS = j; if (current) renderPanel(current); } }).catch(() => {});
   const names = Object.keys(DATA.districts);
@@ -212,6 +212,7 @@ function renderSimple(name) {
     $("#cmap-slot").innerHTML = centreMap(name, GEO, SAFE, TOWNS, DATA.towns?.districts?.[name], townOf[name]);
     $("#cmap-slot").querySelectorAll("path.town").forEach((p) => p.addEventListener("click", () => pick(p.dataset.town === townOf[name] ? "" : p.dataset.town)));
   }
+  if ($("#green-slot")) $("#green-slot").innerHTML = greenMap(name, GEO);
   $("#town-select")?.addEventListener("change", (e) => pick(e.target.value));
   wireAlerts(model);
   $("#dl-png").addEventListener("click", () => downloadPNG(model));

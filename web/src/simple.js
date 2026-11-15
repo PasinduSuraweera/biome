@@ -169,7 +169,8 @@ export function buildReport(name, view, DATA, SAFE, townName) {
   if (view === "farmer") {
     extras.push({ title: t("s_tanks"), lines: res.length ? res.slice(0, 6).map((r) => `${r.name}: ${t(r.spilling ? "tank_spill" : "full", { p: Math.round(r.pct_full) })}`) : [t("res_none")] });
     const g = d.now?.ndvi_anom;
-    if (g != null) extras.push({ title: t("s_green"), tag: "NASA Terra MODIS", lines: [t(g > 0.03 ? "green_more" : g < -0.03 ? "green_less" : "green_same")] });
+    extras.push({ title: t("s_green"), tag: "NASA Terra MODIS", green: true,
+      lines: g != null ? [t(g > 0.03 ? "green_more" : g < -0.03 ? "green_less" : "green_same")] : [] });
   } else if (view === "coast") {
     extras.push({ title: t("s_sea"), lines: [t("coast_sea"), t("coast_rain"), t("coast_next")] });
     extras.push({ title: t("s_rivers"), lines: riverLines });
@@ -270,7 +271,7 @@ export function reportHTML(m) {
     <div class="key">${key}</div>
     <div class="periods">${m.periods.map((p) => cardHTML(p)).join("")}</div>
     ${m.year ? cardHTML(m.year, "year") : ""}
-    ${m.extras.map((e) => `<h3>${esc(e.title)}${tag(e.tag)}</h3>${e.map ? '<div id="cmap-slot"></div>' : ""}<ul class="plain${e.map ? " nomark" : ""}">${e.lines.map((l) => `<li>${esc(l)}</li>`).join("")}</ul>`).join("")}
+    ${m.extras.map((e) => `<h3>${esc(e.title)}${tag(e.tag)}</h3>${e.map ? '<div id="cmap-slot"></div>' : ""}${e.green ? '<div id="green-slot"></div>' : ""}<ul class="plain${e.map ? " nomark" : ""}">${e.lines.map((l) => `<li>${esc(l)}</li>`).join("")}</ul>`).join("")}
     <p class="emer">${esc(m.emer)}</p>
     <p class="disc">${esc(m.disc)}</p>
     <p class="disc nasa-line">${esc(m.nasa)}</p>

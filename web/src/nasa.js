@@ -1,9 +1,10 @@
 // Real NASA pictures, the missions behind each feature, and the evacuation place map.
-import { geoMercator, geoPath, geoContains } from "d3-geo";
+import { geoMercator, geoPath, geoContains, geoTransform } from "d3-geo";
 import { t, dName, monthName } from "./i18n.js";
 
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-const fmt = (d) => `${Number(d.slice(8, 10))} ${monthName(d.slice(0, 7))}`;
+const fmtDay = (d) => `${Number(d.slice(8, 10))} ${monthName(d.slice(0, 7))}`;
+const fmt = fmtDay;
 let INDEX = null, day = "2025-11-27";
 
 export async function loadNasa() {
@@ -11,8 +12,9 @@ export async function loadNasa() {
   return INDEX;
 }
 
-function figure(im, cap) {
+function figure(im, cap, monthly = false) {
   if (!im) return "";
+  const fmt = monthly ? (d) => monthName(d.slice(0, 7)) : fmtDay;
   const layer = im.layer.replaceAll("_", " ");
   return `<figure class="shot"><a href="${esc(im.worldview)}" target="_blank" rel="noopener"><img loading="lazy" src="${esc(im.file)}" width="${im.w}" height="${im.h}" alt="${esc(cap)}, ${esc(fmt(im.date))}. NASA ${esc(layer)}"></a>
     <figcaption><b>${esc(cap)}</b> · ${esc(fmt(im.date))}<br><span class="muted">NASA Worldview / GIBS · ${esc(layer)}</span><br><a href="${esc(im.worldview)}" target="_blank" rel="noopener">${esc(t("g_open"))}</a></figcaption></figure>`;
@@ -37,6 +39,8 @@ export function renderGallery(el) {
     </div>` : ""}
     ${now || nowRain ? `<div class="g-block"><h3>${esc(t("g_now"))}</h3><p class="cap">${esc(t("g_now_d"))}</p>
       <div class="shots">${figure(now, t("g_clouds"))}${figure(nowRain, t("g_rain"))}</div></div>` : ""}
+    ${by("ndvi").length >= 2 ? `<div class="g-block"><h3>${esc(t("g_green"))}</h3><p class="cap">${esc(t("green_cmp"))}</p>
+      <div class="shots tall">${by("ndvi").sort((a, b) => a.date.localeCompare(b.date)).map((im) => figure(im, t("s_green"), true)).join("")}</div></div>` : ""}
     <div class="g-block"><div class="shots tall">
       ${flood ? `<div><h3>${esc(t("g_flood"))}</h3><p class="cap">${esc(t("g_flood_d"))}</p>${figure(flood, t("g_flood"))}</div>` : ""}
       <div><h3>${esc(t("g_terrain"))}</h3><p class="cap">${esc(t("g_terrain_d"))}</p>
@@ -44,6 +48,31 @@ export function renderGallery(el) {
         <figcaption><span class="muted">NASA NASADEM (Shuttle Radar Topography Mission), 30 m</span></figcaption></figure></div>
     </div></div>`;
   el.querySelectorAll(".days button").forEach((b) => b.addEventListener("click", () => { day = b.dataset.d; renderGallery(el); }));
+}
+
+// the same month a year apart, cut to one district, from NASA's monthly MODIS greenness
+export function greenMap(name, GEO) {
+  const ims = (INDEX?.images || []).filter((i) => i.group === "ndvi").sort((a, b) => a.date.localeCompare(b.date));
+  const f = GEO?.features.find((x) => x.properties.name === name);
+  if (!ims.length || !f) return "";
+  const panel = (im) => {
+    const [w0, s0, e0, n0] = im.bbox, W = im.w, H = im.h;
+    const path = geoPath(geoTransform({ point(x, y) { this.stream.point(((x - w0) / (e0 - w0)) * W, ((n0 - y) / (n0 - s0)) * H); } }));
+    const [[x0, y0], [x1, y1]] = path.bounds(f);
+    const pad = Math.max(x1 - x0, y1 - y0) * 0.12;
+    const vb = [x0 - pad, y0 - pad, x1 - x0 + 2 * pad, y1 - y0 + 2 * pad].map((v) => +v.toFixed(1));
+    const d = path(f);
+    const when = monthName(im.date.slice(0, 7));
+    return `<figure class="gshot"><a href="${esc(im.worldview)}" target="_blank" rel="noopener"><svg viewBox="${vb.join(" ")}" role="img" aria-label="${esc(t("s_green"))}: ${esc(dName(name))}, ${esc(when)}">
+      <image href="${esc(im.file)}" x="0" y="0" width="${W}" height="${H}" preserveAspectRatio="none"/>
+      <path class="dim" fill-rule="evenodd" d="M${vb[0]} ${vb[1]}h${vb[2]}v${vb[3]}h${-vb[2]}Z${d}"/>
+      <path class="edge" d="${d}" vector-effect="non-scaling-stroke"/></svg></a>
+      <figcaption><b>${esc(when)}</b></figcaption></figure>`;
+  };
+  const wv = ims[ims.length - 1].worldview;
+  return `<div class="green">${ims.map(panel).join("")}</div>
+    <p class="cap">${esc(t("green_cmp"))}</p>
+    <p class="cap muted">${esc(t("green_src"))} · <a href="${esc(wv)}" target="_blank" rel="noopener">${esc(t("g_open"))}</a></p>`;
 }
 
 const MISSIONS = [["GPM · IMERG", "ms_gpm"], ["GLDAS · MERRA-2", "ms_gldas"], ["Terra · MODIS", "ms_modis"], ["SRTM · NASADEM", "ms_srtm"], ["Suomi NPP · VIIRS · Worldview", "ms_viirs"]];

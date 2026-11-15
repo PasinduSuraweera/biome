@@ -19,7 +19,7 @@ So the next storm finds us ready.
 | **Safer places to go** | About 15,000 schools, places of worship and halls checked for steep ground and past flooding, with a map and a top five per district and division | NASADEM (SRTM) 30 m |
 | **Plain-language views** | Families, Farmers and Coast pages with what to do now and a report to download as a picture or PDF | all of the above, MODIS NDVI for farmers |
 | **Alerts** | A Telegram message in the person's language when their district reaches the level they chose | GPM IMERG Late (daily) |
-| **Seen by NASA** | Real satellite pictures of Cyclone Ditwah, its rain, the flood water after it and this week's weather, each linked to NASA Worldview | VIIRS, MODIS and IMERG through NASA GIBS |
+| **Seen by NASA** | Real satellite pictures of Cyclone Ditwah, its rain, the flood water after it and this week's weather, plus each district's greenness in September 2025 and September 2026, each linked to NASA Worldview | VIIRS, MODIS and IMERG through NASA GIBS |
 | **Live ground data** | 74 reservoirs and 40 river gauges, refreshed every 3 hours | Irrigation Department (not NASA) |
 
 Biome is not a weather forecast and not an official warning. For warnings, follow the Department of Meteorology, NBRO and the Disaster Management Centre (call 117).

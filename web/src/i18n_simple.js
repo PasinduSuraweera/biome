@@ -127,6 +127,11 @@ export const S = {
 
   s_tanks: ["Tanks and reservoirs", "වැව් සහ ජලාශ", "குளங்களும் நீர்த்தேக்கங்களும்"],
   tank_spill: ["{p}% full, spilling", "{p}% පිරී ඇත, වාන් දමයි", "{p}% நிரம்பியுள்ளது, வான் பாய்கிறது"],
+  green_cmp: ["The same month a year apart, seen by NASA's Terra satellite. Dark green means healthy, growing plants. Pale green or brown means dry land where plants are short of water.",
+    "NASA හි Terra චන්ද්‍රිකාව දුටු, වසරක පරතරයක් ඇති එකම මාසය. තද කොළ පැහැයෙන් පෙන්වන්නේ නිරෝගීව වැඩෙන ශාක ය. ලා කොළ හෝ දුඹුරු පැහැයෙන් පෙන්වන්නේ ශාකවලට ජලය මදි වියළි බිම ය.",
+    "NASA வின் Terra செயற்கைக்கோள் பார்த்த, ஒரு வருட இடைவெளியில் உள்ள அதே மாதம். அடர் பச்சை ஆரோக்கியமாக வளரும் தாவரங்களைக் காட்டுகிறது. வெளிர் பச்சை அல்லது பழுப்பு, தாவரங்களுக்கு நீர் குறைவான வறண்ட நிலத்தைக் காட்டுகிறது."],
+  green_src: ["NASA Terra MODIS greenness (NDVI), monthly, through NASA Worldview", "NASA Terra MODIS හරිතභාවය (NDVI), මාසික, NASA Worldview හරහා", "NASA Terra MODIS பசுமை (NDVI), மாதாந்திர, NASA Worldview வழியாக"],
+  g_green: ["Plants from space, a year apart", "වසරක පරතරයකින් අභ්‍යවකාශයෙන් පෙනෙන ශාක", "ஒரு வருட இடைவெளியில் விண்வெளியிலிருந்து தாவரங்கள்"],
   s_green: ["Plants seen from space", "අභ්‍යවකාශයෙන් පෙනෙන ශාක", "விண்வெளியிலிருந்து தெரியும் தாவரங்கள்"],
   green_more: ["Fields and forests are greener than usual.",
     "වගාබිම් සහ වනාන්තර සාමාන්‍යයට වඩා කොළ පැහැයි.",
