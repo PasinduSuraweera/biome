@@ -140,8 +140,42 @@
   {
    "id": "now-1",
    "group": "now",
-   "date": "2026-11-13",
+   "date": "2026-11-14",
    "file": "nasa/now-1.jpg",
+   "w": 1200,
+   "h": 960,
+   "layer": "VIIRS_NOAA20_CorrectedReflectance_TrueColor",
+   "title": "VIIRS_NOAA20_CorrectedReflectance_TrueColor",
+   "bbox": [
+    72.0,
+    0.0,
+    92.0,
+    16.0
+   ],
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=72.0,0.0,92.0,16.0&l=Coastlines_15m,VIIRS_NOAA20_CorrectedReflectance_TrueColor&t=2026-11-14"
+  },
+  {
+   "id": "now-rain-1",
+   "group": "now_rain",
+   "date": "2026-11-14",
+   "file": "nasa/now-rain-1.jpg",
+   "w": 1200,
+   "h": 960,
+   "layer": "IMERG_Precipitation_Rate",
+   "title": "IMERG_Precipitation_Rate",
+   "bbox": [
+    72.0,
+    0.0,
+    92.0,
+    16.0
+   ],
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=72.0,0.0,92.0,16.0&l=Coastlines_15m,IMERG_Precipitation_Rate,BlueMarble_ShadedRelief_Bathymetry&t=2026-11-14"
+  },
+  {
+   "id": "now-2",
+   "group": "now",
+   "date": "2026-11-13",
+   "file": "nasa/now-2.jpg",
    "w": 1200,
    "h": 960,
    "layer": "VIIRS_NOAA20_CorrectedReflectance_TrueColor",
@@ -155,10 +189,10 @@
    "worldview": "https://worldview.earthdata.nasa.gov/?v=72.0,0.0,92.0,16.0&l=Coastlines_15m,VIIRS_NOAA20_CorrectedReflectance_TrueColor&t=2026-11-13"
   },
   {
-   "id": "now-rain-1",
+   "id": "now-rain-2",
    "group": "now_rain",
    "date": "2026-11-13",
-   "file": "nasa/now-rain-1.jpg",
+   "file": "nasa/now-rain-2.jpg",
    "w": 1200,
    "h": 960,
    "layer": "IMERG_Precipitation_Rate",
@@ -172,10 +206,10 @@
    "worldview": "https://worldview.earthdata.nasa.gov/?v=72.0,0.0,92.0,16.0&l=Coastlines_15m,IMERG_Precipitation_Rate,BlueMarble_ShadedRelief_Bathymetry&t=2026-11-13"
   },
   {
-   "id": "now-2",
+   "id": "now-3",
    "group": "now",
    "date": "2026-11-12",
-   "file": "nasa/now-2.jpg",
+   "file": "nasa/now-3.jpg",
    "w": 1200,
    "h": 960,
    "layer": "VIIRS_NOAA20_CorrectedReflectance_TrueColor",
@@ -189,43 +223,9 @@
    "worldview": "https://worldview.earthdata.nasa.gov/?v=72.0,0.0,92.0,16.0&l=Coastlines_15m,VIIRS_NOAA20_CorrectedReflectance_TrueColor&t=2026-11-12"
   },
   {
-   "id": "now-rain-2",
-   "group": "now_rain",
-   "date": "2026-11-12",
-   "file": "nasa/now-rain-2.jpg",
-   "w": 1200,
-   "h": 960,
-   "layer": "IMERG_Precipitation_Rate",
-   "title": "IMERG_Precipitation_Rate",
-   "bbox": [
-    72.0,
-    0.0,
-    92.0,
-    16.0
-   ],
-   "worldview": "https://worldview.earthdata.nasa.gov/?v=72.0,0.0,92.0,16.0&l=Coastlines_15m,IMERG_Precipitation_Rate,BlueMarble_ShadedRelief_Bathymetry&t=2026-11-12"
-  },
-  {
-   "id": "now-3",
-   "group": "now",
-   "date": "2026-11-11",
-   "file": "nasa/now-3.jpg",
-   "w": 1200,
-   "h": 960,
-   "layer": "VIIRS_NOAA20_CorrectedReflectance_TrueColor",
-   "title": "VIIRS_NOAA20_CorrectedReflectance_TrueColor",
-   "bbox": [
-    72.0,
-    0.0,
-    92.0,
-    16.0
-   ],
-   "worldview": "https://worldview.earthdata.nasa.gov/?v=72.0,0.0,92.0,16.0&l=Coastlines_15m,VIIRS_NOAA20_CorrectedReflectance_TrueColor&t=2026-11-11"
-  },
-  {
    "id": "now-rain-3",
    "group": "now_rain",
-   "date": "2026-11-11",
+   "date": "2026-11-12",
    "file": "nasa/now-rain-3.jpg",
    "w": 1200,
    "h": 960,
@@ -237,7 +237,7 @@
     92.0,
     16.0
    ],
-   "worldview": "https://worldview.earthdata.nasa.gov/?v=72.0,0.0,92.0,16.0&l=Coastlines_15m,IMERG_Precipitation_Rate,BlueMarble_ShadedRelief_Bathymetry&t=2026-11-11"
+   "worldview": "https://worldview.earthdata.nasa.gov/?v=72.0,0.0,92.0,16.0&l=Coastlines_15m,IMERG_Precipitation_Rate,BlueMarble_ShadedRelief_Bathymetry&t=2026-11-12"
   },
   {
    "id": "flood-2025-12-01",
