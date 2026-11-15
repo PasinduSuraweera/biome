@@ -32,7 +32,8 @@ export function ThemeToggle({ theme, toggle, className }) {
 }
 
 // the Biome logo, in its light and dark versions
-export function Logo({ className }) {
+export function Logo({ className, dark }) {
+  if (dark) return <img src="logo-on-dark.png" alt="Biome" className={className} />;
   return (
     <>
       <img src="logo.png" alt="Biome" className={cn("dark:hidden", className)} />

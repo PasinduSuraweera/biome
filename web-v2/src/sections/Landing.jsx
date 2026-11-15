@@ -1,7 +1,7 @@
 // The landing page: what Biome is, live from today's NASA data, and the way in
 // for families, farmers, coastal towns and officers.
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, ArrowUpRight, Bell, CalendarDays, CloudRain, Droplets, MapPin, Mountain, Satellite, Sprout, Users, Waves } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Bell, Play, CalendarDays, CloudRain, Droplets, MapPin, Mountain, Satellite, Sprout, Users, Waves } from "lucide-react";
 import { t, dName, getLang, LANGS, monthName } from "@classic/i18n.js";
 import { buildReport } from "@classic/simple.js";
 import { Button } from "@/components/ui/button";
@@ -68,6 +68,18 @@ const S = {
   p4: L("NASA's satellite rain matches NOAA's ground stations with r of {r} or more at {n} of {t} stations.", "NASA චන්ද්‍රිකා වැසි, NOAA භූමි මධ්‍යස්ථාන {t} න් {n} ක r {r} හෝ ඊට වැඩියෙන් ගැළපේ.", "NASA செயற்கைக்கோள் மழை, NOAA தரை நிலையங்கள் {t} இல் {n} இல் r {r} அல்லது அதற்கு மேல் பொருந்துகிறது."),
   final_t: L("Check your district.", "ඔබේ දිස්ත්‍රික්කය බලන්න.", "உங்கள் மாவட்டத்தைப் பாருங்கள்."),
   final_b: L("Pick your district and who you are. The report is free, in your language, and you can save it as a picture to share.", "ඔබේ දිස්ත්‍රික්කය සහ ඔබ කවුරුන්දැයි තෝරන්න. වාර්තාව නොමිලේ, ඔබේ භාෂාවෙන්, බෙදා ගැනීමට පින්තූරයක් ලෙස සුරැකිය හැක.", "உங்கள் மாவட்டத்தையும் நீங்கள் யார் என்பதையும் தேர்ந்தெடுங்கள். அறிக்கை இலவசம், உங்கள் மொழியில், பகிர படமாகச் சேமிக்கலாம்."),
+  hero_k: L("Live from NASA satellites, every 3 hours", "NASA චන්ද්‍රිකාවලින් සජීවීව, පැය 3 කට වරක්", "NASA செயற்கைக்கோள்களிலிருந்து நேரடியாக, 3 மணி நேரத்துக்கு ஒருமுறை"),
+  hero_cap: L("Behind this text: Cyclone Ditwah approaching Sri Lanka, 21 to 30 November 2025. Real NASA VIIRS satellite pictures.", "මෙම පෙළ පිටුපස: 2025 නොවැම්බර් 21 සිට 30 දක්වා ශ්‍රී ලංකාවට ළඟා වන ඩිට්වා සුළි කුණාටුව. සැබෑ NASA VIIRS චන්ද්‍රිකා පින්තූර.", "இந்த உரைக்குப் பின்னால்: 2025 நவம்பர் 21 முதல் 30 வரை இலங்கையை நெருங்கும் டித்வா சூறாவளி. உண்மையான NASA VIIRS செயற்கைக்கோள் படங்கள்."),
+  rain_cap: L("Every hour of Cyclone Ditwah's rain, 24 to 30 November 2025, measured from space by NASA GPM IMERG. Biome reads this same data for your district.", "2025 නොවැම්බර් 24 සිට 30 දක්වා ඩිට්වා සුළි කුණාටුවේ සෑම පැයකම වැසි, NASA GPM IMERG මගින් අභ්‍යවකාශයේ සිට මනින ලදී. Biome ඔබේ දිස්ත්‍රික්කය සඳහා මෙම දත්තම කියවයි.", "2025 நவம்பர் 24 முதல் 30 வரை டித்வா சூறாவளியின் ஒவ்வொரு மணி நேர மழையும், NASA GPM IMERG மூலம் விண்வெளியிலிருந்து அளவிடப்பட்டது. Biome உங்கள் மாவட்டத்துக்கு இதே தரவைப் படிக்கிறது."),
+  prot_k: L("What we are protecting", "අප ආරක්ෂා කරන්නේ කුමක් ද", "நாம் எதைப் பாதுகாக்கிறோம்"),
+  prot_t: L("Hills that slide, fields that dry, a coast that floods.", "නායයන කඳු, වියළෙන කෙත්, ගංවතුරට යටවන වෙරළ.", "சரியும் மலைகள், வறளும் வயல்கள், வெள்ளம் புகும் கரை."),
+  ph_monsoon: L("November rain over the hills near Mahiyangana. Soaked slopes like these gave way during Ditwah.", "මහියංගනය අසල කඳු මත නොවැම්බර් වැසි. ඩිට්වා අතරතුර මෙවැනි තෙත් වූ බෑවුම් කඩා වැටුණා.", "மஹியங்கனைக்கு அருகே மலைகளில் நவம்பர் மழை. டித்வாவின் போது இப்படி நனைந்த சரிவுகள் சரிந்தன."),
+  ph_rescue: L("Rescue teams training for landslides. Biome aims to warn people before they are needed.", "නායයෑම් සඳහා පුහුණු වන ගලවා ගැනීමේ කණ්ඩායම්. ඔවුන් අවශ්‍ය වීමට පෙර මිනිසුන්ට අනතුරු ඇඟවීම Biome ගේ අරමුණයි.", "மண்சரிவுக்குப் பயிற்சி பெறும் மீட்புக் குழுக்கள். அவர்கள் தேவைப்படுவதற்கு முன் மக்களை எச்சரிப்பதே Biome இன் நோக்கம்."),
+  ph_tank: L("Parakrama Samudra, Polonnaruwa. When tanks run low, the season fails.", "පොළොන්නරුව පරාක්‍රම සමුද්‍රය. වැව් අඩු වූ විට කන්නය අසාර්ථක වේ.", "பொலன்னறுவை பராக்கிரம சமுத்திரம். குளங்கள் வற்றினால் பருவம் தோல்வியடையும்."),
+  ph_lagoon: L("Batticaloa lagoon, where river floods meet the sea.", "ගංවතුර මුහුදට හමුවන මඩකලපුව කලපුව.", "ஆற்று வெள்ளம் கடலைச் சந்திக்கும் மட்டக்களப்பு வாவி."),
+  ph_tea: L("The hill country, where most landslides happen.", "බොහෝ නායයෑම් සිදුවන කඳුකරය.", "பெரும்பாலான மண்சரிவுகள் நிகழும் மலைநாடு."),
+  open_s: L("Dashboard", "පුවරුව", "டாஷ்போர்டு"),
+  watch: L("Why it matters", "එය වැදගත් ඇයි", "இது ஏன் முக்கியம்"),
   goal_k: L("Why we built Biome", "අපි Biome හැදුවේ ඇයි", "நாங்கள் ஏன் Biome ஐ உருவாக்கினோம்"),
   goal_t: L("No family in Sri Lanka should be caught by surprise.", "ශ්‍රී ලංකාවේ කිසිම පවුලක් හදිසියේ අසු නොවිය යුතුයි.", "இலங்கையில் எந்தக் குடும்பமும் எதிர்பாராமல் சிக்கக் கூடாது."),
   goal_b1: L("Last November, Cyclone Ditwah sat over our island. In one day, 431 mm of rain fell on Nillambe, here in Kandy, on hillsides that were already soaked. 638 people died, 234 of them in this district.",
@@ -113,6 +125,45 @@ function Reveal({ children, className }) {
   return <div ref={ref} className={cn("transition-all duration-700 ease-out motion-reduce:transition-none", on ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0", className)}>{children}</div>;
 }
 
+// a silent looping video of real NASA imagery; still picture for reduced motion or no video
+function BgVideo({ src, poster, className }) {
+  const ref = useRef(null);
+  const [ok, setOk] = useState(true);
+  useEffect(() => {
+    const v = ref.current;
+    if (!v) return;
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) { v.pause(); return; }
+    v.play?.().catch(() => {});
+  }, []);
+  if (!ok) return <img src={poster} alt="" className={className} />;
+  return <video ref={ref} className={className} poster={poster} autoPlay muted loop playsInline preload="metadata" aria-hidden="true" onError={() => setOk(false)}>
+    <source src={`${src}.mp4`} type="video/mp4" onError={() => setOk(false)} />
+  </video>;
+}
+
+// freely licensed photos from Wikimedia Commons, credited as their licences ask
+const PHOTOS = {
+  "kandy-hills": ["Terranceensen", "CC BY-SA 4.0", "Sri_Lanka-6.jpg"],
+  "monsoon-hills": ["Thanuriedz", "CC BY-SA 4.0", "Rain_and_misty_mountains.jpg"],
+  "paddy-ampara": ["Anton Croos", "CC BY-SA 3.0", "Paddy_field_in_Sammanthurai,_Ampara,_Sri_Lanka.JPG"],
+  "parakrama-samudra": ["Nethmi Gunasekera", "CC BY-SA 4.0", "Parakrama_Samudra_Sri_Lanka.jpg"],
+  "batticaloa-lagoon": ["Anton Croos", "CC BY-SA 4.0", "Batticaloa_lagoon,_fishing_boats.jpg"],
+  "trinco-fishermen": ["Pierre André Leclercq", "CC BY-SA 4.0", "Trinquemalay,_retour_des_pêcheurs_au_Sri-Lanka_(1).jpg"],
+  "rescue-training": ["U.S. Air National Guard, Devin Doskey", "public domain", "Atlas_Angel_II_expands_Montana-Sri_Lanka_partnership_through_subject_matter_expert_exchanges_(9913045).jpg"],
+  "tea-hills": ["Abdhallah R Sanoon", "CC BY-SA 4.0", "Tea_landscape.jpg"],
+};
+function Photo({ id, alt, className, imgClass, children }) {
+  const [by, lic, file] = PHOTOS[id];
+  return (
+    <figure className={cn("relative m-0 overflow-hidden bg-[#0b1a1f]", className)}>
+      <img src={`photos/${id}.jpg`} alt={alt} loading="lazy" className={cn("h-full w-full object-cover", imgClass)} />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/70 to-transparent" />
+      {children}
+      <a href={`https://commons.wikimedia.org/wiki/File:${file}`} target="_blank" rel="noopener" className="absolute bottom-2 right-3 text-[10px] text-white/70 hover:text-white">Photo: {by}, {lic}</a>
+    </figure>
+  );
+}
+
 function Paper({ children, className }) {
   return <div className={cn("rounded-xl border bg-card p-5 shadow-[0_24px_50px_-28px_rgba(16,35,42,0.45)]", className)}>{children}</div>;
 }
@@ -148,94 +199,65 @@ export function Landing({ DATA, SAFE, GEO, INDEX, lang, changeLang, go, theme, t
     [t("q_tank"), "farmer", "Anuradhapura", Droplets], [t("q_flood"), "coast", "Batticaloa", Waves], [t("q_rain"), "farmer", "Kurunegala", CloudRain],
   ];
   const scen = [
-    { k: "family", d: "Kandy", title: s("fam_t"), body: s("fam_b"), m: fam, icon: Users },
-    { k: "farmer", d: "Polonnaruwa", title: s("farm_t"), body: s("farm_b"), m: farm, icon: Sprout },
-    { k: "coast", d: "Batticaloa", title: s("coast_t"), body: s("coast_b"), m: coast, icon: Waves },
+    { k: "family", d: "Kandy", title: s("fam_t"), body: s("fam_b"), m: fam, icon: Users, photo: "kandy-hills" },
+    { k: "farmer", d: "Polonnaruwa", title: s("farm_t"), body: s("farm_b"), m: farm, icon: Sprout, photo: "paddy-ampara" },
+    { k: "coast", d: "Batticaloa", title: s("coast_t"), body: s("coast_b"), m: coast, icon: Waves, photo: "trinco-fishermen" },
   ];
 
   return (
     <div className="min-h-screen overflow-x-hidden">
-      <div className="sticky top-3 z-40 px-3 pt-3">
+      <div className="fixed inset-x-0 top-3 z-40 px-3">
         <nav className={cn("mx-auto flex max-w-6xl items-center justify-between rounded-full px-3 py-2 transition-all duration-300 sm:px-4",
-          scrolled ? "bg-card/80 dark:bg-card/85 shadow-[0_8px_30px_-12px_rgba(16,35,42,0.3)] ring-1 ring-foreground/5 backdrop-blur-md" : "bg-transparent")} aria-label="Main">
-          <a href={`${HERE}#`} className="pl-1" aria-label="Biome"><Logo className="h-8 w-auto" /></a>
-          <div className="hidden items-center gap-1 rounded-full bg-foreground/[0.05] p-1 lg:flex">
-            <button type="button" onClick={() => scrollTo("how-it-works")} className="rounded-full px-3 py-1.5 text-[13px] hover:bg-card">{s("nav_how")}</button>
-            <a href={`${HERE}#nasa`} className="rounded-full px-3 py-1.5 text-[13px] hover:bg-card">{s("nav_nasa")}</a>
-            <a href={`${HERE}#calendar`} className="rounded-full px-3 py-1.5 text-[13px] hover:bg-card">{s("nav_cal")}</a>
-            <a href={`${HERE}#how`} className="rounded-full px-3 py-1.5 text-[13px] hover:bg-card">{t("how_title")}</a>
+          scrolled ? "bg-card/85 shadow-[0_8px_30px_-12px_rgba(16,35,42,0.3)] ring-1 ring-foreground/5 backdrop-blur-md" : "bg-transparent text-white")} aria-label="Main">
+          <a href={`${HERE}#`} className="pl-1" aria-label="Biome"><Logo className="h-8 w-auto" dark={!scrolled || theme === "dark"} /></a>
+          <div className={cn("hidden items-center gap-1 rounded-full p-1 lg:flex", scrolled ? "bg-foreground/[0.05]" : "bg-white/10 backdrop-blur-sm")}>
+            {[[s("nav_how"), null, "how-it-works"], [s("nav_nasa"), "nasa"], [s("nav_cal"), "calendar"], [t("how_title"), "how"]].map(([l, h, id]) => id
+              ? <button key={l} type="button" onClick={() => scrollTo(id)} className={cn("rounded-full px-3 py-1.5 text-[13px]", scrolled ? "hover:bg-card" : "hover:bg-white/15")}>{l}</button>
+              : <a key={l} href={`${HERE}#${h}`} className={cn("rounded-full px-3 py-1.5 text-[13px]", scrolled ? "hover:bg-card" : "hover:bg-white/15")}>{l}</a>)}
           </div>
           <div className="flex items-center gap-1">
             <div className="hidden sm:flex">
-              {Object.entries(LANGS).map(([k, label]) => <Button key={k} size="sm" variant={k === lang ? "secondary" : "ghost"} className="h-8 rounded-full px-2.5" onClick={() => changeLang(k)}>{label}</Button>)}
+              {Object.entries(LANGS).map(([k, label]) => <Button key={k} size="sm" variant={k === lang ? "secondary" : "ghost"} className={cn("h-8 rounded-full px-2.5", !scrolled && k !== lang && "text-white hover:bg-white/15 hover:text-white")} onClick={() => changeLang(k)}>{label}</Button>)}
             </div>
-            <ThemeToggle theme={theme} toggle={toggleTheme} />
-            <Button asChild className="h-10 rounded-full px-5"><a href={`${HERE}#overview`}>{s("open")}</a></Button>
+            <ThemeToggle theme={theme} toggle={toggleTheme} className={cn(!scrolled && "text-white hover:bg-white/15 hover:text-white")} />
+            <Button asChild className="h-10 rounded-full px-4 sm:px-5"><a href={`${HERE}#overview`}><span className="hidden sm:inline">{s("open")}</span><span className="sm:hidden">{s("open_s")}</span></a></Button>
           </div>
         </nav>
-        <div className="mt-2 flex justify-end gap-1 sm:hidden">
-          {Object.entries(LANGS).map(([k, label]) => <Button key={k} size="sm" variant={k === lang ? "secondary" : "ghost"} className="h-8 rounded-full px-2.5" onClick={() => changeLang(k)}>{label}</Button>)}
-        </div>
       </div>
 
       <main>
-        <section className="mx-auto grid max-w-6xl items-center gap-12 px-5 pb-16 pt-12 lg:grid-cols-[1.05fr_1fr] lg:pb-24 lg:pt-20">
-          <Reveal>
-            <h1 className="font-display text-[44px] font-bold leading-[1.02] tracking-[-0.035em] sm:text-[60px] lg:text-[68px]">
-              {s("h1a")}<br />{s("h1b")}<br />
-              <span className="relative inline-block text-brand-deep">{s("h1c")}
-                <svg viewBox="0 0 260 18" fill="none" aria-hidden="true" className="absolute -bottom-3 left-0 h-4 w-full text-brand" preserveAspectRatio="none"><path d="M3 13C70 1 164 2 255 8" stroke="currentColor" strokeWidth="5" strokeLinecap="round" /></svg>
-              </span>
-            </h1>
-            <p className="mt-8 max-w-[46ch] text-lg leading-relaxed text-muted-foreground">{s("lede")}</p>
-            <div className="mt-8 flex flex-wrap items-center gap-4">
-              <Button asChild size="lg" className="h-12 rounded-full px-6 text-[15px]"><a href={`${HERE}#family/${slug(pickD)}`}>{s("cta")}<ArrowRight /></a></Button>
-              <button type="button" onClick={() => scrollTo("how-it-works")} className="text-[15px] font-medium underline-offset-4 hover:underline">{s("nav_how")}</button>
-            </div>
-            <p className="mt-4 text-sm text-muted-foreground">{s("note")}</p>
-          </Reveal>
-          <Reveal className="relative mx-auto w-full max-w-[460px]">
-            <Paper className="relative rotate-[-1.5deg] p-4">
-              {GEO && <IslandMap GEO={GEO} DATA={DATA} name="" onPick={(n) => go("family", n)} view="family" compact />}
-            </Paper>
-            <Paper className="absolute -left-4 top-10 hidden w-56 rotate-[-4deg] p-4 sm:block lg:-left-12">
-              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{t("s_level")}</p>
-              <p className="mt-1 font-display text-lg font-semibold">{dName("Kandy")}</p>
-              <p className="mt-2 flex items-center gap-2 text-sm font-medium"><span className={cn("size-3 rounded-full", LEVEL_DOT[fam.level?.n || 0])} />{fam.level ? fam.level.title : t("lvl_0")}</p>
-            </Paper>
-            {ditwah && (
-              <Paper className="absolute -bottom-8 -right-3 hidden w-48 rotate-[3deg] overflow-hidden p-0 sm:block lg:-right-10">
-                <img src={ditwah.file} alt="Cyclone Ditwah, NASA Suomi NPP VIIRS" className="h-32 w-full object-cover" />
-                <p className="p-2.5 text-[11px] leading-snug text-muted-foreground">Cyclone Ditwah · 27 Nov 2025 · NASA VIIRS</p>
-              </Paper>
-            )}
-          </Reveal>
-        </section>
-
-        <section className="mx-auto max-w-6xl px-5">
-          <Reveal>
-            <div className="rounded-2xl border bg-card p-6 sm:p-8">
-              <p className="text-sm font-medium uppercase tracking-wide text-brand-deep">{s("today")}</p>
-              <div className="mt-4 grid grid-cols-2 gap-6 lg:grid-cols-5">
-                {[[lvls.filter((x) => x > 0).length, s("k_alert"), Bell], [counts.SlopeWatch || 0, s("k_slope"), Mountain], [counts.DryWatch || 0, s("k_dry"), Droplets],
-                  [day, s("k_rain"), CloudRain], [cur ? `+${cur.peak}` : "0", s("k_oni"), Waves]].map(([v, l, I], i) => (
-                  <div key={i} className="grid content-start gap-1">
-                    <I className="size-5 text-brand" />
-                    <p className="font-display text-3xl font-bold tracking-tight">{v}</p>
-                    <p className="text-sm text-muted-foreground">{l}</p>
-                  </div>
-                ))}
+        <section className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-[#0b1a1f] text-white">
+          <BgVideo src="nasa/video/ditwah-clouds" poster="nasa/ditwah-2025-11-27.jpg" className="absolute inset-0 -z-10 h-full w-full object-cover opacity-90" />
+          <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(6,16,20,0.92)_0%,rgba(6,16,20,0.7)_45%,rgba(6,16,20,0.2)_100%)]" />
+          <div className="absolute inset-x-0 bottom-0 -z-10 h-1/2 bg-gradient-to-t from-[#06100f] to-transparent" />
+          <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-5 pb-10 pt-32 sm:pt-36">
+            <Reveal>
+              <div className="flex gap-1 sm:hidden">
+                {Object.entries(LANGS).map(([k, label]) => <button key={k} type="button" onClick={() => changeLang(k)} className={cn("rounded-full px-3 py-1 text-sm", k === lang ? "bg-white text-[#10232a]" : "text-white/80 ring-1 ring-white/25")}>{label}</button>)}
               </div>
-            </div>
-          </Reveal>
+              <p className="mt-6 flex items-center gap-2 text-sm font-medium text-white/80 sm:mt-0"><span className="relative flex size-2"><span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75 motion-reduce:hidden" /><span className="relative inline-flex size-2 rounded-full bg-red-400" /></span>{s("hero_k")}</p>
+              <h1 className="mt-4 max-w-[16ch] font-display text-[42px] font-bold leading-[1.02] tracking-[-0.035em] sm:text-[64px] lg:text-[76px]">
+                {s("h1a")} {s("h1b")} <span className="text-[#9fd9c4]">{s("h1c")}</span>
+              </h1>
+              <p className="mt-6 max-w-[48ch] text-lg leading-relaxed text-white/80">{s("lede")}</p>
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+                <Button asChild size="lg" className="h-12 rounded-full bg-white px-6 text-[15px] text-[#10232a] hover:bg-white/90"><a href={`${HERE}#family/${slug(pickD)}`}>{s("cta")}<ArrowRight /></a></Button>
+                <button type="button" onClick={() => scrollTo("goal")} className="inline-flex h-12 items-center gap-2 rounded-full px-5 text-[15px] font-medium ring-1 ring-white/30 hover:bg-white/10"><Play className="size-4" />{s("watch")}</button>
+              </div>
+              <p className="mt-4 text-sm text-white/60">{s("note")}</p>
+            </Reveal>
+          </div>
+          <div className="mx-auto w-full max-w-6xl px-5 pb-6">
+            <p className="text-right text-xs text-white/55">{s("hero_cap")}</p>
+          </div>
         </section>
 
-        <section className="mx-auto max-w-6xl px-5 pt-20 lg:pt-28">
+        <section id="goal" className="mx-auto max-w-6xl scroll-mt-20 px-5 pt-20 lg:pt-28">
           <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
             <Reveal>
-              <figure className="m-0 overflow-hidden rounded-2xl border bg-card shadow-[0_24px_50px_-28px_rgba(16,35,42,0.45)]">
-                <img src="nasa/ditwah-2025-11-27.jpg" alt={s("ditwah_cap")} className="aspect-[5/4] w-full object-cover" loading="lazy" />
-                <figcaption className="p-4 text-sm text-muted-foreground">{s("ditwah_cap")}</figcaption>
+              <figure className="m-0 overflow-hidden rounded-2xl bg-[#0b1a1f] shadow-[0_24px_50px_-28px_rgba(16,35,42,0.6)]">
+                <BgVideo src="nasa/video/ditwah-rain" poster="nasa/ditwah-rain-2025-11-27.jpg" className="aspect-[5/4] w-full object-cover" />
+                <figcaption className="p-4 text-sm text-white/70">{s("rain_cap")}</figcaption>
               </figure>
             </Reveal>
             <Reveal>
@@ -243,12 +265,24 @@ export function Landing({ DATA, SAFE, GEO, INDEX, lang, changeLang, go, theme, t
               <h2 className="mt-3 font-display text-[32px] font-semibold leading-[1.1] tracking-[-0.03em] sm:text-[42px]">{s("goal_t")}</h2>
               <p className="mt-5 text-[17px] leading-relaxed text-muted-foreground">{s("goal_b1")}</p>
               <p className="mt-4 text-[17px] leading-relaxed text-muted-foreground">{s("goal_b2")}</p>
-              <div className="mt-8 grid grid-cols-3 gap-4 border-t pt-6">
-                {[["638", s("g1")], ["23,000", s("g2")], ["3", s("g3")]].map(([v, l]) => (
-                  <div key={l}><p className="font-display text-3xl font-bold tracking-tight sm:text-4xl">{v}</p><p className="mt-1 text-sm leading-snug text-muted-foreground">{l}</p></div>
-                ))}
-              </div>
             </Reveal>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-6xl px-5 pt-20 lg:pt-28">
+          <Reveal>
+            <p className="text-sm font-semibold uppercase tracking-wide text-brand-deep dark:text-brand">{s("prot_k")}</p>
+            <h2 className="mt-3 max-w-[24ch] font-display text-[32px] font-semibold leading-[1.1] tracking-[-0.03em] sm:text-[42px]">{s("prot_t")}</h2>
+          </Reveal>
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-2">
+            {[["monsoon-hills", "ph_monsoon", "sm:col-span-2 lg:row-span-2 aspect-[4/3] lg:aspect-auto"], ["rescue-training", "ph_rescue", "aspect-[4/3]"],
+              ["parakrama-samudra", "ph_tank", "aspect-[4/3]"], ["batticaloa-lagoon", "ph_lagoon", "aspect-[4/3]"], ["tea-hills", "ph_tea", "aspect-[4/3]"]].map(([id, k, cls]) => (
+              <Reveal key={id} className={cls}>
+                <Photo id={id} alt={s(k)} className="h-full rounded-2xl">
+                  <figcaption className="absolute bottom-7 left-4 right-4 text-[15px] font-medium leading-snug text-white">{s(k)}</figcaption>
+                </Photo>
+              </Reveal>
+            ))}
           </div>
         </section>
 
@@ -311,7 +345,7 @@ export function Landing({ DATA, SAFE, GEO, INDEX, lang, changeLang, go, theme, t
           </ul>
         </section>
 
-        {scen.map(({ k, d, title, body, m, icon: I }, idx) => (
+        {scen.map(({ k, d, title, body, m, icon: I, photo }, idx) => (
           <section key={k} className="mx-auto max-w-6xl px-5">
             <div className="grid items-center gap-12 border-t py-20 lg:grid-cols-2 lg:py-24">
               <Reveal className={cn(idx % 2 === 1 && "lg:order-2")}>
@@ -320,9 +354,11 @@ export function Landing({ DATA, SAFE, GEO, INDEX, lang, changeLang, go, theme, t
                 <p className="mt-4 max-w-[50ch] text-[17px] leading-relaxed text-muted-foreground">{body}</p>
                 <Button asChild variant="outline" className="mt-6 h-11 rounded-full px-5"><a href={`${HERE}#${k}/${slug(d)}`}>{s("see")}: {dName(d)}<ArrowRight /></a></Button>
               </Reveal>
-              <Reveal className="relative mx-auto w-full max-w-[460px]">
+              <Reveal className="relative">
+                <Photo id={photo} alt={title} className="aspect-[4/3] rounded-3xl" />
+                <div className="relative z-10 -mt-28 px-3 sm:-mt-36 sm:px-8">
                 {k === "family" && <>
-                  <Paper className="rotate-[1.5deg]">
+                  <Paper className="">
                     <p className="text-sm font-medium">{t("s_level")} · {m.district}</p>
                     <p className="mt-2 flex items-center gap-2 font-display text-xl font-semibold"><span className={cn("size-3 rounded-full", LEVEL_DOT[m.level?.n || 0])} />{m.level ? m.level.title : t("lvl_0")}</p>
                     {m.level && <p className="mt-2 text-sm text-muted-foreground">{m.level.rain}</p>}
@@ -333,7 +369,7 @@ export function Landing({ DATA, SAFE, GEO, INDEX, lang, changeLang, go, theme, t
                   </Paper>
                 </>}
                 {k === "farmer" && m.plant?.[0] && (
-                  <Paper className="rotate-[-1.5deg]">
+                  <Paper className="">
                     <div className="flex items-baseline justify-between gap-2"><p className="font-display text-xl font-semibold">{m.plant[0].title}</p><p className="text-sm text-muted-foreground">{m.district}</p></div>
                     <p className="text-sm text-muted-foreground">{m.plant[0].range}</p>
                     <div className="mt-3 grid gap-1.5 text-[15px]">{m.plant[0].lines.map((l, i) => <p key={i}>{l}</p>)}</div>
@@ -341,7 +377,7 @@ export function Landing({ DATA, SAFE, GEO, INDEX, lang, changeLang, go, theme, t
                   </Paper>
                 )}
                 {k === "coast" && (
-                  <Paper className="rotate-[1.5deg] overflow-hidden p-0">
+                  <Paper className=" overflow-hidden p-0">
                     <div className="p-5" style={{ background: m.now.bg, color: m.now.fg }}>
                       <p className="text-xs font-semibold uppercase tracking-wide opacity-80">{t("s_now")} · {m.district}</p>
                       <p className="mt-1 font-display text-xl font-bold">{m.now.title}</p>
@@ -352,6 +388,7 @@ export function Landing({ DATA, SAFE, GEO, INDEX, lang, changeLang, go, theme, t
                     </div>
                   </Paper>
                 )}
+                </div>
               </Reveal>
             </div>
           </section>
@@ -367,11 +404,12 @@ export function Landing({ DATA, SAFE, GEO, INDEX, lang, changeLang, go, theme, t
               </div>
               <Button asChild variant="secondary" className="mt-8 h-11 rounded-full px-5"><a href={`${HERE}#nasa`}>{s("nav_nasa")}<ArrowUpRight /></a></Button>
             </Reveal>
-            <div className="grid grid-cols-2 gap-6">
-              {[["46", s("st_years")], ["330", s("st_div")], [places.toLocaleString(), s("st_places")], ["3", s("st_lang")]].map(([v, l]) => (
-                <Reveal key={l}><p className="font-display text-5xl font-bold tracking-tight sm:text-6xl">{v}</p><p className="mt-2 text-[#f3efe6]/75">{l}</p></Reveal>
-              ))}
-            </div>
+            <Reveal>
+              <figure className="m-0 overflow-hidden rounded-2xl ring-1 ring-white/15">
+                <img src="nasa/ditwah-2025-11-27.jpg" alt={s("ditwah_cap")} loading="lazy" className="aspect-[4/3] w-full object-cover" />
+                <figcaption className="p-4 text-sm text-[#f3efe6]/70">{s("ditwah_cap")}</figcaption>
+              </figure>
+            </Reveal>
           </div>
         </section>
 
