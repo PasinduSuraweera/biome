@@ -89,6 +89,59 @@ function fcRuns(fc, upto) {
   return out;
 }
 
+// a block of forecast months as one: chance of drier or wetter overall, and the worst drought month
+function blockOdds(fc, idx) {
+  const { F, x, months } = fc;
+  const nm = idx.map((i) => x.normal_mm[i]), tot = nm.reduce((a, b) => a + b, 0) || 1;
+  const totals = x.members.map((row) => idx.reduce((a, i, k) => a + row[i] * nm[k], 0) / tot);
+  const pDry = totals.reduce((a, v, k) => a + (v < 85 ? F.weights[k] : 0), 0);
+  const pWet = totals.reduce((a, v, k) => a + (v > 115 ? F.weights[k] : 0), 0);
+  const signal = idx.filter((i) => months[i].signal).length * 2 >= idx.length;
+  let dw = null;
+  for (const i of idx) if (months[i].signal && x.watch.DryWatch[i] >= 0.5 && (!dw || x.watch.DryWatch[i] > dw.p)) dw = { m: months[i].month, p: x.watch.DryWatch[i] };
+  return { pDry, pWet, signal, dw };
+}
+
+// the coming Maha (Oct-Mar) and Yala (Apr-Sep) seasons inside the 12-month outlook
+function seasonsAhead(fc) {
+  const out = [];
+  let cur = null;
+  fc.months.forEach((mo, i) => {
+    const m = +mo.month.slice(5, 7), y = +mo.month.slice(0, 4);
+    const kind = m >= 10 || m <= 3 ? "maha" : "yala";
+    if (cur && cur.kind === kind) cur.idx.push(i);
+    else { cur = { kind, idx: [i], y: kind === "maha" && m <= 3 ? y - 1 : y }; out.push(cur); }
+  });
+  return out.filter((sn) => sn.idx.length >= 3).slice(0, 2);
+}
+
+function planting(fc) {
+  if (!fc) return [];
+  return seasonsAhead(fc).map((sn) => {
+    const o = blockOdds(fc, sn.idx);
+    const title = sn.kind === "maha" ? t("season_maha", { a: sn.y, b: String(sn.y + 1).slice(2) }) : t("season_yala", { a: sn.y });
+    const sign = !o.signal ? "normal" : o.pDry >= 0.5 ? "dry" : o.pWet >= 0.5 ? "wet" : "mixed";
+    const lines = [sign === "dry" ? t("pl_dry", { x: in10(o.pDry) }) : sign === "wet" ? t("pl_wet", { x: in10(o.pWet) })
+      : sign === "mixed" ? `${t("lv_mixed")}. ${t("mixed_odds", { a: in10(o.pDry), b: in10(o.pWet) })}` : t("pl_unclear")];
+    if (o.dw) lines.push(t("pl_drought", { m: mLong(o.dw.m), x: in10(o.dw.p) }));
+    const adv = sign === "dry" || (o.dw && sign !== "wet") ? "dry" : sign === "wet" ? "wet" : "normal";
+    return { title, range: span(fc.months, sn.idx[0], sn.idx[sn.idx.length - 1]), sign, lines, adv: t(`pl_adv_${adv}`), dry: adv === "dry" };
+  });
+}
+
+// every past Maha and Yala since 1980, and what followed the strong El Ninos
+function yearsOf(d, DATA) {
+  if (!d.seasons?.maha?.years?.length) return null;
+  const cls = (p) => (p == null ? "normal" : p < 85 ? "dry" : p > 115 ? "wet" : "normal");
+  const strong = new Set(DATA.meta?.strong_el_nino_years || []);
+  const rows = ["maha", "yala"].map((k) => ({ label: t(`s_${k}`),
+    cells: d.seasons[k].years.map((y, i) => ({ y, pct: d.seasons[k].rain_pct[i], sign: cls(d.seasons[k].rain_pct[i]), nino: strong.has(y) })) }));
+  const after = d.seasons.maha.years.map((y, i) => [y, d.seasons.maha.rain_pct[i]]).filter(([y]) => strong.has(y));
+  const ys = d.seasons.maha.years;
+  return { rows, first: ys[0], last: ys[ys.length - 1],
+    note: after.length ? t("yr_elnino", { n: after.length, a: after.filter(([, p]) => p < 85).length, b: after.filter(([, p]) => p > 115).length }) : "" };
+}
+
 const strip = (o, n) => o.months.slice(0, n).map((m) => ({ lab: mShort(m.month), sign: SIGN[m.level] || "normal" }));
 
 export function buildReport(name, view, DATA, SAFE, townName) {
@@ -199,10 +252,29 @@ export function buildReport(name, view, DATA, SAFE, townName) {
       ...sp.top.slice(0, 5).map((c, i) => `${i + 1}. ${c[3]} (${t(`kind_${c[2]}`)})`),
       t("safe_count", { a: sp.safer, n: sp.count }), t("safe_note")] });
   }
+  const plant = view === "farmer" ? planting(fc) : [];
+  const years = yearsOf(d, DATA);
+  const qSafe = () => ({ q: t("q_safe"), a: level ? [t(`a_safe_${level.n}`), level.rain, ...(level.n ? [t(`al_do_${level.n}`)] : [])] : [t("lvl_0")] });
+  const qGo = () => ({ q: t("q_go"), a: sp?.top?.length
+    ? [t("a_go", { p: `${sp.top[0][3]} (${t(`kind_${sp.top[0][2]}`)})`, n: Math.min(sp.top.length, 5) - 1 }), t("safe_note")] : [t("a_go_none")] });
+  const q3m = () => ({ q: t("q_3m"), a: periods[1] ? [...periods[1].lines, ...periods[1].adv] : [basis] });
+  let ask;
+  if (view === "farmer") {
+    const avg = res.length ? Math.round(res.reduce((a, r) => a + r.pct_full, 0) / res.length) : null;
+    const dry = plant[0]?.dry;
+    ask = [
+      { q: t("q_plant"), a: plant[0] ? [`${plant[0].title} (${plant[0].range}): ${plant[0].lines.join(" ")}`, plant[0].adv] : [basis] },
+      { q: t("q_tank"), a: avg == null ? [t("res_none")] : [t("a_tank", { n: res.length, p: avg }), t(dry ? "a_tank_dry" : "a_tank_ok")] },
+      { q: t("q_rain"), a: [...(level ? [level.title, level.rain] : []), ...(periods[0]?.lines || [])] },
+    ];
+  } else if (view === "coast") {
+    const wetNowC = d.watch === "FloodWatch" || d.watch === "SlopeWatch" || (level && level.n >= 2 && lv.hazard !== "drought");
+    ask = [{ q: t("q_flood"), a: [t(wetNowC ? "a_flood_yes" : "a_flood_no"), `${now.title}. ${now.desc}`, ...(level ? [level.title, level.rain] : [])] }, qGo(), q3m()];
+  } else ask = [qSafe(), qGo(), q3m()];
   const today = new Date();
   const ym = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}`;
   return {
-    view, name, level, towns: towns.map((x) => ({ name: x.name, level: x.level })), town: tw?.name || "", hazardNow: lv?.hazard || (d.hill ? "landslide" : "flood"), bot: DATA.levels?.bot || null, safeTop: sp?.top || [], aud: t(`for_${view}`), district: tw ? `${tw.name}, ${dName(name)}` : dName(name), when: monthName(d.flag_month), now, todo, basis, periods, year, extras,
+    view, name, level, towns: towns.map((x) => ({ name: x.name, level: x.level })), town: tw?.name || "", hazardNow: lv?.hazard || (d.hill ? "landslide" : "flood"), bot: DATA.levels?.bot || null, safeTop: sp?.top || [], aud: t(`for_${view}`), district: tw ? `${tw.name}, ${dName(name)}` : dName(name), when: monthName(d.flag_month), now, todo, basis, periods, year, extras, plant, years, ask,
     emer: t("emer"), disc: t("disc"), nasa: t("rep_nasa"), modelled: !!fc, made: t("rep_made", { d: `${today.getDate()} ${monthName(ym)}` }),
   };
 }
@@ -264,6 +336,8 @@ export function reportHTML(m) {
     </div>
     ${m.level ? `<div class="levelbox l${m.level.n}"><p class="k">${esc(t("s_level"))} <span class="nasa-tag">NASA GPM IMERG</span></p>
       <p class="v"><i class="lv-dot"></i>${esc(m.level.title)}</p><p class="d">${esc(m.level.rain)}</p><p class="h">${esc(m.level.how)}</p></div>` : ""}
+    ${m.ask?.length ? `<div class="ask"><h3>${esc(t("ask_title"))}</h3><p class="cap">${esc(t("ask_lede"))}</p>
+      ${m.ask.map((x) => `<details><summary>${esc(x.q)}</summary>${x.a.map((l) => `<p>${esc(l)}</p>`).join("")}</details>`).join("")}</div>` : ""}
     <h3>${esc(t("s_todo"))}</h3>
     <ul class="todo">${m.todo.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>
     <h3>${esc(t("s_expect"))}${tag("NASA GPM IMERG + MERRA-2")}</h3>
@@ -271,7 +345,15 @@ export function reportHTML(m) {
     <div class="key">${key}</div>
     <div class="periods">${m.periods.map((p) => cardHTML(p)).join("")}</div>
     ${m.year ? cardHTML(m.year, "year") : ""}
+    ${m.plant?.length ? `<h3>${esc(t("s_plant"))}${tag("NASA GPM IMERG + MERRA-2")}</h3><div class="periods plant">${m.plant.map((p) => `
+      <div class="period pl-${p.sign}"><p class="p-k">${esc(p.title)}</p><p class="p-r">${esc(p.range)}</p>
+      ${p.lines.map((l) => `<p class="p-l">${esc(l)}</p>`).join("")}<p class="p-a">${esc(p.adv)}</p></div>`).join("")}</div>
+      <p class="cap">${esc(t("pl_note"))}</p>` : ""}
     ${m.extras.map((e) => `<h3>${esc(e.title)}${tag(e.tag)}</h3>${e.map ? '<div id="cmap-slot"></div>' : ""}${e.green ? '<div id="green-slot"></div>' : ""}<ul class="plain${e.map ? " nomark" : ""}">${e.lines.map((l) => `<li>${esc(l)}</li>`).join("")}</ul>`).join("")}
+    ${m.years ? `<h3>${esc(t("s_years"))}${tag("NASA MERRA-2 + GPM IMERG")}</h3><div class="years">
+      ${m.years.rows.map((r) => `<div class="yr-row"><span class="yr-l">${esc(r.label)}</span><div class="yr-cells" style="grid-template-columns:repeat(${r.cells.length},1fr)">${r.cells.map((c) => `<i class="yc ${c.sign}${c.nino ? " nino" : ""}" title="${c.y}: ${c.pct ?? "?"}%"></i>`).join("")}</div></div>`).join("")}
+      <div class="yr-row yr-axis"><span class="yr-l"></span><div><span>${m.years.first}</span><span>${m.years.last}</span></div></div></div>
+      <p class="cap">${esc(t("yr_cap"))}</p>${m.years.note ? `<p class="p-l"><b>${esc(m.years.note)}</b></p>` : ""}<p class="cap muted">${esc(t("yr_src"))}</p>` : ""}
     <p class="emer">${esc(m.emer)}</p>
     <p class="disc">${esc(m.disc)}</p>
     <p class="disc nasa-line">${esc(m.nasa)}</p>

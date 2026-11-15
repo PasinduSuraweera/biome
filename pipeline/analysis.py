@@ -755,6 +755,31 @@ def risk_calendar(rain1, rain3, smp, types):
 
 # ------------------------------------------------------------------ main
 
+def season_history(rain_all, rnorm, d):
+    """Rain in each past Maha (Oct-Mar) and Yala (Apr-Sep) season, as % of normal.
+
+    Seasons are what farmers plan by. Each month's % is weighted by that month's
+    normal rain, so a wet December counts for more than a dry March. Only whole
+    seasons are kept. MERRA-2 before 2001, NASA IMERG after.
+    """
+    if d not in rain_all:
+        return None
+    col = rain_all[d].dropna()
+    out = {}
+    for name, months, shift in (("maha", (10, 11, 12, 1, 2, 3), 1), ("yala", (4, 5, 6, 7, 8, 9), 0)):
+        years, pcts = [], []
+        for y in range(col.index.year.min(), col.index.year.max() + 1):
+            idx = [pd.Timestamp(year=y + (1 if (shift and m < 10) else 0), month=m, day=1) for m in months]
+            if not all(t in col.index for t in idx):
+                continue
+            w = np.array([rnorm.at[t.month, d] for t in idx], float)
+            v = np.array([col[t] for t in idx], float)
+            years.append(y)
+            pcts.append(_r(float((v * w).sum() / w.sum())))
+        out[name] = {"years": years, "rain_pct": pcts}
+    return out
+
+
 def main():
     rain, rain_source, partial = load_rain()
     rnorm = normal_of(rain)
@@ -902,6 +927,10 @@ def main():
         districts[d]["outlook"] = outlook(d, rain_all, rnorm, analog, y0_now, start,
                                           calendar["district"].get(d), kind_now)
 
+    for d in districts:
+        districts[d]["seasons"] = _safe(season_history, rain_all, rnorm, d)
+    strong_years = [e["year0"] for e in strong]
+
     levels = _safe(daily_levels, districts, rain1, rain3, wet3)
     towns = _safe(town_levels, districts, rain1, rain3, wet3)
 
@@ -922,7 +951,7 @@ def main():
             "latest_source": rain_source.get(latest, "IMERG Final"),
             "normal_period": f"{CLIM_START}-{CLIM_END}",
             "lag_labels": LAG_LABELS, "lag_now": int(lag_now),
-            "rules": RULES, "watch_counts": counts, "gap_fills": GAP_FILLS,
+            "rules": RULES, "watch_counts": counts, "gap_fills": GAP_FILLS, "strong_el_nino_years": strong_years,
             "hill_rule": {"source": TERRAIN.get("source"), "steep_degrees": TERRAIN.get("steep_degrees"),
                           "min_share": HILL_STEEP_SHARE, "districts": sorted(HILL_DISTRICTS)},
             "data_ranges": {k: _range(v) for k, v in

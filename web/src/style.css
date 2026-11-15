@@ -327,3 +327,26 @@ table.towns .lv-dot { width: 11px; height: 11px; vertical-align: middle; }
 .gshot .edge { fill: none; stroke: #fff; stroke-width: 2; }
 .gshot figcaption { font-size: .85rem; padding: 4px 2px 0; }
 @media print { .gshot svg { max-height: 60mm; } }
+
+/* Ask Biome */
+.ask { margin: 16px 0; }
+.ask details { border: 1px solid var(--line, #d6cebd); border-radius: var(--radius); background: #fff; margin: 0 0 8px; }
+.ask summary { cursor: pointer; padding: 12px 14px; font-weight: 600; list-style: none; }
+.ask summary::-webkit-details-marker { display: none; }
+.ask summary::after { content: "+"; float: right; color: var(--ink-3, #59666b); }
+.ask details[open] summary::after { content: "–"; }
+.ask details p { margin: 0; padding: 0 14px 10px; }
+/* planting card */
+.periods.plant .period.pl-dry { background: #f6ecd2; }
+.periods.plant .period.pl-wet { background: #e2eff2; }
+/* seasons through the years */
+.years { margin: 4px 0 8px; }
+.yr-row { display: grid; grid-template-columns: 92px 1fr; align-items: center; gap: 8px; margin: 0 0 4px; }
+.yr-l { font-size: .85rem; color: var(--ink-3, #59666b); }
+.yr-cells { display: grid; gap: 2px; }
+.yc { display: block; height: 22px; border-radius: 2px; background: #e4e6e0; position: relative; }
+.yc.dry { background: #e3b85c; }
+.yc.wet { background: #23687a; }
+.yc.nino::after { content: ""; position: absolute; left: 50%; top: 50%; width: 5px; height: 5px; margin: -2.5px 0 0 -2.5px; border-radius: 50%; background: #16201f; }
+.yc.wet.nino::after { background: #fff; }
+.yr-axis div { display: flex; justify-content: space-between; font-size: .8rem; color: var(--ink-3, #59666b); }

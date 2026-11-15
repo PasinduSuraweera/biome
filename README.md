@@ -18,6 +18,9 @@ So the next storm finds us ready.
 | **Risk calendar** | The same chances for a district, province or the country, with a CSV download for planners | as above |
 | **Safer places to go** | About 15,000 schools, places of worship and halls checked for steep ground and past flooding, with a map and a top five per district and division | NASADEM (SRTM) 30 m |
 | **Plain-language views** | Families, Farmers and Coast pages with what to do now and a report to download as a picture or PDF | all of the above, MODIS NDVI for farmers |
+| **Ask Biome** | Three plain questions on every report ("Is it safe at home today?", "Should I plant now?", "Is flooding likely here now?"), each answered from the levels and the outlook | GPM IMERG, MERRA-2, NASADEM |
+| **Planting this season** | For farmers: the chance of a drier or wetter Maha and Yala season, the month drought danger peaks, and what to do about it | GPM IMERG, MERRA-2, NOAA ONI |
+| **Through the years** | Every Maha and Yala season since 1980 for the district, with what followed past strong El Niños | MERRA-2, GPM IMERG |
 | **Alerts** | A Telegram message in the person's language when their district reaches the level they chose | GPM IMERG Early and Late (daily) |
 | **Seen by NASA** | Real satellite pictures of Cyclone Ditwah, its rain, the flood water after it and this week's weather, plus each district's greenness in September 2025 and September 2026, each linked to NASA Worldview | VIIRS, MODIS and IMERG through NASA GIBS |
 | **Live ground data** | 74 reservoirs and 40 river gauges, refreshed every 3 hours | Irrigation Department (not NASA) |
@@ -59,6 +62,11 @@ Biome is not a weather forecast and not an official warning. For warnings, follo
 - **Outlook model:** in strong El Niño years (1982, 1987, 1997, 2015, 2023) it picked the right category about 6 times in 10 for December to April; guessing gets 3. Over all years it has little skill, and says so.
 - **Rain gauges:** satellite rain matches NOAA stations with r of 0.85 to 0.95 at 4 of 5 stations (0.51 at Nuwara Eliya).
 - **Past disasters at monthly scale:** 2 of 3 caught; the Ratnapura 2017 floods, which came from one extreme day, were missed. That is why daily levels were added.
+
+## Next
+
+- **The coastline:** sea-level rise and shoreline change for the 14 coastal districts, from NASA's SWOT and Landsat satellites, on the Coast page.
+- **Checked with the people who warn today:** take the Watches, levels and safer places to NBRO and the Disaster Management Centre, starting from SLIIT Kandy UNI with the Kandy district, and have Grama Niladharis confirm the safer places on the ground.
 
 ## Limits
 
