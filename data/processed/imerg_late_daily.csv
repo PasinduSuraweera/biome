@@ -16,7 +16,7 @@ time,var,district,value,days
 2026-08-01,rain_mm,Ampara,63.502199999999995,31
 2026-09-01,rain_mm,Ampara,103.1167,30
 2026-10-01,rain_mm,Ampara,185.15630000000002,31
-2026-11-01,rain_mm,Ampara,108.4529,13
+2026-11-01,rain_mm,Ampara,125.14320000000001,14
 2025-06-01,rain_mm,Anuradhapura,25.5444,30
 2025-07-01,rain_mm,Anuradhapura,13.4038,31
 2025-08-01,rain_mm,Anuradhapura,105.6673,31
@@ -34,7 +34,7 @@ time,var,district,value,days
 2026-08-01,rain_mm,Anuradhapura,15.9857,31
 2026-09-01,rain_mm,Anuradhapura,83.0031,30
 2026-10-01,rain_mm,Anuradhapura,343.8987,31
-2026-11-01,rain_mm,Anuradhapura,58.262,13
+2026-11-01,rain_mm,Anuradhapura,66.0453,14
 2025-06-01,rain_mm,Badulla,68.9294,30
 2025-07-01,rain_mm,Badulla,124.3973,31
 2025-08-01,rain_mm,Badulla,110.92139999999999,31
@@ -52,7 +52,7 @@ time,var,district,value,days
 2026-08-01,rain_mm,Badulla,113.464,31
 2026-09-01,rain_mm,Badulla,232.4353,30
 2026-10-01,rain_mm,Badulla,368.3292,31
-2026-11-01,rain_mm,Badulla,159.3163,13
+2026-11-01,rain_mm,Badulla,180.0207,14
 2025-06-01,rain_mm,Batticaloa,23.5181,30
 2025-07-01,rain_mm,Batticaloa,35.995000000000005,31
 2025-08-01,rain_mm,Batticaloa,90.4562,31
@@ -70,7 +70,7 @@ time,var,district,value,days
 2026-08-01,rain_mm,Batticaloa,59.4554,31
 2026-09-01,rain_mm,Batticaloa,88.6098,30
 2026-10-01,rain_mm,Batticaloa,172.9328,31
-2026-11-01,rain_mm,Batticaloa,75.3045,13
+2026-11-01,rain_mm,Batticaloa,94.1761,14
 2025-06-01,rain_mm,Colombo,144.2535,30
 2025-07-01,rain_mm,Colombo,89.1654,31
 2025-08-01,rain_mm,Colombo,86.36659999999999,31
@@ -88,7 +88,7 @@ time,var,district,value,days
 2026-08-01,rain_mm,Colombo,147.6414,31
 2026-09-01,rain_mm,Colombo,244.1994,30
 2026-10-01,rain_mm,Colombo,452.4073,31
-2026-11-01,rain_mm,Colombo,168.6311,13
+2026-11-01,rain_mm,Colombo,175.74099999999999,14
 2025-06-01,rain_mm,Galle,111.5222,30
 2025-07-01,rain_mm,Galle,140.207,31
 2025-08-01,rain_mm,Galle,56.2544,31
@@ -106,7 +106,7 @@ time,var,district,value,days
 2026-08-01,rain_mm,Galle,252.9206,31
 2026-09-01,rain_mm,Galle,465.4396,30
 2026-10-01,rain_mm,Galle,471.58459999999997,31
-2026-11-01,rain_mm,Galle,205.7977,13
+2026-11-01,rain_mm,Galle,209.5438,14
 2025-06-01,rain_mm,Gampaha,113.5727,30
 2025-07-01,rain_mm,Gampaha,74.849,31
 2025-08-01,rain_mm,Gampaha,65.1283,31
@@ -124,7 +124,7 @@ time,var,district,value,days
 2026-08-01,rain_mm,Gampaha,116.1337,31
 2026-09-01,rain_mm,Gampaha,199.1462,30
 2026-10-01,rain_mm,Gampaha,454.5208,31
-2026-11-01,rain_mm,Gampaha,185.5652,13
+2026-11-01,rain_mm,Gampaha,191.0392,14
 2025-06-01,rain_mm,Hambantota,71.0753,30
 2025-07-01,rain_mm,Hambantota,77.1172,31
 2025-08-01,rain_mm,Hambantota,43.8051,31
@@ -142,7 +142,7 @@ time,var,district,value,days
 2026-08-01,rain_mm,Hambantota,106.621,31
 2026-09-01,rain_mm,Hambantota,202.6087,30
 2026-10-01,rain_mm,Hambantota,344.1324,31
-2026-11-01,rain_mm,Hambantota,161.8526,13
+2026-11-01,rain_mm,Hambantota,168.8805,14
 2025-06-01,rain_mm,Jaffna,59.662800000000004,30
 2025-07-01,rain_mm,Jaffna,42.1385,31
 2025-08-01,rain_mm,Jaffna,113.1781,31
@@ -160,7 +160,7 @@ time,var,district,value,days
 2026-08-01,rain_mm,Jaffna,2.813,31
 2026-09-01,rain_mm,Jaffna,42.432399999999994,30
 2026-10-01,rain_mm,Jaffna,290.4704,31
-2026-11-01,rain_mm,Jaffna,48.003499999999995,13
+2026-11-01,rain_mm,Jaffna,56.1473,14
 2025-06-01,rain_mm,Kalutara,152.29739999999998,30
 2025-07-01,rain_mm,Kalutara,113.8803,31
 2025-08-01,rain_mm,Kalutara,76.8467,31
@@ -178,7 +178,7 @@ time,var,district,value,days
 2026-08-01,rain_mm,Kalutara,220.0265,31
 2026-09-01,rain_mm,Kalutara,386.9058,30
 2026-10-01,rain_mm,Kalutara,514.59,31
-2026-11-01,rain_mm,Kalutara,226.6156,13
+2026-11-01,rain_mm,Kalutara,231.5981,14
 2025-06-01,rain_mm,Kandy,81.8074,30
 2025-07-01,rain_mm,Kandy,163.9516,31
 2025-08-01,rain_mm,Kandy,151.0012,31
@@ -196,7 +196,7 @@ time,var,district,value,days
 2026-08-01,rain_mm,Kandy,203.1003,31
 2026-09-01,rain_mm,Kandy,224.49110000000002,30
 2026-10-01,rain_mm,Kandy,485.3912,31
-2026-11-01,rain_mm,Kandy,219.0088,13
+2026-11-01,rain_mm,Kandy,238.5029,14
 2025-06-01,rain_mm,Kegalle,118.0322,30
 2025-07-01,rain_mm,Kegalle,83.2033,31
 2025-08-01,rain_mm,Kegalle,117.6722,31
@@ -214,7 +214,7 @@ time,var,district,value,days
 2026-08-01,rain_mm,Kegalle,272.544,31
 2026-09-01,rain_mm,Kegalle,309.4453,30
 2026-10-01,rain_mm,Kegalle,556.7185000000001,31
-2026-11-01,rain_mm,Kegalle,279.843,13
+2026-11-01,rain_mm,Kegalle,289.9901,14
 2025-06-01,rain_mm,Kilinochchi,50.7122,30
 2025-07-01,rain_mm,Kilinochchi,20.1057,31
 2025-08-01,rain_mm,Kilinochchi,83.4071,31
@@ -232,7 +232,7 @@ time,var,district,value,days
 2026-08-01,rain_mm,Kilinochchi,2.2788999999999997,31
 2026-09-01,rain_mm,Kilinochchi,52.3571,30
 2026-10-01,rain_mm,Kilinochchi,209.1739,31
-2026-11-01,rain_mm,Kilinochchi,72.7082,13
+2026-11-01,rain_mm,Kilinochchi,83.154,14
 2025-06-01,rain_mm,Kurunegala,74.9524,30
 2025-07-01,rain_mm,Kurunegala,41.1822,31
 2025-08-01,rain_mm,Kurunegala,73.4328,31
@@ -250,7 +250,7 @@ time,var,district,value,days
 2026-08-01,rain_mm,Kurunegala,85.55940000000001,31
 2026-09-01,rain_mm,Kurunegala,113.5223,30
 2026-10-01,rain_mm,Kurunegala,420.97630000000004,31
-2026-11-01,rain_mm,Kurunegala,126.7169,13
+2026-11-01,rain_mm,Kurunegala,135.03629999999998,14
 2025-06-01,rain_mm,Mannar,53.2301,30
 2025-07-01,rain_mm,Mannar,25.4476,31
 2025-08-01,rain_mm,Mannar,44.4748,31
@@ -268,7 +268,7 @@ time,var,district,value,days
 2026-08-01,rain_mm,Mannar,3.1889,31
 2026-09-01,rain_mm,Mannar,33.4057,30
 2026-10-01,rain_mm,Mannar,316.9638,31
-2026-11-01,rain_mm,Mannar,98.5319,13
+2026-11-01,rain_mm,Mannar,104.9704,14
 2025-06-01,rain_mm,Matale,46.9146,30
 2025-07-01,rain_mm,Matale,85.9708,31
 2025-08-01,rain_mm,Matale,120.0666,31
@@ -286,7 +286,7 @@ time,var,district,value,days
 2026-08-01,rain_mm,Matale,81.717,31
 2026-09-01,rain_mm,Matale,122.7987,30
 2026-10-01,rain_mm,Matale,441.9219,31
-2026-11-01,rain_mm,Matale,121.1523,13
+2026-11-01,rain_mm,Matale,136.4768,14
 2025-06-01,rain_mm,Matara,111.4357,30
 2025-07-01,rain_mm,Matara,128.2281,31
 2025-08-01,rain_mm,Matara,51.5643,31
@@ -304,7 +304,7 @@ time,var,district,value,days
 2026-08-01,rain_mm,Matara,270.5566,31
 2026-09-01,rain_mm,Matara,389.676,30
 2026-10-01,rain_mm,Matara,510.6874,31
-2026-11-01,rain_mm,Matara,183.0714,13
+2026-11-01,rain_mm,Matara,188.7464,14
 2025-06-01,rain_mm,Monaragala,46.3712,30
 2025-07-01,rain_mm,Monaragala,74.6434,31
 2025-08-01,rain_mm,Monaragala,72.0882,31
@@ -322,7 +322,7 @@ time,var,district,value,days
 2026-08-01,rain_mm,Monaragala,87.6199,31
 2026-09-01,rain_mm,Monaragala,184.6074,30
 2026-10-01,rain_mm,Monaragala,267.9136,31
-2026-11-01,rain_mm,Monaragala,119.952,13
+2026-11-01,rain_mm,Monaragala,132.6051,14
 2025-06-01,rain_mm,Mullaitivu,40.3074,30
 2025-07-01,rain_mm,Mullaitivu,17.3508,31
 2025-08-01,rain_mm,Mullaitivu,65.0389,31
@@ -340,7 +340,7 @@ time,var,district,value,days
 2026-08-01,rain_mm,Mullaitivu,13.927,31
 2026-09-01,rain_mm,Mullaitivu,62.7604,30
 2026-10-01,rain_mm,Mullaitivu,232.7626,31
-2026-11-01,rain_mm,Mullaitivu,104.6435,13
+2026-11-01,rain_mm,Mullaitivu,118.6938,14
 2025-06-01,rain_mm,Nuwara Eliya,108.0226,30
 2025-07-01,rain_mm,Nuwara Eliya,140.8875,31
 2025-08-01,rain_mm,Nuwara Eliya,163.8795,31
@@ -358,7 +358,7 @@ time,var,district,value,days
 2026-08-01,rain_mm,Nuwara Eliya,226.3137,31
 2026-09-01,rain_mm,Nuwara Eliya,287.916,30
 2026-10-01,rain_mm,Nuwara Eliya,471.7074,31
-2026-11-01,rain_mm,Nuwara Eliya,248.92,13
+2026-11-01,rain_mm,Nuwara Eliya,265.59389999999996,14
 2025-06-01,rain_mm,Polonnaruwa,36.893,30
 2025-07-01,rain_mm,Polonnaruwa,29.4365,31
 2025-08-01,rain_mm,Polonnaruwa,125.1359,31
@@ -376,7 +376,7 @@ time,var,district,value,days
 2026-08-01,rain_mm,Polonnaruwa,35.182,31
 2026-09-01,rain_mm,Polonnaruwa,98.0053,30
 2026-10-01,rain_mm,Polonnaruwa,295.9975,31
-2026-11-01,rain_mm,Polonnaruwa,78.281,13
+2026-11-01,rain_mm,Polonnaruwa,93.07,14
 2025-06-01,rain_mm,Puttalam,51.8346,30
 2025-07-01,rain_mm,Puttalam,39.5562,31
 2025-08-01,rain_mm,Puttalam,41.3624,31
@@ -394,7 +394,7 @@ time,var,district,value,days
 2026-08-01,rain_mm,Puttalam,25.5709,31
 2026-09-01,rain_mm,Puttalam,46.380900000000004,30
 2026-10-01,rain_mm,Puttalam,334.1693,31
-2026-11-01,rain_mm,Puttalam,94.8401,13
+2026-11-01,rain_mm,Puttalam,97.7191,14
 2025-06-01,rain_mm,Ratnapura,121.74249999999999,30
 2025-07-01,rain_mm,Ratnapura,139.1952,31
 2025-08-01,rain_mm,Ratnapura,107.5922,31
@@ -412,7 +412,7 @@ time,var,district,value,days
 2026-08-01,rain_mm,Ratnapura,350.3056,31
 2026-09-01,rain_mm,Ratnapura,341.4262,30
 2026-10-01,rain_mm,Ratnapura,611.9506,31
-2026-11-01,rain_mm,Ratnapura,257.8923,13
+2026-11-01,rain_mm,Ratnapura,267.7622,14
 2025-06-01,rain_mm,Trincomalee,36.6446,30
 2025-07-01,rain_mm,Trincomalee,15.5307,31
 2025-08-01,rain_mm,Trincomalee,107.4863,31
@@ -430,7 +430,7 @@ time,var,district,value,days
 2026-08-01,rain_mm,Trincomalee,30.1616,31
 2026-09-01,rain_mm,Trincomalee,129.6958,30
 2026-10-01,rain_mm,Trincomalee,203.2334,31
-2026-11-01,rain_mm,Trincomalee,111.0541,13
+2026-11-01,rain_mm,Trincomalee,132.1995,14
 2025-06-01,rain_mm,Vavuniya,37.4922,30
 2025-07-01,rain_mm,Vavuniya,15.496300000000002,31
 2025-08-01,rain_mm,Vavuniya,53.818,31
@@ -448,4 +448,4 @@ time,var,district,value,days
 2026-08-01,rain_mm,Vavuniya,8.7954,31
 2026-09-01,rain_mm,Vavuniya,66.9854,30
 2026-10-01,rain_mm,Vavuniya,295.2985,31
-2026-11-01,rain_mm,Vavuniya,93.18939999999999,13
+2026-11-01,rain_mm,Vavuniya,103.8924,14
