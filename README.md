@@ -1,3 +1,10 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="web/public/logo-on-dark.png">
+    <img src="web/public/logo.png" alt="Biome" width="320">
+  </picture>
+</p>
+
 # Biome: Sri Lanka's Earth, read from space
 
 NASA Space Apps Challenge 2026 · Kandy · Challenge: **Be An Earth System Trend Detective!**
