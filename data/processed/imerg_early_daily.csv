@@ -9,6 +9,7 @@ time,var,district,value
 2026-11-12,rain_mm,Ampara,2.9
 2026-11-13,rain_mm,Ampara,6.8
 2026-11-14,rain_mm,Ampara,20.1
+2026-11-15,rain_mm,Ampara,1.7
 2026-11-05,rain_mm,Anuradhapura,2.8
 2026-11-06,rain_mm,Anuradhapura,5.7
 2026-11-07,rain_mm,Anuradhapura,4.5
@@ -19,6 +20,7 @@ time,var,district,value
 2026-11-12,rain_mm,Anuradhapura,1.9
 2026-11-13,rain_mm,Anuradhapura,1.3
 2026-11-14,rain_mm,Anuradhapura,9.4
+2026-11-15,rain_mm,Anuradhapura,6.6
 2026-11-05,rain_mm,Badulla,3.9
 2026-11-06,rain_mm,Badulla,9.1
 2026-11-07,rain_mm,Badulla,19.6
@@ -29,6 +31,7 @@ time,var,district,value
 2026-11-12,rain_mm,Badulla,11.0
 2026-11-13,rain_mm,Badulla,5.3
 2026-11-14,rain_mm,Badulla,24.8
+2026-11-15,rain_mm,Badulla,1.9
 2026-11-05,rain_mm,Batticaloa,5.8
 2026-11-06,rain_mm,Batticaloa,9.3
 2026-11-07,rain_mm,Batticaloa,2.3
@@ -39,6 +42,7 @@ time,var,district,value
 2026-11-12,rain_mm,Batticaloa,5.7
 2026-11-13,rain_mm,Batticaloa,6.1
 2026-11-14,rain_mm,Batticaloa,19.6
+2026-11-15,rain_mm,Batticaloa,3.0
 2026-11-05,rain_mm,Colombo,4.0
 2026-11-06,rain_mm,Colombo,22.1
 2026-11-07,rain_mm,Colombo,17.8
@@ -49,6 +53,7 @@ time,var,district,value
 2026-11-12,rain_mm,Colombo,2.5
 2026-11-13,rain_mm,Colombo,0.4
 2026-11-14,rain_mm,Colombo,8.4
+2026-11-15,rain_mm,Colombo,3.9
 2026-11-05,rain_mm,Galle,9.2
 2026-11-06,rain_mm,Galle,13.8
 2026-11-07,rain_mm,Galle,22.1
@@ -59,6 +64,7 @@ time,var,district,value
 2026-11-12,rain_mm,Galle,29.9
 2026-11-13,rain_mm,Galle,0.5
 2026-11-14,rain_mm,Galle,5.2
+2026-11-15,rain_mm,Galle,6.0
 2026-11-05,rain_mm,Gampaha,9.4
 2026-11-06,rain_mm,Gampaha,27.3
 2026-11-07,rain_mm,Gampaha,12.8
@@ -69,6 +75,7 @@ time,var,district,value
 2026-11-12,rain_mm,Gampaha,1.1
 2026-11-13,rain_mm,Gampaha,0.2
 2026-11-14,rain_mm,Gampaha,7.8
+2026-11-15,rain_mm,Gampaha,1.9
 2026-11-05,rain_mm,Hambantota,6.0
 2026-11-06,rain_mm,Hambantota,21.4
 2026-11-07,rain_mm,Hambantota,11.7
@@ -79,6 +86,7 @@ time,var,district,value
 2026-11-12,rain_mm,Hambantota,20.2
 2026-11-13,rain_mm,Hambantota,1.3
 2026-11-14,rain_mm,Hambantota,8.6
+2026-11-15,rain_mm,Hambantota,0.6
 2026-11-05,rain_mm,Jaffna,0.3
 2026-11-06,rain_mm,Jaffna,3.7
 2026-11-07,rain_mm,Jaffna,4.2
@@ -89,6 +97,7 @@ time,var,district,value
 2026-11-12,rain_mm,Jaffna,0.1
 2026-11-13,rain_mm,Jaffna,0.1
 2026-11-14,rain_mm,Jaffna,13.5
+2026-11-15,rain_mm,Jaffna,9.8
 2026-11-05,rain_mm,Kalutara,8.8
 2026-11-06,rain_mm,Kalutara,19.0
 2026-11-07,rain_mm,Kalutara,24.2
@@ -99,6 +108,7 @@ time,var,district,value
 2026-11-12,rain_mm,Kalutara,11.5
 2026-11-13,rain_mm,Kalutara,0.7
 2026-11-14,rain_mm,Kalutara,5.6
+2026-11-15,rain_mm,Kalutara,2.2
 2026-11-05,rain_mm,Kandy,2.3
 2026-11-06,rain_mm,Kandy,8.7
 2026-11-07,rain_mm,Kandy,37.7
@@ -109,6 +119,7 @@ time,var,district,value
 2026-11-12,rain_mm,Kandy,7.2
 2026-11-13,rain_mm,Kandy,1.0
 2026-11-14,rain_mm,Kandy,22.1
+2026-11-15,rain_mm,Kandy,3.7
 2026-11-05,rain_mm,Kegalle,3.6
 2026-11-06,rain_mm,Kegalle,14.1
 2026-11-07,rain_mm,Kegalle,27.1
@@ -119,6 +130,7 @@ time,var,district,value
 2026-11-12,rain_mm,Kegalle,5.5
 2026-11-13,rain_mm,Kegalle,0.6
 2026-11-14,rain_mm,Kegalle,13.3
+2026-11-15,rain_mm,Kegalle,0.7
 2026-11-05,rain_mm,Kilinochchi,1.0
 2026-11-06,rain_mm,Kilinochchi,5.2
 2026-11-07,rain_mm,Kilinochchi,9.5
@@ -129,6 +141,7 @@ time,var,district,value
 2026-11-12,rain_mm,Kilinochchi,0.5
 2026-11-13,rain_mm,Kilinochchi,0.6
 2026-11-14,rain_mm,Kilinochchi,13.3
+2026-11-15,rain_mm,Kilinochchi,9.7
 2026-11-05,rain_mm,Kurunegala,5.7
 2026-11-06,rain_mm,Kurunegala,9.2
 2026-11-07,rain_mm,Kurunegala,22.7
@@ -139,6 +152,7 @@ time,var,district,value
 2026-11-12,rain_mm,Kurunegala,1.2
 2026-11-13,rain_mm,Kurunegala,0.8
 2026-11-14,rain_mm,Kurunegala,11.1
+2026-11-15,rain_mm,Kurunegala,2.4
 2026-11-05,rain_mm,Mannar,3.5
 2026-11-06,rain_mm,Mannar,9.5
 2026-11-07,rain_mm,Mannar,5.9
@@ -149,6 +163,7 @@ time,var,district,value
 2026-11-12,rain_mm,Mannar,2.4
 2026-11-13,rain_mm,Mannar,0.3
 2026-11-14,rain_mm,Mannar,8.6
+2026-11-15,rain_mm,Mannar,7.0
 2026-11-05,rain_mm,Matale,1.8
 2026-11-06,rain_mm,Matale,10.0
 2026-11-07,rain_mm,Matale,12.4
@@ -159,6 +174,7 @@ time,var,district,value
 2026-11-12,rain_mm,Matale,2.2
 2026-11-13,rain_mm,Matale,2.2
 2026-11-14,rain_mm,Matale,19.5
+2026-11-15,rain_mm,Matale,4.3
 2026-11-05,rain_mm,Matara,9.3
 2026-11-06,rain_mm,Matara,14.1
 2026-11-07,rain_mm,Matara,17.8
@@ -169,6 +185,7 @@ time,var,district,value
 2026-11-12,rain_mm,Matara,25.4
 2026-11-13,rain_mm,Matara,0.4
 2026-11-14,rain_mm,Matara,6.9
+2026-11-15,rain_mm,Matara,4.9
 2026-11-05,rain_mm,Monaragala,5.3
 2026-11-06,rain_mm,Monaragala,8.2
 2026-11-07,rain_mm,Monaragala,5.4
@@ -179,6 +196,7 @@ time,var,district,value
 2026-11-12,rain_mm,Monaragala,11.2
 2026-11-13,rain_mm,Monaragala,4.7
 2026-11-14,rain_mm,Monaragala,16.4
+2026-11-15,rain_mm,Monaragala,0.7
 2026-11-05,rain_mm,Mullaitivu,1.8
 2026-11-06,rain_mm,Mullaitivu,5.0
 2026-11-07,rain_mm,Mullaitivu,5.7
@@ -189,6 +207,7 @@ time,var,district,value
 2026-11-12,rain_mm,Mullaitivu,2.4
 2026-11-13,rain_mm,Mullaitivu,0.5
 2026-11-14,rain_mm,Mullaitivu,18.6
+2026-11-15,rain_mm,Mullaitivu,13.0
 2026-11-05,rain_mm,Nuwara Eliya,1.9
 2026-11-06,rain_mm,Nuwara Eliya,7.6
 2026-11-07,rain_mm,Nuwara Eliya,29.4
@@ -199,6 +218,7 @@ time,var,district,value
 2026-11-12,rain_mm,Nuwara Eliya,11.5
 2026-11-13,rain_mm,Nuwara Eliya,3.3
 2026-11-14,rain_mm,Nuwara Eliya,20.2
+2026-11-15,rain_mm,Nuwara Eliya,1.4
 2026-11-05,rain_mm,Polonnaruwa,3.4
 2026-11-06,rain_mm,Polonnaruwa,6.1
 2026-11-07,rain_mm,Polonnaruwa,6.0
@@ -209,6 +229,7 @@ time,var,district,value
 2026-11-12,rain_mm,Polonnaruwa,1.6
 2026-11-13,rain_mm,Polonnaruwa,3.8
 2026-11-14,rain_mm,Polonnaruwa,18.2
+2026-11-15,rain_mm,Polonnaruwa,3.6
 2026-11-05,rain_mm,Puttalam,8.6
 2026-11-06,rain_mm,Puttalam,7.6
 2026-11-07,rain_mm,Puttalam,11.3
@@ -219,6 +240,7 @@ time,var,district,value
 2026-11-12,rain_mm,Puttalam,1.2
 2026-11-13,rain_mm,Puttalam,0.4
 2026-11-14,rain_mm,Puttalam,4.5
+2026-11-15,rain_mm,Puttalam,3.4
 2026-11-05,rain_mm,Ratnapura,5.3
 2026-11-06,rain_mm,Ratnapura,10.0
 2026-11-07,rain_mm,Ratnapura,37.8
@@ -229,6 +251,7 @@ time,var,district,value
 2026-11-12,rain_mm,Ratnapura,23.1
 2026-11-13,rain_mm,Ratnapura,3.2
 2026-11-14,rain_mm,Ratnapura,13.2
+2026-11-15,rain_mm,Ratnapura,1.8
 2026-11-05,rain_mm,Trincomalee,1.8
 2026-11-06,rain_mm,Trincomalee,10.6
 2026-11-07,rain_mm,Trincomalee,3.0
@@ -239,6 +262,7 @@ time,var,district,value
 2026-11-12,rain_mm,Trincomalee,10.9
 2026-11-13,rain_mm,Trincomalee,3.6
 2026-11-14,rain_mm,Trincomalee,23.6
+2026-11-15,rain_mm,Trincomalee,9.9
 2026-11-05,rain_mm,Vavuniya,2.1
 2026-11-06,rain_mm,Vavuniya,3.2
 2026-11-07,rain_mm,Vavuniya,2.2
@@ -249,3 +273,4 @@ time,var,district,value
 2026-11-12,rain_mm,Vavuniya,2.1
 2026-11-13,rain_mm,Vavuniya,0.5
 2026-11-14,rain_mm,Vavuniya,13.6
+2026-11-15,rain_mm,Vavuniya,10.3
