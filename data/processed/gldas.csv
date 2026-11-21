@@ -318,6 +318,7 @@ time,var,district,value
 2026-05-01,Evap_tavg,Ampara,0.0
 2026-06-01,Evap_tavg,Ampara,0.0
 2026-07-01,Evap_tavg,Ampara,0.0
+2026-08-01,Evap_tavg,Ampara,0.0
 2000-01-01,Evap_tavg,Anuradhapura,0.0
 2000-02-01,Evap_tavg,Anuradhapura,0.0
 2000-03-01,Evap_tavg,Anuradhapura,0.0
@@ -637,6 +638,7 @@ time,var,district,value
 2026-05-01,Evap_tavg,Anuradhapura,0.0
 2026-06-01,Evap_tavg,Anuradhapura,0.0
 2026-07-01,Evap_tavg,Anuradhapura,0.0
+2026-08-01,Evap_tavg,Anuradhapura,0.0
 2000-01-01,Evap_tavg,Badulla,0.0
 2000-02-01,Evap_tavg,Badulla,0.0
 2000-03-01,Evap_tavg,Badulla,0.0
@@ -956,6 +958,7 @@ time,var,district,value
 2026-05-01,Evap_tavg,Badulla,0.0
 2026-06-01,Evap_tavg,Badulla,0.0
 2026-07-01,Evap_tavg,Badulla,0.0
+2026-08-01,Evap_tavg,Badulla,0.0
 2000-01-01,Evap_tavg,Batticaloa,0.0
 2000-02-01,Evap_tavg,Batticaloa,0.0
 2000-03-01,Evap_tavg,Batticaloa,0.0
@@ -1275,6 +1278,7 @@ time,var,district,value
 2026-05-01,Evap_tavg,Batticaloa,0.0
 2026-06-01,Evap_tavg,Batticaloa,0.0
 2026-07-01,Evap_tavg,Batticaloa,0.0
+2026-08-01,Evap_tavg,Batticaloa,0.0
 2000-01-01,Evap_tavg,Colombo,0.0
 2000-02-01,Evap_tavg,Colombo,0.0
 2000-03-01,Evap_tavg,Colombo,0.0
@@ -1594,6 +1598,7 @@ time,var,district,value
 2026-05-01,Evap_tavg,Colombo,0.0
 2026-06-01,Evap_tavg,Colombo,0.0
 2026-07-01,Evap_tavg,Colombo,0.0
+2026-08-01,Evap_tavg,Colombo,0.0
 2000-01-01,Evap_tavg,Galle,0.0
 2000-02-01,Evap_tavg,Galle,0.0
 2000-03-01,Evap_tavg,Galle,0.0
@@ -1913,6 +1918,7 @@ time,var,district,value
 2026-05-01,Evap_tavg,Galle,0.0
 2026-06-01,Evap_tavg,Galle,0.0
 2026-07-01,Evap_tavg,Galle,0.0
+2026-08-01,Evap_tavg,Galle,0.0
 2000-01-01,Evap_tavg,Gampaha,0.0
 2000-02-01,Evap_tavg,Gampaha,0.0
 2000-03-01,Evap_tavg,Gampaha,0.0
@@ -2232,6 +2238,7 @@ time,var,district,value
 2026-05-01,Evap_tavg,Gampaha,0.0
 2026-06-01,Evap_tavg,Gampaha,0.0
 2026-07-01,Evap_tavg,Gampaha,0.0
+2026-08-01,Evap_tavg,Gampaha,0.0
 2000-01-01,Evap_tavg,Hambantota,0.0
 2000-02-01,Evap_tavg,Hambantota,0.0
 2000-03-01,Evap_tavg,Hambantota,0.0
@@ -2551,6 +2558,7 @@ time,var,district,value
 2026-05-01,Evap_tavg,Hambantota,0.0001
 2026-06-01,Evap_tavg,Hambantota,0.0
 2026-07-01,Evap_tavg,Hambantota,0.0
+2026-08-01,Evap_tavg,Hambantota,0.0
 2000-01-01,Evap_tavg,Jaffna,
 2000-02-01,Evap_tavg,Jaffna,
 2000-03-01,Evap_tavg,Jaffna,
@@ -2870,6 +2878,7 @@ time,var,district,value
 2026-05-01,Evap_tavg,Jaffna,
 2026-06-01,Evap_tavg,Jaffna,
 2026-07-01,Evap_tavg,Jaffna,
+2026-08-01,Evap_tavg,Jaffna,
 2000-01-01,Evap_tavg,Kalutara,0.0
 2000-02-01,Evap_tavg,Kalutara,0.0
 2000-03-01,Evap_tavg,Kalutara,0.0
@@ -3189,6 +3198,7 @@ time,var,district,value
 2026-05-01,Evap_tavg,Kalutara,0.0
 2026-06-01,Evap_tavg,Kalutara,0.0
 2026-07-01,Evap_tavg,Kalutara,0.0
+2026-08-01,Evap_tavg,Kalutara,0.0
 2000-01-01,Evap_tavg,Kandy,0.0
 2000-02-01,Evap_tavg,Kandy,0.0
 2000-03-01,Evap_tavg,Kandy,0.0
@@ -3508,6 +3518,7 @@ time,var,district,value
 2026-05-01,Evap_tavg,Kandy,0.0
 2026-06-01,Evap_tavg,Kandy,0.0
 2026-07-01,Evap_tavg,Kandy,0.0
+2026-08-01,Evap_tavg,Kandy,0.0
 2000-01-01,Evap_tavg,Kegalle,0.0
 2000-02-01,Evap_tavg,Kegalle,0.0
 2000-03-01,Evap_tavg,Kegalle,0.0
@@ -3827,6 +3838,7 @@ time,var,district,value
 2026-05-01,Evap_tavg,Kegalle,0.0
 2026-06-01,Evap_tavg,Kegalle,0.0
 2026-07-01,Evap_tavg,Kegalle,0.0
+2026-08-01,Evap_tavg,Kegalle,0.0
 2000-01-01,Evap_tavg,Kilinochchi,0.0
 2000-02-01,Evap_tavg,Kilinochchi,0.0001
 2000-03-01,Evap_tavg,Kilinochchi,0.0
@@ -4146,6 +4158,7 @@ time,var,district,value
 2026-05-01,Evap_tavg,Kilinochchi,0.0
 2026-06-01,Evap_tavg,Kilinochchi,0.0
 2026-07-01,Evap_tavg,Kilinochchi,0.0
+2026-08-01,Evap_tavg,Kilinochchi,0.0
 2000-01-01,Evap_tavg,Kurunegala,0.0
 2000-02-01,Evap_tavg,Kurunegala,0.0
 2000-03-01,Evap_tavg,Kurunegala,0.0
@@ -4465,6 +4478,7 @@ time,var,district,value
 2026-05-01,Evap_tavg,Kurunegala,0.0
 2026-06-01,Evap_tavg,Kurunegala,0.0
 2026-07-01,Evap_tavg,Kurunegala,0.0
+2026-08-01,Evap_tavg,Kurunegala,0.0
 2000-01-01,Evap_tavg,Mannar,0.0
 2000-02-01,Evap_tavg,Mannar,0.0
 2000-03-01,Evap_tavg,Mannar,0.0
@@ -4784,6 +4798,7 @@ time,var,district,value
 2026-05-01,Evap_tavg,Mannar,0.0
 2026-06-01,Evap_tavg,Mannar,0.0
 2026-07-01,Evap_tavg,Mannar,0.0
+2026-08-01,Evap_tavg,Mannar,0.0
 2000-01-01,Evap_tavg,Matale,0.0
 2000-02-01,Evap_tavg,Matale,0.0
 2000-03-01,Evap_tavg,Matale,0.0
@@ -5103,6 +5118,7 @@ time,var,district,value
 2026-05-01,Evap_tavg,Matale,0.0001
 2026-06-01,Evap_tavg,Matale,0.0001
 2026-07-01,Evap_tavg,Matale,0.0
+2026-08-01,Evap_tavg,Matale,0.0
 2000-01-01,Evap_tavg,Matara,0.0
 2000-02-01,Evap_tavg,Matara,0.0
 2000-03-01,Evap_tavg,Matara,0.0
@@ -5422,6 +5438,7 @@ time,var,district,value
 2026-05-01,Evap_tavg,Matara,0.0
 2026-06-01,Evap_tavg,Matara,0.0
 2026-07-01,Evap_tavg,Matara,0.0
+2026-08-01,Evap_tavg,Matara,0.0
 2000-01-01,Evap_tavg,Monaragala,0.0
 2000-02-01,Evap_tavg,Monaragala,0.0
 2000-03-01,Evap_tavg,Monaragala,0.0
@@ -5741,6 +5758,7 @@ time,var,district,value
 2026-05-01,Evap_tavg,Monaragala,0.0
 2026-06-01,Evap_tavg,Monaragala,0.0
 2026-07-01,Evap_tavg,Monaragala,0.0
+2026-08-01,Evap_tavg,Monaragala,0.0
 2000-01-01,Evap_tavg,Mullaitivu,0.0
 2000-02-01,Evap_tavg,Mullaitivu,0.0001
 2000-03-01,Evap_tavg,Mullaitivu,0.0
@@ -6060,6 +6078,7 @@ time,var,district,value
 2026-05-01,Evap_tavg,Mullaitivu,0.0
 2026-06-01,Evap_tavg,Mullaitivu,0.0
 2026-07-01,Evap_tavg,Mullaitivu,0.0
+2026-08-01,Evap_tavg,Mullaitivu,0.0
 2000-01-01,Evap_tavg,Nuwara Eliya,0.0
 2000-02-01,Evap_tavg,Nuwara Eliya,0.0
 2000-03-01,Evap_tavg,Nuwara Eliya,0.0
@@ -6379,6 +6398,7 @@ time,var,district,value
 2026-05-01,Evap_tavg,Nuwara Eliya,0.0
 2026-06-01,Evap_tavg,Nuwara Eliya,0.0
 2026-07-01,Evap_tavg,Nuwara Eliya,0.0
+2026-08-01,Evap_tavg,Nuwara Eliya,0.0
 2000-01-01,Evap_tavg,Polonnaruwa,0.0
 2000-02-01,Evap_tavg,Polonnaruwa,0.0
 2000-03-01,Evap_tavg,Polonnaruwa,0.0
@@ -6698,6 +6718,7 @@ time,var,district,value
 2026-05-01,Evap_tavg,Polonnaruwa,0.0001
 2026-06-01,Evap_tavg,Polonnaruwa,0.0
 2026-07-01,Evap_tavg,Polonnaruwa,0.0
+2026-08-01,Evap_tavg,Polonnaruwa,0.0
 2000-01-01,Evap_tavg,Puttalam,0.0001
 2000-02-01,Evap_tavg,Puttalam,0.0
 2000-03-01,Evap_tavg,Puttalam,0.0
@@ -7017,6 +7038,7 @@ time,var,district,value
 2026-05-01,Evap_tavg,Puttalam,0.0
 2026-06-01,Evap_tavg,Puttalam,0.0
 2026-07-01,Evap_tavg,Puttalam,0.0
+2026-08-01,Evap_tavg,Puttalam,0.0
 2000-01-01,Evap_tavg,Ratnapura,0.0
 2000-02-01,Evap_tavg,Ratnapura,0.0
 2000-03-01,Evap_tavg,Ratnapura,0.0
@@ -7336,6 +7358,7 @@ time,var,district,value
 2026-05-01,Evap_tavg,Ratnapura,0.0
 2026-06-01,Evap_tavg,Ratnapura,0.0
 2026-07-01,Evap_tavg,Ratnapura,0.0
+2026-08-01,Evap_tavg,Ratnapura,0.0
 2000-01-01,Evap_tavg,Trincomalee,0.0
 2000-02-01,Evap_tavg,Trincomalee,0.0001
 2000-03-01,Evap_tavg,Trincomalee,0.0001
@@ -7655,6 +7678,7 @@ time,var,district,value
 2026-05-01,Evap_tavg,Trincomalee,0.0
 2026-06-01,Evap_tavg,Trincomalee,0.0
 2026-07-01,Evap_tavg,Trincomalee,0.0
+2026-08-01,Evap_tavg,Trincomalee,0.0
 2000-01-01,Evap_tavg,Vavuniya,0.0
 2000-02-01,Evap_tavg,Vavuniya,0.0001
 2000-03-01,Evap_tavg,Vavuniya,0.0
@@ -7974,6 +7998,7 @@ time,var,district,value
 2026-05-01,Evap_tavg,Vavuniya,0.0
 2026-06-01,Evap_tavg,Vavuniya,0.0
 2026-07-01,Evap_tavg,Vavuniya,0.0
+2026-08-01,Evap_tavg,Vavuniya,0.0
 2000-01-01,Rainf_f_tavg,Ampara,0.0001
 2000-02-01,Rainf_f_tavg,Ampara,0.0001
 2000-03-01,Rainf_f_tavg,Ampara,0.0
@@ -8293,6 +8318,7 @@ time,var,district,value
 2026-05-01,Rainf_f_tavg,Ampara,0.0001
 2026-06-01,Rainf_f_tavg,Ampara,0.0
 2026-07-01,Rainf_f_tavg,Ampara,0.0
+2026-08-01,Rainf_f_tavg,Ampara,0.0
 2000-01-01,Rainf_f_tavg,Anuradhapura,0.0
 2000-02-01,Rainf_f_tavg,Anuradhapura,0.0001
 2000-03-01,Rainf_f_tavg,Anuradhapura,0.0
@@ -8612,6 +8638,7 @@ time,var,district,value
 2026-05-01,Rainf_f_tavg,Anuradhapura,0.0001
 2026-06-01,Rainf_f_tavg,Anuradhapura,0.0
 2026-07-01,Rainf_f_tavg,Anuradhapura,0.0
+2026-08-01,Rainf_f_tavg,Anuradhapura,0.0
 2000-01-01,Rainf_f_tavg,Badulla,0.0001
 2000-02-01,Rainf_f_tavg,Badulla,0.0001
 2000-03-01,Rainf_f_tavg,Badulla,0.0
@@ -8931,6 +8958,7 @@ time,var,district,value
 2026-05-01,Rainf_f_tavg,Badulla,0.0001
 2026-06-01,Rainf_f_tavg,Badulla,0.0
 2026-07-01,Rainf_f_tavg,Badulla,0.0
+2026-08-01,Rainf_f_tavg,Badulla,0.0
 2000-01-01,Rainf_f_tavg,Batticaloa,0.0001
 2000-02-01,Rainf_f_tavg,Batticaloa,0.0001
 2000-03-01,Rainf_f_tavg,Batticaloa,0.0
@@ -9250,6 +9278,7 @@ time,var,district,value
 2026-05-01,Rainf_f_tavg,Batticaloa,0.0001
 2026-06-01,Rainf_f_tavg,Batticaloa,0.0
 2026-07-01,Rainf_f_tavg,Batticaloa,0.0
+2026-08-01,Rainf_f_tavg,Batticaloa,0.0
 2000-01-01,Rainf_f_tavg,Colombo,0.0001
 2000-02-01,Rainf_f_tavg,Colombo,0.0001
 2000-03-01,Rainf_f_tavg,Colombo,0.0001
@@ -9569,6 +9598,7 @@ time,var,district,value
 2026-05-01,Rainf_f_tavg,Colombo,0.0001
 2026-06-01,Rainf_f_tavg,Colombo,0.0001
 2026-07-01,Rainf_f_tavg,Colombo,0.0
+2026-08-01,Rainf_f_tavg,Colombo,0.0
 2000-01-01,Rainf_f_tavg,Galle,0.0001
 2000-02-01,Rainf_f_tavg,Galle,0.0001
 2000-03-01,Rainf_f_tavg,Galle,0.0001
@@ -9888,6 +9918,7 @@ time,var,district,value
 2026-05-01,Rainf_f_tavg,Galle,0.0001
 2026-06-01,Rainf_f_tavg,Galle,0.0
 2026-07-01,Rainf_f_tavg,Galle,0.0
+2026-08-01,Rainf_f_tavg,Galle,0.0
 2000-01-01,Rainf_f_tavg,Gampaha,0.0001
 2000-02-01,Rainf_f_tavg,Gampaha,0.0001
 2000-03-01,Rainf_f_tavg,Gampaha,0.0
@@ -10207,6 +10238,7 @@ time,var,district,value
 2026-05-01,Rainf_f_tavg,Gampaha,0.0001
 2026-06-01,Rainf_f_tavg,Gampaha,0.0
 2026-07-01,Rainf_f_tavg,Gampaha,0.0
+2026-08-01,Rainf_f_tavg,Gampaha,0.0
 2000-01-01,Rainf_f_tavg,Hambantota,0.0001
 2000-02-01,Rainf_f_tavg,Hambantota,0.0001
 2000-03-01,Rainf_f_tavg,Hambantota,0.0001
@@ -10526,6 +10558,7 @@ time,var,district,value
 2026-05-01,Rainf_f_tavg,Hambantota,0.0001
 2026-06-01,Rainf_f_tavg,Hambantota,0.0
 2026-07-01,Rainf_f_tavg,Hambantota,0.0
+2026-08-01,Rainf_f_tavg,Hambantota,0.0
 2000-01-01,Rainf_f_tavg,Jaffna,
 2000-02-01,Rainf_f_tavg,Jaffna,
 2000-03-01,Rainf_f_tavg,Jaffna,
@@ -10845,6 +10878,7 @@ time,var,district,value
 2026-05-01,Rainf_f_tavg,Jaffna,
 2026-06-01,Rainf_f_tavg,Jaffna,
 2026-07-01,Rainf_f_tavg,Jaffna,
+2026-08-01,Rainf_f_tavg,Jaffna,
 2000-01-01,Rainf_f_tavg,Kalutara,0.0001
 2000-02-01,Rainf_f_tavg,Kalutara,0.0001
 2000-03-01,Rainf_f_tavg,Kalutara,0.0001
@@ -11164,6 +11198,7 @@ time,var,district,value
 2026-05-01,Rainf_f_tavg,Kalutara,0.0001
 2026-06-01,Rainf_f_tavg,Kalutara,0.0
 2026-07-01,Rainf_f_tavg,Kalutara,0.0
+2026-08-01,Rainf_f_tavg,Kalutara,0.0
 2000-01-01,Rainf_f_tavg,Kandy,0.0001
 2000-02-01,Rainf_f_tavg,Kandy,0.0001
 2000-03-01,Rainf_f_tavg,Kandy,0.0
@@ -11483,6 +11518,7 @@ time,var,district,value
 2026-05-01,Rainf_f_tavg,Kandy,0.0001
 2026-06-01,Rainf_f_tavg,Kandy,0.0
 2026-07-01,Rainf_f_tavg,Kandy,0.0
+2026-08-01,Rainf_f_tavg,Kandy,0.0
 2000-01-01,Rainf_f_tavg,Kegalle,0.0001
 2000-02-01,Rainf_f_tavg,Kegalle,0.0001
 2000-03-01,Rainf_f_tavg,Kegalle,0.0
@@ -11802,6 +11838,7 @@ time,var,district,value
 2026-05-01,Rainf_f_tavg,Kegalle,0.0001
 2026-06-01,Rainf_f_tavg,Kegalle,0.0
 2026-07-01,Rainf_f_tavg,Kegalle,0.0
+2026-08-01,Rainf_f_tavg,Kegalle,0.0
 2000-01-01,Rainf_f_tavg,Kilinochchi,0.0
 2000-02-01,Rainf_f_tavg,Kilinochchi,0.0
 2000-03-01,Rainf_f_tavg,Kilinochchi,0.0
@@ -12121,6 +12158,7 @@ time,var,district,value
 2026-05-01,Rainf_f_tavg,Kilinochchi,0.0001
 2026-06-01,Rainf_f_tavg,Kilinochchi,0.0
 2026-07-01,Rainf_f_tavg,Kilinochchi,0.0
+2026-08-01,Rainf_f_tavg,Kilinochchi,0.0
 2000-01-01,Rainf_f_tavg,Kurunegala,0.0001
 2000-02-01,Rainf_f_tavg,Kurunegala,0.0001
 2000-03-01,Rainf_f_tavg,Kurunegala,0.0
@@ -12440,6 +12478,7 @@ time,var,district,value
 2026-05-01,Rainf_f_tavg,Kurunegala,0.0001
 2026-06-01,Rainf_f_tavg,Kurunegala,0.0
 2026-07-01,Rainf_f_tavg,Kurunegala,0.0
+2026-08-01,Rainf_f_tavg,Kurunegala,0.0
 2000-01-01,Rainf_f_tavg,Mannar,0.0
 2000-02-01,Rainf_f_tavg,Mannar,0.0
 2000-03-01,Rainf_f_tavg,Mannar,0.0
@@ -12759,6 +12798,7 @@ time,var,district,value
 2026-05-01,Rainf_f_tavg,Mannar,0.0001
 2026-06-01,Rainf_f_tavg,Mannar,0.0
 2026-07-01,Rainf_f_tavg,Mannar,0.0
+2026-08-01,Rainf_f_tavg,Mannar,0.0
 2000-01-01,Rainf_f_tavg,Matale,0.0001
 2000-02-01,Rainf_f_tavg,Matale,0.0001
 2000-03-01,Rainf_f_tavg,Matale,0.0
@@ -13078,6 +13118,7 @@ time,var,district,value
 2026-05-01,Rainf_f_tavg,Matale,0.0001
 2026-06-01,Rainf_f_tavg,Matale,0.0
 2026-07-01,Rainf_f_tavg,Matale,0.0
+2026-08-01,Rainf_f_tavg,Matale,0.0
 2000-01-01,Rainf_f_tavg,Matara,0.0001
 2000-02-01,Rainf_f_tavg,Matara,0.0001
 2000-03-01,Rainf_f_tavg,Matara,0.0001
@@ -13397,6 +13438,7 @@ time,var,district,value
 2026-05-01,Rainf_f_tavg,Matara,0.0001
 2026-06-01,Rainf_f_tavg,Matara,0.0
 2026-07-01,Rainf_f_tavg,Matara,0.0
+2026-08-01,Rainf_f_tavg,Matara,0.0
 2000-01-01,Rainf_f_tavg,Monaragala,0.0001
 2000-02-01,Rainf_f_tavg,Monaragala,0.0001
 2000-03-01,Rainf_f_tavg,Monaragala,0.0
@@ -13716,6 +13758,7 @@ time,var,district,value
 2026-05-01,Rainf_f_tavg,Monaragala,0.0001
 2026-06-01,Rainf_f_tavg,Monaragala,0.0
 2026-07-01,Rainf_f_tavg,Monaragala,0.0
+2026-08-01,Rainf_f_tavg,Monaragala,0.0
 2000-01-01,Rainf_f_tavg,Mullaitivu,0.0
 2000-02-01,Rainf_f_tavg,Mullaitivu,0.0
 2000-03-01,Rainf_f_tavg,Mullaitivu,0.0
@@ -14035,6 +14078,7 @@ time,var,district,value
 2026-05-01,Rainf_f_tavg,Mullaitivu,0.0001
 2026-06-01,Rainf_f_tavg,Mullaitivu,0.0
 2026-07-01,Rainf_f_tavg,Mullaitivu,0.0
+2026-08-01,Rainf_f_tavg,Mullaitivu,0.0
 2000-01-01,Rainf_f_tavg,Nuwara Eliya,0.0001
 2000-02-01,Rainf_f_tavg,Nuwara Eliya,0.0001
 2000-03-01,Rainf_f_tavg,Nuwara Eliya,0.0
@@ -14354,6 +14398,7 @@ time,var,district,value
 2026-05-01,Rainf_f_tavg,Nuwara Eliya,0.0001
 2026-06-01,Rainf_f_tavg,Nuwara Eliya,0.0
 2026-07-01,Rainf_f_tavg,Nuwara Eliya,0.0
+2026-08-01,Rainf_f_tavg,Nuwara Eliya,0.0
 2000-01-01,Rainf_f_tavg,Polonnaruwa,0.0001
 2000-02-01,Rainf_f_tavg,Polonnaruwa,0.0001
 2000-03-01,Rainf_f_tavg,Polonnaruwa,0.0
@@ -14673,6 +14718,7 @@ time,var,district,value
 2026-05-01,Rainf_f_tavg,Polonnaruwa,0.0001
 2026-06-01,Rainf_f_tavg,Polonnaruwa,0.0
 2026-07-01,Rainf_f_tavg,Polonnaruwa,0.0
+2026-08-01,Rainf_f_tavg,Polonnaruwa,0.0
 2000-01-01,Rainf_f_tavg,Puttalam,0.0001
 2000-02-01,Rainf_f_tavg,Puttalam,0.0001
 2000-03-01,Rainf_f_tavg,Puttalam,0.0
@@ -14992,6 +15038,7 @@ time,var,district,value
 2026-05-01,Rainf_f_tavg,Puttalam,0.0001
 2026-06-01,Rainf_f_tavg,Puttalam,0.0
 2026-07-01,Rainf_f_tavg,Puttalam,0.0
+2026-08-01,Rainf_f_tavg,Puttalam,0.0
 2000-01-01,Rainf_f_tavg,Ratnapura,0.0001
 2000-02-01,Rainf_f_tavg,Ratnapura,0.0001
 2000-03-01,Rainf_f_tavg,Ratnapura,0.0001
@@ -15311,6 +15358,7 @@ time,var,district,value
 2026-05-01,Rainf_f_tavg,Ratnapura,0.0001
 2026-06-01,Rainf_f_tavg,Ratnapura,0.0
 2026-07-01,Rainf_f_tavg,Ratnapura,0.0
+2026-08-01,Rainf_f_tavg,Ratnapura,0.0
 2000-01-01,Rainf_f_tavg,Trincomalee,0.0001
 2000-02-01,Rainf_f_tavg,Trincomalee,0.0
 2000-03-01,Rainf_f_tavg,Trincomalee,0.0
@@ -15630,6 +15678,7 @@ time,var,district,value
 2026-05-01,Rainf_f_tavg,Trincomalee,0.0001
 2026-06-01,Rainf_f_tavg,Trincomalee,0.0
 2026-07-01,Rainf_f_tavg,Trincomalee,0.0
+2026-08-01,Rainf_f_tavg,Trincomalee,0.0
 2000-01-01,Rainf_f_tavg,Vavuniya,0.0
 2000-02-01,Rainf_f_tavg,Vavuniya,0.0
 2000-03-01,Rainf_f_tavg,Vavuniya,0.0
@@ -15949,6 +15998,7 @@ time,var,district,value
 2026-05-01,Rainf_f_tavg,Vavuniya,0.0001
 2026-06-01,Rainf_f_tavg,Vavuniya,0.0
 2026-07-01,Rainf_f_tavg,Vavuniya,0.0
+2026-08-01,Rainf_f_tavg,Vavuniya,0.0
 2000-01-01,RootMoist_inst,Ampara,471.751
 2000-02-01,RootMoist_inst,Ampara,443.3904
 2000-03-01,RootMoist_inst,Ampara,417.6104
@@ -16268,6 +16318,7 @@ time,var,district,value
 2026-05-01,RootMoist_inst,Ampara,339.6227
 2026-06-01,RootMoist_inst,Ampara,296.4302
 2026-07-01,RootMoist_inst,Ampara,244.3808
+2026-08-01,RootMoist_inst,Ampara,238.8197
 2000-01-01,RootMoist_inst,Anuradhapura,459.4208
 2000-02-01,RootMoist_inst,Anuradhapura,413.5491
 2000-03-01,RootMoist_inst,Anuradhapura,374.4253
@@ -16587,6 +16638,7 @@ time,var,district,value
 2026-05-01,RootMoist_inst,Anuradhapura,350.9299
 2026-06-01,RootMoist_inst,Anuradhapura,299.1774
 2026-07-01,RootMoist_inst,Anuradhapura,253.2603
+2026-08-01,RootMoist_inst,Anuradhapura,243.0482
 2000-01-01,RootMoist_inst,Badulla,457.2718
 2000-02-01,RootMoist_inst,Badulla,432.2576
 2000-03-01,RootMoist_inst,Badulla,417.0401
@@ -16906,6 +16958,7 @@ time,var,district,value
 2026-05-01,RootMoist_inst,Badulla,364.0559
 2026-06-01,RootMoist_inst,Badulla,316.2924
 2026-07-01,RootMoist_inst,Badulla,266.897
+2026-08-01,RootMoist_inst,Badulla,258.0789
 2000-01-01,RootMoist_inst,Batticaloa,368.5614
 2000-02-01,RootMoist_inst,Batticaloa,338.3288
 2000-03-01,RootMoist_inst,Batticaloa,303.7348
@@ -17225,6 +17278,7 @@ time,var,district,value
 2026-05-01,RootMoist_inst,Batticaloa,253.0684
 2026-06-01,RootMoist_inst,Batticaloa,218.7723
 2026-07-01,RootMoist_inst,Batticaloa,172.6071
+2026-08-01,RootMoist_inst,Batticaloa,168.3723
 2000-01-01,RootMoist_inst,Colombo,464.6698
 2000-02-01,RootMoist_inst,Colombo,439.0986
 2000-03-01,RootMoist_inst,Colombo,447.0513
@@ -17544,6 +17598,7 @@ time,var,district,value
 2026-05-01,RootMoist_inst,Colombo,467.3638
 2026-06-01,RootMoist_inst,Colombo,452.1619
 2026-07-01,RootMoist_inst,Colombo,424.0012
+2026-08-01,RootMoist_inst,Colombo,429.0887
 2000-01-01,RootMoist_inst,Galle,510.6753
 2000-02-01,RootMoist_inst,Galle,484.4327
 2000-03-01,RootMoist_inst,Galle,484.5743
@@ -17863,6 +17918,7 @@ time,var,district,value
 2026-05-01,RootMoist_inst,Galle,494.3126
 2026-06-01,RootMoist_inst,Galle,458.2037
 2026-07-01,RootMoist_inst,Galle,428.5823
+2026-08-01,RootMoist_inst,Galle,430.3717
 2000-01-01,RootMoist_inst,Gampaha,547.1831
 2000-02-01,RootMoist_inst,Gampaha,515.9745
 2000-03-01,RootMoist_inst,Gampaha,516.4335
@@ -18182,6 +18238,7 @@ time,var,district,value
 2026-05-01,RootMoist_inst,Gampaha,512.4675
 2026-06-01,RootMoist_inst,Gampaha,508.5444
 2026-07-01,RootMoist_inst,Gampaha,487.7286
+2026-08-01,RootMoist_inst,Gampaha,488.5184
 2000-01-01,RootMoist_inst,Hambantota,411.2709
 2000-02-01,RootMoist_inst,Hambantota,384.8556
 2000-03-01,RootMoist_inst,Hambantota,377.5105
@@ -18501,6 +18558,7 @@ time,var,district,value
 2026-05-01,RootMoist_inst,Hambantota,302.5328
 2026-06-01,RootMoist_inst,Hambantota,252.9618
 2026-07-01,RootMoist_inst,Hambantota,214.2661
+2026-08-01,RootMoist_inst,Hambantota,206.7059
 2000-01-01,RootMoist_inst,Jaffna,
 2000-02-01,RootMoist_inst,Jaffna,
 2000-03-01,RootMoist_inst,Jaffna,
@@ -18820,6 +18878,7 @@ time,var,district,value
 2026-05-01,RootMoist_inst,Jaffna,
 2026-06-01,RootMoist_inst,Jaffna,
 2026-07-01,RootMoist_inst,Jaffna,
+2026-08-01,RootMoist_inst,Jaffna,
 2000-01-01,RootMoist_inst,Kalutara,517.8165
 2000-02-01,RootMoist_inst,Kalutara,492.0755
 2000-03-01,RootMoist_inst,Kalutara,497.8921
@@ -19139,6 +19198,7 @@ time,var,district,value
 2026-05-01,RootMoist_inst,Kalutara,513.7218
 2026-06-01,RootMoist_inst,Kalutara,483.2962
 2026-07-01,RootMoist_inst,Kalutara,457.6558
+2026-08-01,RootMoist_inst,Kalutara,465.6738
 2000-01-01,RootMoist_inst,Kandy,576.6232
 2000-02-01,RootMoist_inst,Kandy,544.3325
 2000-03-01,RootMoist_inst,Kandy,529.164
@@ -19458,6 +19518,7 @@ time,var,district,value
 2026-05-01,RootMoist_inst,Kandy,542.4576
 2026-06-01,RootMoist_inst,Kandy,496.8006
 2026-07-01,RootMoist_inst,Kandy,460.0352
+2026-08-01,RootMoist_inst,Kandy,451.2529
 2000-01-01,RootMoist_inst,Kegalle,583.3249
 2000-02-01,RootMoist_inst,Kegalle,551.7844
 2000-03-01,RootMoist_inst,Kegalle,547.6744
@@ -19777,6 +19838,7 @@ time,var,district,value
 2026-05-01,RootMoist_inst,Kegalle,577.399
 2026-06-01,RootMoist_inst,Kegalle,540.9121
 2026-07-01,RootMoist_inst,Kegalle,517.7689
+2026-08-01,RootMoist_inst,Kegalle,527.856
 2000-01-01,RootMoist_inst,Kilinochchi,432.1616
 2000-02-01,RootMoist_inst,Kilinochchi,368.5326
 2000-03-01,RootMoist_inst,Kilinochchi,298.3814
@@ -20096,6 +20158,7 @@ time,var,district,value
 2026-05-01,RootMoist_inst,Kilinochchi,293.005
 2026-06-01,RootMoist_inst,Kilinochchi,261.3862
 2026-07-01,RootMoist_inst,Kilinochchi,230.0717
+2026-08-01,RootMoist_inst,Kilinochchi,217.7616
 2000-01-01,RootMoist_inst,Kurunegala,497.2595
 2000-02-01,RootMoist_inst,Kurunegala,459.6909
 2000-03-01,RootMoist_inst,Kurunegala,443.9512
@@ -20415,6 +20478,7 @@ time,var,district,value
 2026-05-01,RootMoist_inst,Kurunegala,464.5108
 2026-06-01,RootMoist_inst,Kurunegala,434.2961
 2026-07-01,RootMoist_inst,Kurunegala,401.9778
+2026-08-01,RootMoist_inst,Kurunegala,395.8658
 2000-01-01,RootMoist_inst,Mannar,567.424
 2000-02-01,RootMoist_inst,Mannar,513.2575
 2000-03-01,RootMoist_inst,Mannar,460.3468
@@ -20734,6 +20798,7 @@ time,var,district,value
 2026-05-01,RootMoist_inst,Mannar,446.0323
 2026-06-01,RootMoist_inst,Mannar,397.7383
 2026-07-01,RootMoist_inst,Mannar,346.6155
+2026-08-01,RootMoist_inst,Mannar,326.7369
 2000-01-01,RootMoist_inst,Matale,520.7581
 2000-02-01,RootMoist_inst,Matale,481.3124
 2000-03-01,RootMoist_inst,Matale,453.4938
@@ -21053,6 +21118,7 @@ time,var,district,value
 2026-05-01,RootMoist_inst,Matale,479.0755
 2026-06-01,RootMoist_inst,Matale,426.7402
 2026-07-01,RootMoist_inst,Matale,379.3943
+2026-08-01,RootMoist_inst,Matale,362.05
 2000-01-01,RootMoist_inst,Matara,522.7097
 2000-02-01,RootMoist_inst,Matara,493.9345
 2000-03-01,RootMoist_inst,Matara,488.3505
@@ -21372,6 +21438,7 @@ time,var,district,value
 2026-05-01,RootMoist_inst,Matara,480.3277
 2026-06-01,RootMoist_inst,Matara,440.6841
 2026-07-01,RootMoist_inst,Matara,403.52
+2026-08-01,RootMoist_inst,Matara,391.0204
 2000-01-01,RootMoist_inst,Monaragala,466.0689
 2000-02-01,RootMoist_inst,Monaragala,437.7563
 2000-03-01,RootMoist_inst,Monaragala,422.2958
@@ -21691,6 +21758,7 @@ time,var,district,value
 2026-05-01,RootMoist_inst,Monaragala,331.0254
 2026-06-01,RootMoist_inst,Monaragala,281.3307
 2026-07-01,RootMoist_inst,Monaragala,234.6554
+2026-08-01,RootMoist_inst,Monaragala,228.0509
 2000-01-01,RootMoist_inst,Mullaitivu,526.6297
 2000-02-01,RootMoist_inst,Mullaitivu,460.7121
 2000-03-01,RootMoist_inst,Mullaitivu,387.9878
@@ -22010,6 +22078,7 @@ time,var,district,value
 2026-05-01,RootMoist_inst,Mullaitivu,356.1405
 2026-06-01,RootMoist_inst,Mullaitivu,316.5819
 2026-07-01,RootMoist_inst,Mullaitivu,278.339
+2026-08-01,RootMoist_inst,Mullaitivu,260.0284
 2000-01-01,RootMoist_inst,Nuwara Eliya,450.2188
 2000-02-01,RootMoist_inst,Nuwara Eliya,427.3943
 2000-03-01,RootMoist_inst,Nuwara Eliya,420.7401
@@ -22329,6 +22398,7 @@ time,var,district,value
 2026-05-01,RootMoist_inst,Nuwara Eliya,429.3916
 2026-06-01,RootMoist_inst,Nuwara Eliya,385.1937
 2026-07-01,RootMoist_inst,Nuwara Eliya,354.8316
+2026-08-01,RootMoist_inst,Nuwara Eliya,356.0739
 2000-01-01,RootMoist_inst,Polonnaruwa,462.4411
 2000-02-01,RootMoist_inst,Polonnaruwa,423.7716
 2000-03-01,RootMoist_inst,Polonnaruwa,385.5545
@@ -22648,6 +22718,7 @@ time,var,district,value
 2026-05-01,RootMoist_inst,Polonnaruwa,353.9163
 2026-06-01,RootMoist_inst,Polonnaruwa,305.0894
 2026-07-01,RootMoist_inst,Polonnaruwa,254.4268
+2026-08-01,RootMoist_inst,Polonnaruwa,240.0027
 2000-01-01,RootMoist_inst,Puttalam,433.0296
 2000-02-01,RootMoist_inst,Puttalam,394.9318
 2000-03-01,RootMoist_inst,Puttalam,377.6736
@@ -22967,6 +23038,7 @@ time,var,district,value
 2026-05-01,RootMoist_inst,Puttalam,338.2714
 2026-06-01,RootMoist_inst,Puttalam,335.4378
 2026-07-01,RootMoist_inst,Puttalam,306.5883
+2026-08-01,RootMoist_inst,Puttalam,297.2338
 2000-01-01,RootMoist_inst,Ratnapura,476.367
 2000-02-01,RootMoist_inst,Ratnapura,452.9438
 2000-03-01,RootMoist_inst,Ratnapura,453.3288
@@ -23286,6 +23358,7 @@ time,var,district,value
 2026-05-01,RootMoist_inst,Ratnapura,454.9783
 2026-06-01,RootMoist_inst,Ratnapura,409.4103
 2026-07-01,RootMoist_inst,Ratnapura,373.7241
+2026-08-01,RootMoist_inst,Ratnapura,370.7801
 2000-01-01,RootMoist_inst,Trincomalee,548.6972
 2000-02-01,RootMoist_inst,Trincomalee,496.6127
 2000-03-01,RootMoist_inst,Trincomalee,438.9974
@@ -23605,6 +23678,7 @@ time,var,district,value
 2026-05-01,RootMoist_inst,Trincomalee,389.5724
 2026-06-01,RootMoist_inst,Trincomalee,344.6228
 2026-07-01,RootMoist_inst,Trincomalee,298.3318
+2026-08-01,RootMoist_inst,Trincomalee,280.1181
 2000-01-01,RootMoist_inst,Vavuniya,549.4931
 2000-02-01,RootMoist_inst,Vavuniya,491.8038
 2000-03-01,RootMoist_inst,Vavuniya,433.088
@@ -23924,6 +23998,7 @@ time,var,district,value
 2026-05-01,RootMoist_inst,Vavuniya,412.8134
 2026-06-01,RootMoist_inst,Vavuniya,360.9576
 2026-07-01,RootMoist_inst,Vavuniya,313.0764
+2026-08-01,RootMoist_inst,Vavuniya,296.3491
 2000-01-01,SoilMoi0_10cm_inst,Ampara,32.4477
 2000-02-01,SoilMoi0_10cm_inst,Ampara,31.0354
 2000-03-01,SoilMoi0_10cm_inst,Ampara,29.3497
@@ -24243,6 +24318,7 @@ time,var,district,value
 2026-05-01,SoilMoi0_10cm_inst,Ampara,26.0725
 2026-06-01,SoilMoi0_10cm_inst,Ampara,21.335
 2026-07-01,SoilMoi0_10cm_inst,Ampara,16.592
+2026-08-01,SoilMoi0_10cm_inst,Ampara,20.7424
 2000-01-01,SoilMoi0_10cm_inst,Anuradhapura,28.1825
 2000-02-01,SoilMoi0_10cm_inst,Anuradhapura,26.6619
 2000-03-01,SoilMoi0_10cm_inst,Anuradhapura,23.3333
@@ -24562,6 +24638,7 @@ time,var,district,value
 2026-05-01,SoilMoi0_10cm_inst,Anuradhapura,25.4197
 2026-06-01,SoilMoi0_10cm_inst,Anuradhapura,17.6909
 2026-07-01,SoilMoi0_10cm_inst,Anuradhapura,15.0781
+2026-08-01,SoilMoi0_10cm_inst,Anuradhapura,17.5133
 2000-01-01,SoilMoi0_10cm_inst,Badulla,31.8708
 2000-02-01,SoilMoi0_10cm_inst,Badulla,30.7058
 2000-03-01,SoilMoi0_10cm_inst,Badulla,29.7272
@@ -24881,6 +24958,7 @@ time,var,district,value
 2026-05-01,SoilMoi0_10cm_inst,Badulla,27.1455
 2026-06-01,SoilMoi0_10cm_inst,Badulla,22.7165
 2026-07-01,SoilMoi0_10cm_inst,Badulla,18.2226
+2026-08-01,SoilMoi0_10cm_inst,Badulla,21.0381
 2000-01-01,SoilMoi0_10cm_inst,Batticaloa,29.6168
 2000-02-01,SoilMoi0_10cm_inst,Batticaloa,27.8776
 2000-03-01,SoilMoi0_10cm_inst,Batticaloa,25.054
@@ -25200,6 +25278,7 @@ time,var,district,value
 2026-05-01,SoilMoi0_10cm_inst,Batticaloa,23.6228
 2026-06-01,SoilMoi0_10cm_inst,Batticaloa,18.5018
 2026-07-01,SoilMoi0_10cm_inst,Batticaloa,13.8565
+2026-08-01,SoilMoi0_10cm_inst,Batticaloa,18.0166
 2000-01-01,SoilMoi0_10cm_inst,Colombo,28.2781
 2000-02-01,SoilMoi0_10cm_inst,Colombo,27.9889
 2000-03-01,SoilMoi0_10cm_inst,Colombo,28.3933
@@ -25519,6 +25598,7 @@ time,var,district,value
 2026-05-01,SoilMoi0_10cm_inst,Colombo,29.9907
 2026-06-01,SoilMoi0_10cm_inst,Colombo,28.6728
 2026-07-01,SoilMoi0_10cm_inst,Colombo,25.5013
+2026-08-01,SoilMoi0_10cm_inst,Colombo,27.1968
 2000-01-01,SoilMoi0_10cm_inst,Galle,30.374
 2000-02-01,SoilMoi0_10cm_inst,Galle,29.4273
 2000-03-01,SoilMoi0_10cm_inst,Galle,29.6593
@@ -25838,6 +25918,7 @@ time,var,district,value
 2026-05-01,SoilMoi0_10cm_inst,Galle,30.1484
 2026-06-01,SoilMoi0_10cm_inst,Galle,27.7169
 2026-07-01,SoilMoi0_10cm_inst,Galle,25.0325
+2026-08-01,SoilMoi0_10cm_inst,Galle,26.9654
 2000-01-01,SoilMoi0_10cm_inst,Gampaha,28.476
 2000-02-01,SoilMoi0_10cm_inst,Gampaha,28.2759
 2000-03-01,SoilMoi0_10cm_inst,Gampaha,27.8256
@@ -26157,6 +26238,7 @@ time,var,district,value
 2026-05-01,SoilMoi0_10cm_inst,Gampaha,29.1461
 2026-06-01,SoilMoi0_10cm_inst,Gampaha,27.4789
 2026-07-01,SoilMoi0_10cm_inst,Gampaha,25.2219
+2026-08-01,SoilMoi0_10cm_inst,Gampaha,26.3088
 2000-01-01,SoilMoi0_10cm_inst,Hambantota,30.6158
 2000-02-01,SoilMoi0_10cm_inst,Hambantota,29.0956
 2000-03-01,SoilMoi0_10cm_inst,Hambantota,28.9161
@@ -26476,6 +26558,7 @@ time,var,district,value
 2026-05-01,SoilMoi0_10cm_inst,Hambantota,24.8413
 2026-06-01,SoilMoi0_10cm_inst,Hambantota,19.5027
 2026-07-01,SoilMoi0_10cm_inst,Hambantota,16.1883
+2026-08-01,SoilMoi0_10cm_inst,Hambantota,18.6865
 2000-01-01,SoilMoi0_10cm_inst,Jaffna,
 2000-02-01,SoilMoi0_10cm_inst,Jaffna,
 2000-03-01,SoilMoi0_10cm_inst,Jaffna,
@@ -26795,6 +26878,7 @@ time,var,district,value
 2026-05-01,SoilMoi0_10cm_inst,Jaffna,
 2026-06-01,SoilMoi0_10cm_inst,Jaffna,
 2026-07-01,SoilMoi0_10cm_inst,Jaffna,
+2026-08-01,SoilMoi0_10cm_inst,Jaffna,
 2000-01-01,SoilMoi0_10cm_inst,Kalutara,30.2073
 2000-02-01,SoilMoi0_10cm_inst,Kalutara,29.5161
 2000-03-01,SoilMoi0_10cm_inst,Kalutara,29.9021
@@ -27114,6 +27198,7 @@ time,var,district,value
 2026-05-01,SoilMoi0_10cm_inst,Kalutara,30.677
 2026-06-01,SoilMoi0_10cm_inst,Kalutara,28.7698
 2026-07-01,SoilMoi0_10cm_inst,Kalutara,26.3136
+2026-08-01,SoilMoi0_10cm_inst,Kalutara,28.2411
 2000-01-01,SoilMoi0_10cm_inst,Kandy,32.588
 2000-02-01,SoilMoi0_10cm_inst,Kandy,31.6833
 2000-03-01,SoilMoi0_10cm_inst,Kandy,30.5065
@@ -27433,6 +27518,7 @@ time,var,district,value
 2026-05-01,SoilMoi0_10cm_inst,Kandy,31.7817
 2026-06-01,SoilMoi0_10cm_inst,Kandy,28.4937
 2026-07-01,SoilMoi0_10cm_inst,Kandy,25.1639
+2026-08-01,SoilMoi0_10cm_inst,Kandy,26.6799
 2000-01-01,SoilMoi0_10cm_inst,Kegalle,31.2413
 2000-02-01,SoilMoi0_10cm_inst,Kegalle,30.6173
 2000-03-01,SoilMoi0_10cm_inst,Kegalle,30.049
@@ -27752,6 +27838,7 @@ time,var,district,value
 2026-05-01,SoilMoi0_10cm_inst,Kegalle,31.801
 2026-06-01,SoilMoi0_10cm_inst,Kegalle,29.5659
 2026-07-01,SoilMoi0_10cm_inst,Kegalle,27.3451
+2026-08-01,SoilMoi0_10cm_inst,Kegalle,29.1466
 2000-01-01,SoilMoi0_10cm_inst,Kilinochchi,26.6404
 2000-02-01,SoilMoi0_10cm_inst,Kilinochchi,23.5837
 2000-03-01,SoilMoi0_10cm_inst,Kilinochchi,17.9218
@@ -28071,6 +28158,7 @@ time,var,district,value
 2026-05-01,SoilMoi0_10cm_inst,Kilinochchi,22.6023
 2026-06-01,SoilMoi0_10cm_inst,Kilinochchi,14.9329
 2026-07-01,SoilMoi0_10cm_inst,Kilinochchi,14.2105
+2026-08-01,SoilMoi0_10cm_inst,Kilinochchi,17.3601
 2000-01-01,SoilMoi0_10cm_inst,Kurunegala,28.8421
 2000-02-01,SoilMoi0_10cm_inst,Kurunegala,28.0523
 2000-03-01,SoilMoi0_10cm_inst,Kurunegala,26.1166
@@ -28390,6 +28478,7 @@ time,var,district,value
 2026-05-01,SoilMoi0_10cm_inst,Kurunegala,28.8581
 2026-06-01,SoilMoi0_10cm_inst,Kurunegala,25.5375
 2026-07-01,SoilMoi0_10cm_inst,Kurunegala,22.3221
+2026-08-01,SoilMoi0_10cm_inst,Kurunegala,23.9129
 2000-01-01,SoilMoi0_10cm_inst,Mannar,27.7157
 2000-02-01,SoilMoi0_10cm_inst,Mannar,26.3353
 2000-03-01,SoilMoi0_10cm_inst,Mannar,22.6566
@@ -28709,6 +28798,7 @@ time,var,district,value
 2026-05-01,SoilMoi0_10cm_inst,Mannar,25.8466
 2026-06-01,SoilMoi0_10cm_inst,Mannar,18.2363
 2026-07-01,SoilMoi0_10cm_inst,Mannar,16.2136
+2026-08-01,SoilMoi0_10cm_inst,Mannar,18.7434
 2000-01-01,SoilMoi0_10cm_inst,Matale,30.0154
 2000-02-01,SoilMoi0_10cm_inst,Matale,28.9176
 2000-03-01,SoilMoi0_10cm_inst,Matale,26.7364
@@ -29028,6 +29118,7 @@ time,var,district,value
 2026-05-01,SoilMoi0_10cm_inst,Matale,29.0645
 2026-06-01,SoilMoi0_10cm_inst,Matale,25.0207
 2026-07-01,SoilMoi0_10cm_inst,Matale,21.0422
+2026-08-01,SoilMoi0_10cm_inst,Matale,22.7571
 2000-01-01,SoilMoi0_10cm_inst,Matara,30.6243
 2000-02-01,SoilMoi0_10cm_inst,Matara,29.4788
 2000-03-01,SoilMoi0_10cm_inst,Matara,29.4493
@@ -29347,6 +29438,7 @@ time,var,district,value
 2026-05-01,SoilMoi0_10cm_inst,Matara,29.3846
 2026-06-01,SoilMoi0_10cm_inst,Matara,26.4328
 2026-07-01,SoilMoi0_10cm_inst,Matara,23.2867
+2026-08-01,SoilMoi0_10cm_inst,Matara,24.9397
 2000-01-01,SoilMoi0_10cm_inst,Monaragala,31.3369
 2000-02-01,SoilMoi0_10cm_inst,Monaragala,29.9823
 2000-03-01,SoilMoi0_10cm_inst,Monaragala,29.2838
@@ -29666,6 +29758,7 @@ time,var,district,value
 2026-05-01,SoilMoi0_10cm_inst,Monaragala,24.972
 2026-06-01,SoilMoi0_10cm_inst,Monaragala,19.6862
 2026-07-01,SoilMoi0_10cm_inst,Monaragala,16.0961
+2026-08-01,SoilMoi0_10cm_inst,Monaragala,18.9597
 2000-01-01,SoilMoi0_10cm_inst,Mullaitivu,27.597
 2000-02-01,SoilMoi0_10cm_inst,Mullaitivu,25.2523
 2000-03-01,SoilMoi0_10cm_inst,Mullaitivu,20.4679
@@ -29985,6 +30078,7 @@ time,var,district,value
 2026-05-01,SoilMoi0_10cm_inst,Mullaitivu,23.5455
 2026-06-01,SoilMoi0_10cm_inst,Mullaitivu,15.7632
 2026-07-01,SoilMoi0_10cm_inst,Mullaitivu,14.9632
+2026-08-01,SoilMoi0_10cm_inst,Mullaitivu,17.9384
 2000-01-01,SoilMoi0_10cm_inst,Nuwara Eliya,30.965
 2000-02-01,SoilMoi0_10cm_inst,Nuwara Eliya,30.0584
 2000-03-01,SoilMoi0_10cm_inst,Nuwara Eliya,29.5381
@@ -30304,6 +30398,7 @@ time,var,district,value
 2026-05-01,SoilMoi0_10cm_inst,Nuwara Eliya,30.0915
 2026-06-01,SoilMoi0_10cm_inst,Nuwara Eliya,26.9923
 2026-07-01,SoilMoi0_10cm_inst,Nuwara Eliya,23.8367
+2026-08-01,SoilMoi0_10cm_inst,Nuwara Eliya,25.6611
 2000-01-01,SoilMoi0_10cm_inst,Polonnaruwa,30.2936
 2000-02-01,SoilMoi0_10cm_inst,Polonnaruwa,28.8113
 2000-03-01,SoilMoi0_10cm_inst,Polonnaruwa,25.7703
@@ -30623,6 +30718,7 @@ time,var,district,value
 2026-05-01,SoilMoi0_10cm_inst,Polonnaruwa,25.7757
 2026-06-01,SoilMoi0_10cm_inst,Polonnaruwa,19.1619
 2026-07-01,SoilMoi0_10cm_inst,Polonnaruwa,15.7028
+2026-08-01,SoilMoi0_10cm_inst,Polonnaruwa,18.5499
 2000-01-01,SoilMoi0_10cm_inst,Puttalam,26.7362
 2000-02-01,SoilMoi0_10cm_inst,Puttalam,25.838
 2000-03-01,SoilMoi0_10cm_inst,Puttalam,23.4245
@@ -30942,6 +31038,7 @@ time,var,district,value
 2026-05-01,SoilMoi0_10cm_inst,Puttalam,25.6688
 2026-06-01,SoilMoi0_10cm_inst,Puttalam,21.8956
 2026-07-01,SoilMoi0_10cm_inst,Puttalam,18.6202
+2026-08-01,SoilMoi0_10cm_inst,Puttalam,19.679
 2000-01-01,SoilMoi0_10cm_inst,Ratnapura,30.4854
 2000-02-01,SoilMoi0_10cm_inst,Ratnapura,29.6484
 2000-03-01,SoilMoi0_10cm_inst,Ratnapura,29.7525
@@ -31261,6 +31358,7 @@ time,var,district,value
 2026-05-01,SoilMoi0_10cm_inst,Ratnapura,29.6732
 2026-06-01,SoilMoi0_10cm_inst,Ratnapura,26.565
 2026-07-01,SoilMoi0_10cm_inst,Ratnapura,23.2411
+2026-08-01,SoilMoi0_10cm_inst,Ratnapura,25.2343
 2000-01-01,SoilMoi0_10cm_inst,Trincomalee,31.1264
 2000-02-01,SoilMoi0_10cm_inst,Trincomalee,29.2944
 2000-03-01,SoilMoi0_10cm_inst,Trincomalee,25.3142
@@ -31580,6 +31678,7 @@ time,var,district,value
 2026-05-01,SoilMoi0_10cm_inst,Trincomalee,25.9809
 2026-06-01,SoilMoi0_10cm_inst,Trincomalee,17.2299
 2026-07-01,SoilMoi0_10cm_inst,Trincomalee,16.575
+2026-08-01,SoilMoi0_10cm_inst,Trincomalee,18.2911
 2000-01-01,SoilMoi0_10cm_inst,Vavuniya,28.0628
 2000-02-01,SoilMoi0_10cm_inst,Vavuniya,26.4195
 2000-03-01,SoilMoi0_10cm_inst,Vavuniya,22.5345
@@ -31899,3 +31998,4 @@ time,var,district,value
 2026-05-01,SoilMoi0_10cm_inst,Vavuniya,25.4624
 2026-06-01,SoilMoi0_10cm_inst,Vavuniya,17.5644
 2026-07-01,SoilMoi0_10cm_inst,Vavuniya,15.6926
+2026-08-01,SoilMoi0_10cm_inst,Vavuniya,18.4366
