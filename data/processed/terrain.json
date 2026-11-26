@@ -195,9 +195,9 @@
    "max_elev_m": 178
   },
   "Kandy|Akurana": {
-   "steep_share": 0.4,
-   "mean_elev_m": 575,
-   "max_elev_m": 750
+   "steep_share": 0.402,
+   "mean_elev_m": 576,
+   "max_elev_m": 784
   },
   "Matara|Akuressa": {
    "steep_share": 0.36,
@@ -216,7 +216,7 @@
   },
   "Nuwara Eliya|Ambagamuwa": {
    "steep_share": 0.498,
-   "mean_elev_m": 1212,
+   "mean_elev_m": 1211,
    "max_elev_m": 2303
   },
   "Galle|Ambalangoda": {
@@ -421,7 +421,7 @@
   },
   "Kegalle|Deraniyagala": {
    "steep_share": 0.612,
-   "mean_elev_m": 482,
+   "mean_elev_m": 483,
    "max_elev_m": 1895
   },
   "Matara|Devinuwara": {
@@ -1565,8 +1565,8 @@
    "max_elev_m": 621
   },
   "Kandy|Udapalatha": {
-   "steep_share": 0.429,
-   "mean_elev_m": 827,
+   "steep_share": 0.428,
+   "mean_elev_m": 828,
    "max_elev_m": 1519
   },
   "Kurunegala|Udubaddawa": {
